@@ -264,5 +264,3 @@ export default function PartidosTable({ initialPartidos }: Props) {
     </div>
   )
 }
-)
-}
