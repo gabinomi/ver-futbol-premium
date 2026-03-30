@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Partido, Estado } from '@/types'
-import { Search, Save, Loader2, Calendar, Target, Image as ImageIcon, CheckCircle2, AlertCircle, Info, Radio, TV } from 'lucide-react'
+import { Search, Save, Loader2, Calendar, Target, Image as ImageIcon, CheckCircle2, AlertCircle, Info, Radio, Tv, X, Plus } from 'lucide-react'
 import { useToast } from '@/components/ui/Toaster'
 import { AnimatePresence, motion } from 'framer-motion'
 import { getTimezoneEstimates } from '@/lib/utils'
@@ -309,7 +309,7 @@ export default function PartidoForm({ partido, modo }: Props) {
 
           <section className='glass-panel rounded-[2.5rem] p-10'>
             <h2 className='text-slate-400 text-[10px] font-black uppercase tracking-[4px] mb-8 flex items-center gap-3'>
-              <TV size={14} className='text-emerald-500' /> Transmisión & Redes
+              <Tv size={14} className='text-emerald-500' /> Transmisión & Redes
             </h2>
             <div className='flex flex-col gap-8'>
               <div>
