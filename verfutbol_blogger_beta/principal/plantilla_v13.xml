@@ -1,0 +1,1584 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:css='false' b:defaultmessages='false' b:layouts='false' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  <meta content='width=device-width,initial-scale=1' name='viewport'/>
+
+  <!-- ===== TÍTULO DINÁMICO ===== -->
+  <b:if cond='data:blog.pageType == &quot;item&quot;'>
+    <title><data:blog.pageName/> | Ver Fútbol EN VIVO Gratis</title>
+  <b:else/>
+    <title>Ver Fútbol EN VIVO Gratis | Partidos de Hoy</title>
+  </b:if>
+
+  <!-- ===== META DESCRIPCIÓN DINÁMICA ===== -->
+  <b:if cond='data:blog.pageType == &quot;item&quot;'>
+    <meta expr:content='data:blog.pageName + &quot; EN VIVO - Mirá el partido gratis con horarios para todos los países de Latinoamérica y España. Links de streaming actualizados.&quot;' name='description'/>
+  <b:else/>
+    <meta content='Ver fútbol EN VIVO gratis. Partidos de hoy con links de streaming, horarios por país y marcadores en tiempo real.' name='description'/>
+  </b:if>
+
+  <!-- ===== CANONICAL URL ===== -->
+  <b:if cond='data:blog.pageType == &quot;item&quot;'>
+    <link expr:href='data:blog.url' rel='canonical'/>
+  <b:else/>
+    <link expr:href='data:blog.homepageUrl' rel='canonical'/>
+  </b:if>
+
+  <!-- ===== ROBOTS ===== -->
+  <meta content='index, follow, max-snippet:-1, max-image-preview:large' name='robots'/>
+
+  <!-- ===== OPEN GRAPH ===== -->
+  <b:if cond='data:blog.pageType == &quot;item&quot;'>
+    <meta expr:content='data:blog.pageName + &quot; | Ver Fútbol EN VIVO Gratis&quot;' property='og:title'/>
+    <meta expr:content='data:blog.pageName + &quot; EN VIVO - Links de streaming gratis con horarios para Latinoamérica y España.&quot;' property='og:description'/>
+    <meta expr:content='data:blog.url' property='og:url'/>
+    <meta content='article' property='og:type'/>
+    <meta expr:content='data:blog.title' property='og:site_name'/>
+    <b:if cond='data:blog.postImageUrl'>
+      <meta expr:content='data:blog.postImageUrl' id='og-image' property='og:image'/>
+    <b:else/>
+      <meta content='https://i.imgur.com/hszWnrc.jpeg' id='og-image' property='og:image'/>
+    </b:if>
+    <script>
+    (function(){
+      var m = document.getElementById(&#39;og-image&#39;);
+      if (m) {
+        var url = m.getAttribute(&#39;content&#39;);
+        // Reemplazar cualquier /sXX-c/ o /sXX/ de Blogger por /s1200/
+        url = url.replace(/\/s\d+(-c)?\//, &#39;/s1200/&#39;);
+        m.setAttribute(&#39;content&#39;, url);
+      }
+    })();
+    </script>
+    <meta content='1200' property='og:image:width'/>
+    <meta content='630' property='og:image:height'/>
+    <meta content='image/jpeg' property='og:image:type'/>
+  <b:else/>
+    <meta expr:content='data:blog.title' property='og:title'/>
+    <meta content='Ver fútbol EN VIVO gratis. Partidos de hoy con links de streaming y horarios por país.' property='og:description'/>
+    <meta expr:content='data:blog.homepageUrl' property='og:url'/>
+    <meta content='website' property='og:type'/>
+    <meta expr:content='data:blog.title' property='og:site_name'/>
+  </b:if>
+
+  <!-- ===== TWITTER CARD ===== -->
+  <meta content='summary_large_image' name='twitter:card'/>
+  <b:if cond='data:blog.pageType == &quot;item&quot;'>
+    <meta expr:content='data:blog.pageName + &quot; | Ver Fútbol EN VIVO Gratis&quot;' name='twitter:title'/>
+    <meta expr:content='data:blog.pageName + &quot; EN VIVO - Links de streaming gratis.&quot;' name='twitter:description'/>
+    <b:if cond='data:blog.postImageThumbnailUrl'>
+      <meta expr:content='data:blog.postImageThumbnailUrl' name='twitter:image'/>
+    </b:if>
+  <b:else/>
+    <meta expr:content='data:blog.title' name='twitter:title'/>
+    <meta content='Ver fútbol EN VIVO gratis. Partidos de hoy con horarios por país.' name='twitter:description'/>
+  </b:if>
+
+  <!-- ===== SCHEMA MARKUP &#8212; EVENTO DEPORTIVO ===== -->
+  <b:if cond='data:blog.pageType == &quot;item&quot;'>
+    <script type='application/ld+json'>
+    {
+      &quot;@context&quot;: &quot;https://schema.org&quot;,
+      &quot;@type&quot;: &quot;SportsEvent&quot;,
+      &quot;name&quot;: &quot;<data:blog.pageName/>&quot;,
+      &quot;sport&quot;: &quot;Soccer&quot;,
+      &quot;url&quot;: &quot;<data:blog.url/>&quot;,
+      &quot;description&quot;: &quot;<data:blog.pageName/> EN VIVO - Ver partido gratis con horarios para todos los países.&quot;,
+      &quot;eventStatus&quot;: &quot;https://schema.org/EventScheduled&quot;,
+      &quot;eventAttendanceMode&quot;: &quot;https://schema.org/OnlineEventAttendanceMode&quot;,
+      &quot;organizer&quot;: {
+        &quot;@type&quot;: &quot;Organization&quot;,
+        &quot;name&quot;: &quot;<data:blog.title/>&quot;,
+        &quot;url&quot;: &quot;<data:blog.homepageUrl/>&quot;
+      }
+    }
+    </script>
+  </b:if>
+
+  <!-- ===== SCHEMA MARKUP &#8212; SITIO WEB (HOME) ===== -->
+  <b:if cond='data:blog.pageType == &quot;index&quot;'>
+    <script type='application/ld+json'>
+    {
+      &quot;@context&quot;: &quot;https://schema.org&quot;,
+      &quot;@type&quot;: &quot;WebSite&quot;,
+      &quot;name&quot;: &quot;<data:blog.title/>&quot;,
+      &quot;url&quot;: &quot;<data:blog.homepageUrl/>&quot;,
+      &quot;description&quot;: &quot;Ver fútbol EN VIVO gratis. Partidos de hoy con links de streaming y horarios por país.&quot;,
+      &quot;potentialAction&quot;: {
+        &quot;@type&quot;: &quot;SearchAction&quot;,
+        &quot;target&quot;: &quot;<data:blog.homepageUrl/>search?q={search_term_string}&quot;,
+        &quot;query-input&quot;: &quot;required name=search_term_string&quot;
+      }
+    }
+    </script>
+  </b:if>
+
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' rel='stylesheet'/>
+  <link href='https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap' rel='stylesheet'/>
+
+  <b:skin><![CDATA[
+/* =====================================================
+   VARIABLES DEL CUSTOMIZER
+   ===================================================== */
+/* <Group description="Colores principales" selector="body">
+<Variable name="bg.page"      description="Fondo de la pagina"          type="color" default="#060d1a" value="#060d1a"/>
+<Variable name="bg.blocks"    description="Fondo canales y horarios"    type="color" default="#020810" value="#020810"/>
+<Variable name="color.header" description="Color encabezado azul"       type="color" default="#1746b8" value="#1746b8"/>
+<Variable name="color.badge"  description="Color badge EN VIVO"         type="color" default="#dc2626" value="#dc2626"/>
+<Variable name="color.times"  description="Color texto paises/horarios" type="color" default="#94a3b8" value="#94a3b8"/>
+<Variable name="color.title"  description="Color titulo del partido"    type="color" default="#ffffff"  value="#ffffff"/>
+</Group> */
+
+/* <Group description="Colores de botones" selector=".btn-primary">
+<Variable name="btn1.bg"      description="Boton principal - fondo"     type="color" default="#2563eb" value="#2563eb"/>
+<Variable name="btn1.text"    description="Boton principal - texto"     type="color" default="#ffffff"  value="#ffffff"/>
+<Variable name="btn2.bg"      description="Boton alt - fondo"           type="color" default="#1e293b" value="#1e293b"/>
+<Variable name="btn2.text"    description="Boton alt - texto"           type="color" default="#94a3b8" value="#94a3b8"/>
+<Variable name="btn2.border"  description="Boton alt - borde"           type="color" default="#334155" value="#334155"/>
+</Group> */
+
+/* <Group description="Ancho y tamanos" selector=".sports-card">
+<Variable name="layout.maxwidth"  description="Ancho maximo pagina"     type="length" default="1200px" value="1200px"/>
+<Variable name="layout.cardwidth" description="Ancho maximo tarjeta"    type="length" default="468px"  value="468px"/>
+<Variable name="layout.titlesize" description="Tamano fuente equipos"   type="length" default="21px"   value="21px"/>
+</Group> */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: #fff; position: relative;
+  overflow-x: hidden; background: $(bg.page);
+}
+
+/* ===== ZONAS OCULTAS (header, nav, footer) ===== */
+/* Para activar cualquiera: cambiar display:none por display:block/flex */
+
+.site-header {
+  display: none;
+  width: 100%;
+  background: rgba(6,13,26,0.95);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 14px 20px;
+  position: relative; z-index: 10;
+}
+
+.site-nav {
+  display: none;
+  width: 100%;
+  background: rgba(8,16,36,0.92);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0 20px;
+  position: relative; z-index: 10;
+}
+
+.site-footer {
+  display: none;
+  width: 100%;
+  background: rgba(6,13,26,0.97);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding: 24px 20px;
+  position: relative; z-index: 10;
+  text-align: center;
+  color: rgba(255,255,255,0.4);
+  font-size: 12px;
+}
+
+.bg-stadium {
+  position: fixed; inset: 0;
+  will-change: transform;
+  transform: translateZ(0);
+  background:
+    linear-gradient(
+      rgb(6,13,26) 0%,
+      rgb(6,13,26) 8%,
+      rgba(6,13,26,0.45) 35%,
+      rgba(6,13,26,0.45) 65%,
+      rgb(6,13,26) 92%,
+      rgb(6,13,26) 100%
+    ),
+    url('https://nextjs.fanatiz.com/fanatiz/strapi/production/estadio_OTT_9bf35dcea2.jpg')
+    center center / cover no-repeat;
+  z-index: 0;
+}
+.bg-overlay { display: none; }
+
+/* ===== COLUMNAS DE ADS ===== */
+.ad-columna-lateral {
+  width: 160px; flex-shrink: 0;
+  position: sticky; top: 30px; align-self: flex-start;
+  z-index: 2;
+}
+@media (max-width: 1060px) { .ad-columna-lateral { display: none !important; } }
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.main-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 16px 40px;
+  min-height: 100vh;
+}
+
+/* Columna central — crece entre los banners laterales */
+.content-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* El grid ocupa todo el ancho disponible */
+.content-col .posts-grid {
+  width: 100%;
+  align-self: stretch;
+}
+
+/* Los banners horizontales también se estiran */
+.content-col .ad-horizontal {
+  align-self: stretch;
+}
+
+/* En página de entrada el card se estira para llenar el espacio entre banners */
+body.item-page .main-container {
+  max-width: 1100px;
+}
+body.item-page .content-col {
+  align-items: stretch;
+}
+body.item-page .sports-card-full {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+/* ===== BANNERS HORIZONTALES ===== */
+.ad-horizontal {
+  width: 100%;
+  max-width: 728px;
+  margin: 0 auto;
+  display: none; /* oculto en desktop grande */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Mostrar cuando los laterales desaparecen */
+@media (max-width: 1060px) {
+  .ad-horizontal { display: flex; }
+}
+
+/* 728x90 — tablet/desktop mediano */
+.ad-horizontal .ad-728 {
+  display: block;
+}
+.ad-horizontal .ad-320 {
+  display: none;
+}
+
+/* 320x50 — móvil */
+@media (max-width: 480px) {
+  .ad-horizontal .ad-728 { display: none; }
+  .ad-horizontal .ad-320 { display: block; }
+}
+
+/* ===== GRID PARA PÁGINA PRINCIPAL (INDEX) ===== */
+/* PC: 4 col x 2 filas | Tablet: 2 col | Móvil: 1 col */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .posts-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+/* ===== TARJETA COMPACTA GRID (INDEX) ===== */
+.post-card-compact {
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(8,16,36,0.92);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  text-decoration: none; display: flex;
+  flex-direction: column; position: relative;
+}
+.post-card-compact:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+}
+
+/* ---- BORDE POR ESTADO ---- */
+/* EN VIVO — rojo pulsante */
+.post-card-compact.estado-en-vivo-card {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 1px rgba(220,38,38,0.3),
+              0 0 16px rgba(220,38,38,0.2);
+  animation: border-pulse-red 2s ease-in-out infinite;
+}
+@keyframes border-pulse-red {
+  0%,100% { box-shadow: 0 0 0 1px rgba(220,38,38,0.3), 0 0 10px rgba(220,38,38,0.15); }
+  50%      { box-shadow: 0 0 0 2px rgba(220,38,38,0.6), 0 0 22px rgba(220,38,38,0.35); }
+}
+
+/* PRÓXIMO — azul eléctrico sólido */
+.post-card-compact.estado-proximo-card {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37,99,235,0.2);
+}
+
+/* FINALIZADO — verde esmeralda tenue */
+.post-card-compact.estado-finalizado-card {
+  border-color: #059669;
+  box-shadow: 0 0 0 1px rgba(5,150,105,0.15);
+}
+
+/* ---- LABEL DE ESTADO — arriba centrado ---- */
+.card-status-top {
+  text-align: center;
+  padding: 7px 10px 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.card-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+/* EN VIVO */
+.card-status.en-vivo {
+  background: rgba(220,38,38,0.15);
+  border: 1px solid #dc2626;
+  color: #f87171;
+}
+.card-status.en-vivo .status-dot {
+  width: 5px; height: 5px; background: #dc2626; border-radius: 50%;
+  animation: blink-dot 1s infinite; display: inline-block; flex-shrink: 0;
+}
+/* PRÓXIMO */
+.card-status.proximo {
+  background: rgba(37,99,235,0.12);
+  border: 1px solid #2563eb;
+  color: #60a5fa;
+}
+/* FINALIZADO */
+.card-status.finalizado {
+  background: rgba(5,150,105,0.12);
+  border: 1px solid #059669;
+  color: #34d399;
+}
+
+/* ---- THUMBNAIL + OVERLAY ---- */
+.card-thumb-wrap {
+  position: relative; overflow: hidden; flex: 1;
+}
+.card-thumb {
+  width: 100%; aspect-ratio: 16/9;
+  object-fit: cover; display: block;
+  opacity: 0.88; transition: opacity 0.3s, filter 0.3s;
+}
+.post-card-compact:hover .card-thumb { opacity: 1; }
+
+/* EN VIVO — brillo suave en la thumb */
+.card-thumb-wrap.estado-en-vivo .card-thumb {
+  opacity: 0.92;
+}
+
+/* FINALIZADO — desaturado y oscuro */
+.card-thumb-wrap.estado-finalizado .card-thumb {
+  filter: grayscale(55%) brightness(0.38);
+}
+.card-thumb-wrap.estado-finalizado .card-overlay {
+  background: rgba(0,0,0,0.48);
+}
+
+/* PRÓXIMO — más oscuro */
+.card-thumb-wrap.estado-proximo .card-thumb {
+  filter: brightness(0.45) saturate(0.5);
+}
+
+/* Overlay centrado */
+.card-overlay {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.card-overlay-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; font-weight: 900;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 3px; text-transform: uppercase;
+}
+
+/* ---- TÍTULO DEL POST ---- */
+.card-title-bar {
+  padding: 8px 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.card-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 800;
+  color: rgba(255,255,255,0.8);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  line-height: 1.2; text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ===== TARJETA COMPLETA (POST INDIVIDUAL) ===== */
+.sports-card-full {
+  width: $(layout.cardwidth);
+  min-width: 320px;
+  max-width: 100%;
+  flex-shrink: 0;
+  margin: 0 auto;
+  border-radius: 18px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.09);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  backdrop-filter: blur(22px); background: rgba(8,16,32,0.78);
+}
+
+.card-header {
+  background: linear-gradient(135deg, #0d2860 0%, $(color.header) 60%, #1a3a9a 100%);
+  padding: 18px 20px 15px; text-align: center; position: relative; overflow: hidden;
+}
+.card-header::before {
+  content: ''; position: absolute; top: -50px; left: -50px; right: -50px; height: 130px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.1), transparent 65%);
+  pointer-events: none;
+}
+.badge-live {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: $(color.badge); color: white;
+  padding: 4px 13px 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 9px;
+  animation: pulse-badge 1.8s ease-in-out infinite;
+}
+.badge-live.finalizado {
+  background: #16a34a;
+  animation: none;
+}
+.badge-live .live-dot {
+  width: 7px; height: 7px; background: #fff; border-radius: 50%;
+  animation: blink-dot 1s infinite; display: inline-block;
+}
+.badge-live.finalizado .live-dot { display: none; }
+@keyframes blink-dot { 0%,100%{opacity:1} 50%{opacity:0.25} }
+@keyframes pulse-badge {
+  0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.5)}
+  50%{box-shadow:0 0 0 9px rgba(220,38,38,0)}
+}
+.sport-label {
+  font-family: 'Barlow Condensed', sans-serif; font-size: 21px;
+  font-weight: 900; letter-spacing: 3px; text-transform: uppercase;
+  color: #dceeff; text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+.card-body { padding: 0 20px 22px; }
+
+.match-hero {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  padding: 16px 20px 14px;
+  background: linear-gradient(180deg,rgba(13,40,96,0.55) 0%,rgba(8,16,32,0) 100%);
+  overflow: hidden; gap: 0;
+}
+.match-hero::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+  height: 34px; background: $(color.header); opacity: 0.55;
+  clip-path: polygon(0 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,0 100%,14px 50%);
+}
+.team-side { flex: 1; position: relative; z-index: 2; text-align: center; }
+.team-side.home { padding-right: 6px; }
+.team-side.away { padding-left: 6px; }
+.team-name-hero {
+  font-family: 'Barlow Condensed', sans-serif; font-size: $(layout.titlesize);
+  font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+  color: $(color.title); text-shadow: 0 2px 8px rgba(0,0,0,0.9); line-height: 1; display: block;
+}
+.vs-hero {
+  position: relative; z-index: 3; flex-shrink: 0;
+  width: 50px; height: 50px; background: $(color.badge);
+  border-radius: 6px; margin: 0 8px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(220,38,38,0.55),0 0 0 3px rgba(255,255,255,0.12);
+  transform: rotate(-3deg);
+}
+.vs-hero span {
+  font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900;
+  color: #fff; letter-spacing: 1px; transform: rotate(3deg); display: block;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.match-hero .deco-line {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 26px; background: rgba(255,255,255,0.25); border-radius: 2px;
+}
+.match-hero .deco-line.left  { left: 14px; }
+.match-hero .deco-line.right { right: 14px; }
+
+.score-bar {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; padding: 10px 20px 12px;
+  background: rgba(2,8,16,0.6); border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.shield-wrap {
+  width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden; display: flex; align-items: center; justify-content: center;
+}
+.shield-wrap img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.score-display { display: flex; align-items: center; gap: 6px; flex: 1; justify-content: center; }
+.score-num {
+  font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900;
+  color: #fff; line-height: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  min-width: 28px; text-align: center;
+}
+.score-sep {
+  font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700;
+  color: rgba(255,255,255,0.3); line-height: 1;
+}
+
+.resultado-bar {
+  display: none; align-items: center; justify-content: center; gap: 10px;
+  padding: 8px 20px; background: rgba(220,38,38,0.12);
+  border-top: 1px solid rgba(220,38,38,0.25); border-bottom: 1px solid rgba(220,38,38,0.25);
+}
+.resultado-bar.visible { display: flex; }
+.resultado-label {
+  font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase; color: #f87171;
+}
+.resultado-score {
+  font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900;
+  color: #fff; letter-spacing: 2px;
+}
+
+.video-wrap {
+  position: relative; border-radius: 11px; overflow: hidden;
+  margin-bottom: 14px; cursor: pointer; background: #000;
+  border: 1px solid rgba(255,255,255,0.07);
+  aspect-ratio: 16/9; display: block; text-decoration: none;
+}
+.video-wrap img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.5s ease, opacity 0.3s; opacity: 0.78;
+}
+.video-wrap:hover img { transform: scale(1.05); opacity: 1; }
+.play-btn {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 64px; height: 64px; background: rgba(0,0,0,0.58);
+  border-radius: 50%; border: 2.5px solid rgba(255,255,255,0.85);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s, transform 0.3s; pointer-events: none;
+}
+.play-btn i { font-size: 20px; color: #fff; margin-left: 3px; }
+.video-wrap:hover .play-btn { background: $(btn1.bg); transform: translate(-50%,-50%) scale(1.1); }
+.video-live-badge {
+  position: absolute; top: 10px; left: 10px;
+  background: rgba(220,38,38,0.88); color: #fff;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  padding: 3px 9px; border-radius: 4px;
+  display: flex; align-items: center; gap: 5px; text-transform: uppercase;
+}
+.video-live-badge i { font-size: 7px; }
+
+.channels-box {
+  background: $(bg.blocks); border: 1px dashed rgba(59,130,246,0.45);
+  border-radius: 9px; padding: 10px 14px; margin-bottom: 13px;
+  font-size: 13px; text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+}
+.channels-box i { color: #60a5fa; font-size: 15px; flex-shrink: 0; }
+.channels-box .ch-text { color: #cbd5e1; }
+
+.schedule-box {
+  background: $(bg.blocks); border-radius: 10px;
+  padding: 13px 14px; margin-bottom: 20px;
+}
+.schedule-header {
+  display: flex; align-items: center; gap: 7px; font-size: 10px;
+  text-transform: uppercase; letter-spacing: 1.5px; color: #475569;
+  margin-bottom: 10px; font-weight: 600;
+}
+.schedule-header i { color: #334155; }
+.schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.schedule-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 5px; border-bottom: 1px solid rgba(51,65,85,0.5); font-size: 12px; gap: 4px;
+}
+.schedule-item:nth-last-child(-n+2) { border-bottom: none; }
+.country-info { display: flex; align-items: center; gap: 6px; color: $(color.times); font-size: 12px; }
+.country-info i { font-size: 10px; color: #475569; width: 12px; text-align: center; }
+.schedule-time {
+  font-weight: 700; font-size: 13px; color: #e2e8f0;
+  font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.5px;
+}
+
+/* ===== BOTONES NAV (VOLVER + CANALES) ===== */
+/* Para mostrar el botón Inicio: cambiar display:none por display:flex */
+.nav-btns {
+  display: none; align-items: center; justify-content: center;
+  padding: 12px 20px 6px;
+}
+.btn-back {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: rgba(255,255,255,0.45); text-decoration: none;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+  padding: 8px 14px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-back:hover { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.2); }
+.btn-back i { font-size: 11px; }
+/* Para mostrar el botón Ver Canales: cambiar display:none por display:block */
+.btn-channels-wrap {
+  display: none;
+  margin-top: 16px; width: 100%;
+}
+.btn-channels {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; width: 100%;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: #fff; text-decoration: none;
+  padding: 14px 20px; border-radius: 11px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem; font-weight: 800;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  overflow: hidden; position: relative;
+  box-shadow: 0 6px 24px rgba(220,38,38,0.45);
+  animation: pulse-btn 2.5s ease-in-out infinite;
+}
+.btn-channels::after {
+  content: ''; position: absolute;
+  top: -60%; left: -120%; width: 55%; height: 220%;
+  background: rgba(255,255,255,0.15); transform: rotate(25deg);
+  animation: shine 3.5s ease-in-out infinite;
+}
+.btn-channels .live-dot {
+  width: 6px; height: 6px; background: #fff;
+  border-radius: 50%; animation: blink-dot 1s infinite;
+  display: inline-block; flex-shrink: 0;
+}
+.btn-channels i { font-size: 14px; }
+.btn-channels .txt-full { display: inline; }
+.btn-channels .txt-short { display: none; }
+@media (max-width: 480px) {
+  .btn-channels .txt-full { display: none; }
+  .btn-channels .txt-short { display: inline; }
+}
+.btn-channels::after {
+  content: ''; position: absolute;
+  top: -60%; left: -120%; width: 55%; height: 220%;
+  background: rgba(255,255,255,0.15); transform: rotate(25deg);
+  animation: shine 3.5s ease-in-out infinite;
+}
+.btn-channels .live-dot {
+  width: 6px; height: 6px; background: #fff;
+  border-radius: 50%; animation: blink-dot 1s infinite;
+  display: inline-block; flex-shrink: 0;
+}
+.btn-channels i { font-size: 14px; }
+@media (max-width: 480px) {
+  .btn-channels { bottom: 16px; right: 16px; padding: 10px 16px; font-size: 13px; }
+  .nav-btns { justify-content: center; }
+}
+
+/* ===== BOTONES ===== */
+.btn-section-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: #475569;
+  margin-bottom: 8px; margin-top: 16px;
+}
+.btn-section-label::before,
+.btn-section-label::after {
+  content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.07);
+}
+
+.btn-section-pago { margin-top: 0; }
+.btn-section-pago .btn-section-label { margin-top: 0; }
+
+.btn-primary {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: linear-gradient(135deg, $(btn1.bg), #1a3ab8);
+  color: $(btn1.text); text-decoration: none;
+  padding: 16px 20px; border-radius: 11px; width: 100%;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.2rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+  position: relative; overflow: hidden;
+  box-shadow: 0 6px 22px rgba(37,99,235,0.45);
+  animation: pulse-btn 2.5s ease-in-out infinite;
+}
+.btn-primary::after {
+  content: ''; position: absolute; top: -60%; left: -120%; width: 55%; height: 220%;
+  background: rgba(255,255,255,0.14); transform: rotate(25deg);
+  animation: shine 3.5s ease-in-out infinite;
+}
+@keyframes shine     { 0%{left:-120%} 25%{left:130%} 100%{left:130%} }
+@keyframes pulse-btn { 0%,100%{box-shadow:0 6px 22px rgba(37,99,235,0.45)} 50%{box-shadow:0 8px 30px rgba(37,99,235,0.65)} }
+.btn-primary i { font-size: 18px; flex-shrink: 0; }
+
+.btn-section-alt {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.btn-alt {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  background: $(btn2.bg); border: 1px solid $(btn2.border);
+  color: $(btn2.text); text-decoration: none;
+  padding: 12px 10px; border-radius: 10px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  text-align: center; line-height: 1.2;
+}
+.btn-alt:hover {
+  background: rgba(37,99,235,0.15);
+  border-color: rgba(37,99,235,0.45);
+  transform: translateY(-1px);
+}
+.btn-alt i { font-size: 13px; flex-shrink: 0; }
+
+/* ===== SECCIÓN TELEGRAM ===== */
+/* Para mostrar la sección Telegram: cambiar display:none por display:block */
+.tg-section {
+  display: none;
+  margin-top: 24px;
+  border-radius: 16px; overflow: hidden;
+  border: 1px solid rgba(41,182,246,0.25);
+  background: linear-gradient(135deg, rgba(8,16,36,0.97) 0%, rgba(3,30,55,0.97) 100%);
+  box-shadow: 0 0 40px rgba(41,182,246,0.08);
+  position: relative;
+}
+.tg-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(41,182,246,0.12), transparent 65%);
+  pointer-events: none;
+}
+
+/* Espacio para imagen/banner superior */
+.tg-banner {
+  width: 100%; min-height: 80px;
+  position: relative; overflow: hidden;
+  border-bottom: 1px solid rgba(41,182,246,0.2);
+}
+.tg-banner img {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block; min-height: 80px;
+}
+.tg-banner-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex; align-items: center; justify-content: center;
+}
+.tg-banner-overlay i {
+  font-size: 52px; color: #fff;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
+  animation: tg-pulse 2.2s ease-in-out infinite;
+}
+
+.tg-body {
+  padding: 22px 20px 24px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  position: relative; z-index: 1;
+}
+.tg-icon-wrap {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, #29b6f6, #0288d1);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 20px rgba(41,182,246,0.45);
+  margin-bottom: 4px;
+}
+.tg-icon-wrap i { font-size: 24px; color: #fff; }
+.tg-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px; font-weight: 900;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: #fff; text-align: center; line-height: 1.2;
+}
+
+
+/* BOTÓN TELEGRAM */
+.btn-telegram {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; width: 100%; text-decoration: none;
+  background: linear-gradient(135deg, #29b6f6 0%, #0288d1 100%);
+  color: #fff; padding: 15px 20px; border-radius: 12px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.2rem; font-weight: 800;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  position: relative; overflow: hidden;
+  box-shadow: 0 6px 24px rgba(41,182,246,0.5);
+  animation: tg-pulse 2.2s ease-in-out infinite;
+}
+.btn-telegram::after {
+  content: ''; position: absolute;
+  top: -60%; left: -120%; width: 55%; height: 220%;
+  background: rgba(255,255,255,0.18); transform: rotate(25deg);
+  animation: shine 3s ease-in-out infinite;
+}
+.btn-telegram:active { transform: scale(0.97); }
+.btn-telegram i { font-size: 20px; flex-shrink: 0; }
+@keyframes tg-pulse {
+  0%,100% { box-shadow: 0 6px 24px rgba(41,182,246,0.5), 0 0 0 0 rgba(41,182,246,0.4); }
+  50%      { box-shadow: 0 8px 32px rgba(41,182,246,0.7), 0 0 0 8px rgba(41,182,246,0); }
+}
+
+/* ===== PAGINACIÓN ===== */
+#blog-pager {
+  text-align: center;
+  padding: 30px 0;
+  width: 100%;
+  max-width: $(layout.maxwidth);
+  margin: 0 auto;
+}
+#blog-pager a {
+  display: inline-block;
+  padding: 12px 24px;
+  background: $(btn2.bg);
+  border: 1px solid $(btn2.border);
+  color: $(btn2.text);
+  border-radius: 10px;
+  text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  margin: 0 8px;
+  transition: all 0.2s;
+}
+#blog-pager a:hover {
+  background: rgba(37,99,235,0.15);
+  border-color: rgba(37,99,235,0.45);
+  color: #fff;
+}
+#blog-pager a.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ===== OCULTAR ELEMENTOS POR DEFECTO ===== */
+.post-footer, .post-author, .post-timestamp,
+.post-labels, .blog-feeds, .status-msg-wrap,
+h3.post-title, .post-body-default { display: none !important; }
+
+.fila-datos-gadgets { display: none !important; }
+
+/* ===== DATA HIDDEN CONTAINER ===== */
+.match-data-hidden { display: none !important; }
+  ]]></b:skin>
+</head>
+<body>
+
+  <div class='bg-stadium'/>
+  <div class='bg-overlay'/>
+
+  <!-- ================================================
+       HEADER &#8212; oculto por defecto (display:none en CSS)
+       Para activar: cambiar .site-header { display: flex }
+       ================================================ -->
+  <div class='site-header'>
+    <b:section id='site-header' name='Header' showaddelement='true'/>
+  </div>
+
+  <!-- ================================================
+       NAV &#8212; oculto por defecto (display:none en CSS)
+       Para activar: cambiar .site-nav { display: flex }
+       ================================================ -->
+  <div class='site-nav'>
+    <b:section id='site-nav' name='Navegación' showaddelement='true'/>
+  </div>
+
+  <!-- ================================================
+       LAYOUT PRINCIPAL
+       ================================================ -->
+  <div class='main-container'>
+
+    <!-- COLUMNA IZQUIERDA -->
+    <div class='ad-columna-lateral'>
+      <b:section class='sidebar' id='ad-izquierdo' name='Ad izquierdo' showaddelement='true'>
+        <b:widget id='HTML3' locked='false' title='Banner izquierdo 160x600' type='HTML' version='1'>
+          <b:widget-settings>
+            <b:widget-setting name='content'><![CDATA[<script>
+atOptions = {
+  'key'    : '1e4dc607d2326770ff38455fcb6ac8a6',
+  'format' : 'iframe',
+  'height' : 600,
+  'width'  : 160,
+  'params' : {}
+};
+</script>
+<script src='https://www.highperformanceformat.com/1e4dc607d2326770ff38455fcb6ac8a6/invoke.js'></script>]]></b:widget-setting>
+          </b:widget-settings>
+          <b:includable id='main'>
+            <data:content/>
+          </b:includable>
+        </b:widget>
+      </b:section>
+    </div>
+
+    <!-- ===== COLUMNA CENTRAL (contenido + banners horizontales) ===== -->
+    <div class='content-col'>
+
+      <!-- BANNER HORIZONTAL &#8212; ARRIBA (visible solo &#8804;1060px) -->
+      <div class='ad-horizontal'>
+        <div class='ad-728'>
+          <script>
+            atOptions = { &#39;key&#39;:&#39;799c9dee5346592755c1855570f34750&#39;,&#39;format&#39;:&#39;iframe&#39;,&#39;height&#39;:90,&#39;width&#39;:728,&#39;params&#39;:{} };
+          </script>
+          <script src='https://www.highperformanceformat.com/799c9dee5346592755c1855570f34750/invoke.js'/>
+        </div>
+        <div class='ad-320'>
+          <script>
+            atOptions = { &#39;key&#39;:&#39;3b3035becccf3bcf89dc5313590413b7&#39;,&#39;format&#39;:&#39;iframe&#39;,&#39;height&#39;:50,&#39;width&#39;:320,&#39;params&#39;:{} };
+          </script>
+          <script src='https://www.highperformanceformat.com/3b3035becccf3bcf89dc5313590413b7/invoke.js'/>
+        </div>
+      </div>
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <b:section id='main' name='Contenido' showaddelement='no'>
+        <b:widget id='Blog1' locked='true' title='Entradas del blog' type='Blog' version='1'>
+          <b:widget-settings>
+            <b:widget-setting name='commentLabel'>comments</b:widget-setting>
+            <b:widget-setting name='showShareButtons'>false</b:widget-setting>
+            <b:widget-setting name='authorLabel'>By</b:widget-setting>
+            <b:widget-setting name='style.unittype'>TextAndImage</b:widget-setting>
+            <b:widget-setting name='timestampLabel'>-</b:widget-setting>
+            <b:widget-setting name='reactionsLabel'/>
+            <b:widget-setting name='showAuthorProfile'>false</b:widget-setting>
+            <b:widget-setting name='style.layout'>1x1</b:widget-setting>
+            <b:widget-setting name='showLocation'>true</b:widget-setting>
+            <b:widget-setting name='showTimestamp'>false</b:widget-setting>
+            <b:widget-setting name='postsPerAd'>1</b:widget-setting>
+            <b:widget-setting name='style.bordercolor'>#ffffff</b:widget-setting>
+            <b:widget-setting name='showDateHeader'>false</b:widget-setting>
+            <b:widget-setting name='style.textcolor'>#ffffff</b:widget-setting>
+            <b:widget-setting name='showCommentLink'>false</b:widget-setting>
+            <b:widget-setting name='style.urlcolor'>#ffffff</b:widget-setting>
+            <b:widget-setting name='postLocationLabel'>Location:</b:widget-setting>
+            <b:widget-setting name='showAuthor'>false</b:widget-setting>
+            <b:widget-setting name='style.linkcolor'>#ffffff</b:widget-setting>
+            <b:widget-setting name='style.bgcolor'>#ffffff</b:widget-setting>
+            <b:widget-setting name='showLabels'>false</b:widget-setting>
+            <b:widget-setting name='postLabelsLabel'>Labels:</b:widget-setting>
+            <b:widget-setting name='showBacklinks'>false</b:widget-setting>
+            <b:widget-setting name='showInlineAds'>false</b:widget-setting>
+            <b:widget-setting name='showReactions'>false</b:widget-setting>
+          </b:widget-settings>
+          <b:includable id='main'>
+          <!-- ===== PÁGINA PRINCIPAL (INDEX) - GRID DE POSTS ===== -->
+          <b:if cond='data:blog.pageType == &quot;index&quot; or data:blog.pageType == &quot;search&quot; or data:blog.pageType == &quot;label&quot;'>
+            <div class='posts-grid'>
+              <b:loop values='data:posts' var='post'>
+                <a class='post-card-compact' expr:data-estado='data:post.labels any (l =&gt; l.name == &quot;EN-VIVO&quot;) ? &quot;EN-VIVO&quot; : data:post.labels any (l =&gt; l.name == &quot;FINALIZADO&quot;) ? &quot;FINALIZADO&quot; : &quot;PROXIMO&quot;' expr:href='data:post.url'>
+
+                  <!-- LABEL ARRIBA -->
+                  <div class='card-status-top'>
+                    <b:if cond='data:post.labels any (l =&gt; l.name == &quot;EN-VIVO&quot;)'>
+                      <span class='card-status en-vivo'>
+                        <span class='status-dot'/>
+                        EN VIVO
+                      </span>
+                    <b:elseif cond='data:post.labels any (l =&gt; l.name == &quot;FINALIZADO&quot;)'/>
+                      <span class='card-status finalizado'>
+                        <i class='fa-solid fa-check' style='font-size:8px'/>
+                        FINALIZADO
+                      </span>
+                    <b:else/>
+                      <span class='card-status proximo'>
+                        <i class='fa-regular fa-clock' style='font-size:8px'/>
+                        PRÓXIMO
+                      </span>
+                    </b:if>
+                  </div>
+
+                  <!-- THUMBNAIL + OVERLAY -->
+                  <b:if cond='data:post.labels any (l =&gt; l.name == &quot;EN-VIVO&quot;)'>
+                    <div class='card-thumb-wrap estado-en-vivo'>
+                      <img class='card-thumb' expr:alt='data:post.title' expr:src='data:post.firstImageUrl ? data:post.firstImageUrl : &quot;https://placehold.co/400x225/060d1a/1e40af?text=EN+VIVO&quot;' loading='lazy'/>
+                    </div>
+                  <b:elseif cond='data:post.labels any (l =&gt; l.name == &quot;FINALIZADO&quot;)'/>
+                    <div class='card-thumb-wrap estado-finalizado'>
+                      <img class='card-thumb' expr:alt='data:post.title' expr:src='data:post.firstImageUrl ? data:post.firstImageUrl : &quot;https://placehold.co/400x225/060d1a/1e40af?text=FINALIZADO&quot;' loading='lazy'/>
+                      <div class='card-overlay'>
+                        <span class='card-overlay-text'>FINALIZADO</span>
+                      </div>
+                    </div>
+                  <b:else/>
+                    <div class='card-thumb-wrap estado-proximo'>
+                      <img class='card-thumb' expr:alt='data:post.title' expr:src='data:post.firstImageUrl ? data:post.firstImageUrl : &quot;https://placehold.co/400x225/060d1a/1e40af?text=PROXIMO&quot;' loading='lazy'/>
+                    </div>
+                  </b:if>
+
+                  <!-- TÍTULO -->
+                  <div class='card-title-bar'>
+                    <div class='card-title'><data:post.title/></div>
+                  </div>
+
+                </a>
+              </b:loop>
+            </div>
+
+            <!-- PAGINACIÓN -->
+            <b:if cond='data:olderPageUrl or data:newerPageUrl'>
+              <div id='blog-pager'>
+                <b:if cond='data:newerPageUrl'>
+                  <a expr:href='data:newerPageUrl'>
+                    <i class='fa-solid fa-chevron-left'/>
+                    Más recientes
+                  </a>
+                <b:else/>
+                  <a class='disabled' href='#'>
+                    <i class='fa-solid fa-chevron-left'/>
+                    Más recientes
+                  </a>
+                </b:if>
+                <b:if cond='data:olderPageUrl'>
+                  <a expr:href='data:olderPageUrl'>
+                    Más antiguos
+                    <i class='fa-solid fa-chevron-right'/>
+                  </a>
+                </b:if>
+              </div>
+            </b:if>
+
+          <!-- ===== PÁGINA INDIVIDUAL (POST) - CARD COMPLETA ===== -->
+          <b:elseif cond='data:blog.pageType == &quot;item&quot;'/>
+            <b:loop values='data:posts' var='post'>
+              <article class='sports-card-full' expr:data-post-id='data:post.id'>
+
+                <!-- DATOS OCULTOS DEL PARTIDO (se leen con JS) -->
+                <div class='match-data-hidden'>
+                  <data:post.body/>
+                </div>
+
+                <div class='nav-btns'>
+                  <a class='btn-back' expr:href='data:blog.homepageUrl'>
+                    <i class='fa-solid fa-house'/>
+                    Inicio
+                  </a>
+                </div>
+
+                <div class='card-header'>
+                  <div>
+                    <span class='badge-live' id='card-badge'>
+                      <span class='live-dot'/>
+                      <span id='card-status-text'>EN VIVO</span>
+                    </span>
+                  </div>
+                  <div class='sport-label'>
+                    <i class='fa-solid fa-futbol' style='margin-right:8px;opacity:0.85'/>
+                    FÚTBOL EN DIRECTO
+                  </div>
+                </div>
+
+                <div class='card-body'>
+
+                  <!-- EQUIPOS -->
+                  <div class='match-hero'>
+                    <div class='deco-line left'/>
+                    <div class='team-side home'>
+                      <span class='team-name-hero' id='card-team-home'>LOCAL</span>
+                    </div>
+                    <div class='vs-hero'><span>VS</span></div>
+                    <div class='team-side away'>
+                      <span class='team-name-hero' id='card-team-away'>VISITANTE</span>
+                    </div>
+                    <div class='deco-line right'/>
+                  </div>
+
+                  <!-- VIDEO/IMAGEN -->
+                  <a class='video-wrap' expr:href='data:post.url' id='card-video-link'>
+                    <img expr:alt='data:post.title' expr:src='data:post.firstImageUrl ? data:post.firstImageUrl : &quot;https://placehold.co/468x263/0d2860/60a5fa?text=En+Vivo&quot;' id='card-video-img'/>
+                    <div class='video-live-badge' id='card-video-badge'><i class='fa-solid fa-circle'/>Directo</div>
+                    <div class='play-btn'><i class='fa-solid fa-play'/></div>
+                  </a>
+
+                  <!-- MARCADOR -->
+                  <div class='score-bar'>
+                    <div class='shield-wrap'>
+                      <img alt='Local' id='card-shield-home' src='https://placehold.co/40x40/1e293b/ffffff?text=?'/>
+                    </div>
+                    <div class='score-display'>
+                      <span class='score-num' id='card-score-home'>0</span>
+                      <span class='score-sep'>-</span>
+                      <span class='score-num' id='card-score-away'>0</span>
+                    </div>
+                    <div class='shield-wrap'>
+                      <img alt='Visitante' id='card-shield-away' src='https://placehold.co/40x40/1e293b/ffffff?text=?'/>
+                    </div>
+                  </div>
+
+                  <!-- RESULTADO FINAL -->
+                  <div class='resultado-bar' id='card-resultado'>
+                    <i class='fa-solid fa-flag-checkered' style='font-size:13px;color:#f87171'/>
+                    <span class='resultado-label'>Resultado Final</span>
+                  </div>
+
+                  <!-- CANALES -->
+                  <div class='channels-box'>
+                    <i class='fa-solid fa-tv'/>
+                    <span class='ch-text' id='card-canales'>ESPN &#183; Star+ &#183; DSports</span>
+                  </div>
+
+                  <!-- HORARIOS -->
+                  <div class='schedule-box'>
+                    <div class='schedule-header'>
+                      <i class='fa-regular fa-clock'/>Horarios por país
+                    </div>
+                    <div class='schedule-grid' id='card-horarios'>
+                      <div class='schedule-item'>
+                        <div class='country-info'><i class='fa-solid fa-location-dot'/>MEX / GUA</div>
+                        <span class='schedule-time'>13:00</span>
+                      </div>
+                      <div class='schedule-item'>
+                        <div class='country-info'><i class='fa-solid fa-location-dot'/>COL / ECU</div>
+                        <span class='schedule-time'>14:00</span>
+                      </div>
+                      <div class='schedule-item'>
+                        <div class='country-info'><i class='fa-solid fa-location-dot'/>PERÚ</div>
+                        <span class='schedule-time'>14:00</span>
+                      </div>
+                      <div class='schedule-item'>
+                        <div class='country-info'><i class='fa-solid fa-location-dot'/>VEN / DOM</div>
+                        <span class='schedule-time'>15:00</span>
+                      </div>
+                      <div class='schedule-item'>
+                        <div class='country-info'><i class='fa-solid fa-location-dot'/>PARAGUAY</div>
+                        <span class='schedule-time'>16:00</span>
+                      </div>
+                      <div class='schedule-item'>
+                        <div class='country-info'><i class='fa-solid fa-location-dot'/>ARG / URU</div>
+                        <span class='schedule-time'>16:00</span>
+                      </div>
+                      <div class='schedule-item'>
+                        <div class='country-info'><i class='fa-solid fa-location-dot'/>BRASIL</div>
+                        <span class='schedule-time'>16:00</span>
+                      </div>
+                      <div class='schedule-item'>
+                        <div class='country-info'><i class='fa-solid fa-location-dot'/>ESPAÑA</div>
+                        <span class='schedule-time'>21:00</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- BOTÓN PRINCIPAL -->
+                  <div class='btn-section-pago'>
+                    <div class='btn-section-label'/>
+                    <a class='btn-primary' href='#' id='card-btn1' target='_blank'>
+                      <i class='fa-solid fa-circle-play'/>
+                      VER TRANSMISIÓN HD
+                    </a>
+                  </div>
+
+                  <!-- BOTONES ALTERNATIVOS -->
+                  <div>
+                    <div class='btn-section-label'>Enlaces alternativos</div>
+                    <div class='btn-section-alt'>
+                      <a class='btn-alt' href='#' id='card-btn2' target='_blank'>
+                        <i class='fa-solid fa-satellite-dish'/>
+                        Opción 2
+                      </a>
+                      <a class='btn-alt' href='#' id='card-btn3' target='_blank'>
+                        <i class='fa-solid fa-satellite-dish'/>
+                        Opción 3
+                      </a>
+                    </div>
+
+                    <!-- BOTÓN VER CANALES -->
+                    <div class='btn-channels-wrap'>
+                      <a class='btn-channels' href='https://futbol-envivo-canaleshd.blogspot.com/' target='_blank'>
+                        <span class='live-dot'/>
+                        <i class='fa-solid fa-circle-play'/>
+                        <span class='txt-full'>Ver Canales EN VIVO</span>
+                        <span class='txt-short'>Ver Canales</span>
+                      </a>
+                    </div>
+
+                    <!-- ===== SECCIÓN TELEGRAM ===== -->
+                    <div class='tg-section'>
+                      <div class='tg-banner' id='tg-banner'>
+                        <img alt='Canal de Telegram' src='https://i.imgur.com/1Betlzo.jpeg'/>
+                        <div class='tg-banner-overlay'/>
+                      </div>
+                      <div class='tg-body'>
+                        <div class='tg-icon-wrap'><i class='fa-brands fa-telegram'/></div>
+                        <div class='tg-title'>Unite a nuestro canal de Telegram</div>
+                        <a class='btn-telegram' href='https://t.me/+9d3UrKpnlsw2Yjkx' rel='noopener' target='_blank'>
+                          <i class='fa-brands fa-telegram'/>
+                          Ir a Telegram
+                        </a>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </article>
+            </b:loop>
+          </b:if>
+        </b:includable>
+          <b:includable id='backlinkDeleteIcon' var='backlink'/>
+          <b:includable id='backlinks' var='post'/>
+          <b:includable id='comment-form' var='post'/>
+          <b:includable id='commentDeleteIcon' var='comment'/>
+          <b:includable id='comment_count_picker' var='post'/>
+          <b:includable id='comment_picker' var='post'/>
+          <b:includable id='comments' var='post'/>
+          <b:includable id='feedLinks'/>
+          <b:includable id='feedLinksBody' var='links'/>
+          <b:includable id='iframe_comments' var='post'/>
+          <b:includable id='mobile-index-post' var='post'/>
+          <b:includable id='mobile-main' var='top'/>
+          <b:includable id='mobile-nextprev'/>
+          <b:includable id='mobile-post' var='post'/>
+          <b:includable id='nextprev'/>
+          <b:includable id='post' var='post'/>
+          <b:includable id='postQuickEdit' var='post'/>
+          <b:includable id='shareButtons' var='post'/>
+          <b:includable id='status-message'/>
+          <b:includable id='threaded-comment-form' var='post'/>
+          <b:includable id='threaded_comment_js' var='post'/>
+          <b:includable id='threaded_comments' var='post'/>
+        </b:widget>
+      </b:section>
+
+      <!-- BANNER HORIZONTAL &#8212; ABAJO (visible solo &#8804;1060px) -->
+      <div class='ad-horizontal'>
+        <div class='ad-728'>
+          <script>
+            atOptions = { &#39;key&#39;:&#39;799c9dee5346592755c1855570f34750&#39;,&#39;format&#39;:&#39;iframe&#39;,&#39;height&#39;:90,&#39;width&#39;:728,&#39;params&#39;:{} };
+          </script>
+          <script src='https://www.highperformanceformat.com/799c9dee5346592755c1855570f34750/invoke.js'/>
+        </div>
+        <div class='ad-320'>
+          <script>
+            atOptions = { &#39;key&#39;:&#39;3b3035becccf3bcf89dc5313590413b7&#39;,&#39;format&#39;:&#39;iframe&#39;,&#39;height&#39;:50,&#39;width&#39;:320,&#39;params&#39;:{} };
+          </script>
+          <script src='https://www.highperformanceformat.com/3b3035becccf3bcf89dc5313590413b7/invoke.js'/>
+        </div>
+      </div>
+
+    </div><!-- /content-col -->
+
+    <!-- COLUMNA DERECHA -->
+    <div class='ad-columna-lateral'>
+      <b:section class='sidebar' id='ad-derecho' name='Ad derecho' showaddelement='true'>
+        <b:widget id='HTML4' locked='false' title='Banner derecho 160x600' type='HTML' version='1'>
+          <b:widget-settings>
+            <b:widget-setting name='content'><![CDATA[<script>
+atOptions = {
+  'key'    : '1e4dc607d2326770ff38455fcb6ac8a6',
+  'format' : 'iframe',
+  'height' : 600,
+  'width'  : 160,
+  'params' : {}
+};
+</script>
+<script src='https://www.highperformanceformat.com/1e4dc607d2326770ff38455fcb6ac8a6/invoke.js'></script>]]></b:widget-setting>
+          </b:widget-settings>
+          <b:includable id='main'>
+            <data:content/>
+          </b:includable>
+        </b:widget>
+      </b:section>
+    </div>
+
+  </div>
+
+  <!-- ================================================
+       FOOTER &#8212; oculto por defecto (display:none en CSS)
+       Para activar: cambiar .site-footer { display: block }
+       ================================================ -->
+  <div class='site-footer'>
+    <b:section id='site-footer' name='Footer' showaddelement='true'/>
+  </div>
+
+  <!-- ================================================
+       SCRIPT PARA LEER DATOS DEL POST
+       ================================================ -->
+  <b:if cond='data:blog.pageType == &quot;item&quot;'>
+    <script type='text/javascript'>
+    //<![CDATA[
+    (function() {
+      function parseMatchData() {
+        // Leer el elemento .match-data directamente con dataset API
+        // Mucho más robusto que regex — soporta JSON, URLs, caracteres especiales
+        var dataEl = document.querySelector('.match-data-hidden .match-data');
+        if (!dataEl) return;
+
+        var d = dataEl.dataset;
+
+        // Equipos
+        var teamHome = d.equipoLocal || 'LOCAL';
+        var teamAway = d.equipoVisitante || 'VISITANTE';
+        var elHome = document.getElementById('card-team-home');
+        var elAway = document.getElementById('card-team-away');
+        if (elHome) elHome.textContent = teamHome.toUpperCase();
+        if (elAway) elAway.textContent = teamAway.toUpperCase();
+
+        // Goles
+        var golHome = d.golLocal !== undefined ? d.golLocal : '0';
+        var golAway = d.golVisitante !== undefined ? d.golVisitante : '0';
+        var scHome = document.getElementById('card-score-home');
+        var scAway = document.getElementById('card-score-away');
+        if (scHome) scHome.textContent = golHome;
+        if (scAway) scAway.textContent = golAway;
+
+        // Imagen del reproductor — data-img-video con fallback a firstImageUrl
+        var videoImg = document.getElementById('card-video-img');
+        if (videoImg && d.imgVideo) videoImg.src = d.imgVideo;
+
+        // Escudos — primero data-* manual, luego TheSportsDB como fallback automático
+        var shHome = document.getElementById('card-shield-home');
+        var shAway = document.getElementById('card-shield-away');
+
+        // Si ya tiene escudos en el post, usarlos directo
+        if (shHome && d.escudoLocal)     shHome.src = d.escudoLocal;
+        if (shAway && d.escudoVisitante) shAway.src = d.escudoVisitante;
+
+        // Si NO tiene escudos, buscarlos en TheSportsDB por nombre del equipo
+        function fetchShield(teamName, imgEl) {
+          if (!teamName || !imgEl) return;
+          var url = 'https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=' +
+                    encodeURIComponent(teamName);
+          fetch(url)
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+              if (data && data.teams && data.teams[0]) {
+                var badge = data.teams[0].strBadge ||
+                            data.teams[0].strLogo ||
+                            data.teams[0].strTeamBadge ||
+                            data.teams[0].strTeamLogo;
+                if (badge) imgEl.src = badge;
+              }
+            })
+            .catch(function() {}); // silencioso si falla
+        }
+
+        if (shHome && !d.escudoLocal)     fetchShield(teamHome, shHome);
+        if (shAway && !d.escudoVisitante) fetchShield(teamAway, shAway);
+
+        // Links botones
+        var btn1 = document.getElementById('card-btn1');
+        var btn2 = document.getElementById('card-btn2');
+        var btn3 = document.getElementById('card-btn3');
+        var videoLink = document.getElementById('card-video-link');
+        // URL del blog redirector — cambiá por la URL real de tu blog
+        var REDIR = 'https://redir-futbol.blogspot.com/';
+
+        function redirUrl(url, titulo) {
+          if (!url) return '#';
+          return REDIR + '?url=' + encodeURIComponent(url) + '&t=' + encodeURIComponent(titulo || '');
+        }
+
+        var titulo = teamHome + ' vs ' + teamAway;
+        // btn1, btn2, btn3 pasan por el redirector
+        if (btn1 && d.link1) btn1.href = redirUrl(d.link1, titulo);
+        if (btn2 && d.link2) btn2.href = redirUrl(d.link2, titulo);
+        if (btn3 && d.link3) btn3.href = redirUrl(d.link3, titulo);
+        // SmartLink (video) va directo, sin redirector
+        var linkVideo = d.linkVideo || d.link1;
+        if (videoLink && linkVideo) videoLink.href = linkVideo;
+
+        // Canales
+        var elCanales = document.getElementById('card-canales');
+        if (elCanales && d.canales) elCanales.textContent = d.canales;
+
+        // Estado (EN-VIVO / FINALIZADO)
+        var estado = d.estado || 'EN-VIVO';
+        var badge = document.getElementById('card-badge');
+        var statusText = document.getElementById('card-status-text');
+        var videoBadge = document.getElementById('card-video-badge');
+        var resultadoBar = document.getElementById('card-resultado');
+        var resultadoScore = document.getElementById('card-resultado-score');
+
+        if (estado === 'FINALIZADO') {
+          if (badge) badge.classList.add('finalizado');
+          if (statusText) statusText.textContent = 'FINALIZADO';
+          if (videoBadge) {
+            videoBadge.style.background = 'rgba(22,163,74,0.88)';
+            videoBadge.innerHTML = '<i class="fa-solid fa-check"/>Final';
+          }
+          if (resultadoBar) resultadoBar.classList.add('visible');
+        }
+
+        // Horarios — JSON manual del post o generado automáticamente desde UTC
+        var elHorarios = document.getElementById('card-horarios');
+
+        // Función para renderizar lista de horarios
+        function renderHorarios(lista) {
+          if (!elHorarios || !lista || lista.length < 1) return;
+          var html = '';
+          lista.slice(0, 8).forEach(function(h) {
+            html += '<div class="schedule-item">' +
+              '<div class="country-info"><i class="fa-solid fa-location-dot"></i>' +
+              h[0] + '</div>' +
+              '<span class="schedule-time">' + h[1] + '</span>' +
+              '</div>';
+          });
+          elHorarios.innerHTML = html;
+        }
+
+        // Ocultar horarios si el partido está FINALIZADO
+        var scheduleBox = document.querySelector('.schedule-box');
+        if (estado === 'FINALIZADO') {
+          if (scheduleBox) scheduleBox.style.display = 'none';
+        } else if (d.horarios) {
+          // Tiene horarios manuales en el post — máxima prioridad
+          try { renderHorarios(JSON.parse(d.horarios)); }
+          catch(e) { console.warn('Error data-horarios:', e); }
+
+        } else {
+          // Sin data-horarios ni data-hora-utc — calcular automático
+
+          var ZONAS = [
+            { pais: 'MÉXICO',          tz: 'America/Mexico_City'            },
+            { pais: 'COL / ECU / PER', tz: 'America/Bogota'                 },
+            { pais: 'BOL / VEN',       tz: 'America/Caracas'                },
+            { pais: 'ARG / URU',       tz: 'America/Argentina/Buenos_Aires' },
+            { pais: 'PARAGUAY',        tz: 'America/Asuncion'               },
+            { pais: 'BRASIL',          tz: 'America/Sao_Paulo'              },
+            { pais: 'ESPAÑA',          tz: 'Europe/Madrid'                  }
+          ];
+
+          function horariosDesdeUTC(utcStr) {
+            var dt = new Date(utcStr);
+            return ZONAS.map(function(z) {
+              var hora = dt.toLocaleTimeString('es', {
+                timeZone: z.tz, hour: '2-digit', minute: '2-digit', hour12: false
+              });
+              return [z.pais, hora];
+            });
+          }
+
+          // Si tiene data-hora-utc manual, usarlo
+          if (d.horaUtc) {
+            try { renderHorarios(horariosDesdeUTC(d.horaUtc)); }
+            catch(e) { console.warn('Error hora UTC:', e); }
+          } else {
+            // Buscar automáticamente en TheSportsDB
+            // Busca en próximos Y últimos eventos para cubrir todos los casos:
+            // - Partido futuro → eventsnext
+            // - Partido en curso o pasado → eventslast
+            var awayLow = teamAway.toLowerCase();
+
+            function buildUTC(ev) {
+              if (!ev) return null;
+              if (ev.strTimestamp) {
+                return ev.strTimestamp.indexOf('Z') === -1 && ev.strTimestamp.indexOf('+') === -1
+                       ? ev.strTimestamp + 'Z' : ev.strTimestamp;
+              }
+              if (ev.dateEvent && ev.strTime) return ev.dateEvent + 'T' + ev.strTime + 'Z';
+              if (ev.dateEvent) return ev.dateEvent + 'T00:00:00Z';
+              return null;
+            }
+
+            function findMatch(events) {
+              if (!events) return null;
+              // Buscar por coincidencia parcial con el visitante (mínimo 4 chars)
+              var key = awayLow.replace(/\s+/g, '').substring(0, 6);
+              for (var i = 0; i < events.length; i++) {
+                var ev = events[i];
+                var h = (ev.strHomeTeam || '').toLowerCase().replace(/\s+/g, '');
+                var a = (ev.strAwayTeam || '').toLowerCase().replace(/\s+/g, '');
+                if (h.indexOf(key) !== -1 || a.indexOf(key) !== -1) return ev;
+              }
+              return null;
+            }
+
+            fetch('https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=' +
+                  encodeURIComponent(teamHome))
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                if (!data || !data.teams || !data.teams[0]) return null;
+                var id = data.teams[0].idTeam;
+
+                // Buscar en próximos Y últimos en paralelo
+                return Promise.all([
+                  fetch('https://www.thesportsdb.com/api/v1/json/3/eventsnext.php?id=' + id)
+                    .then(function(r) { return r.json(); }),
+                  fetch('https://www.thesportsdb.com/api/v1/json/3/eventslast.php?id=' + id)
+                    .then(function(r) { return r.json(); })
+                ]);
+              })
+              .then(function(results) {
+                if (!results) return;
+                var nextEvents = results[0] && results[0].events ? results[0].events : [];
+                var lastEvents = results[1] && results[1].results ? results[1].results : [];
+
+                // 1. Buscar partido específico en próximos
+                var ev = findMatch(nextEvents);
+
+                // 2. Si no está en próximos, buscar en últimos (partido ya jugado)
+                if (!ev) ev = findMatch(lastEvents);
+
+                // 3. Si no encontró ninguno, usar el próximo evento disponible
+                if (!ev && nextEvents.length > 0) ev = nextEvents[0];
+
+                var utcStr = buildUTC(ev);
+                if (utcStr) renderHorarios(horariosDesdeUTC(utcStr));
+              })
+              .catch(function(e) { console.warn('TheSportsDB error:', e); });
+          }
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', parseMatchData);
+      } else {
+        parseMatchData();
+      }
+    })();
+    //]]>
+    </script>
+  </b:if>
+
+
+
+  <script type='text/javascript'>
+  //<![CDATA[
+  (function() {
+    function initCards() {
+      var cards = document.querySelectorAll('.post-card-compact[data-estado]');
+      cards.forEach(function(card) {
+        var estado = card.getAttribute('data-estado');
+        if (estado === 'EN-VIVO')    card.classList.add('estado-en-vivo-card');
+        if (estado === 'PROXIMO')    card.classList.add('estado-proximo-card');
+        if (estado === 'FINALIZADO') card.classList.add('estado-finalizado-card');
+
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCards);
+    } else {
+      initCards();
+    }
+  })();
+
+  //]]>
+  </script>
+
+</body>
+</html>
