@@ -23,24 +23,33 @@ export default function FanatizCarousel({ titulo, partidos }: Props) {
 
   return (
     <section className='bg-fanatiz-argentina rounded-[2rem] overflow-hidden mb-12 shadow-2xl border border-white/5'>
-      <div className='bg-gradient-to-r from-[#04192e] via-transparent to-transparent p-8 md:p-12'>
+      <div className='bg-gradient-to-r from-[#04192e]/90 via-[#04192e]/40 to-[#04192e] p-8 md:p-12'>
         <div className='flex items-center justify-between mb-8'>
-          <h2 className='font-barlow text-3xl font-black uppercase tracking-[4px] text-white italic drop-shadow-md'>
-            {titulo}
-          </h2>
           <div className='flex items-center gap-4'>
-            <button 
-              onClick={() => scroll('left')}
-              className='p-2 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all active:scale-90 shadow-lg'
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button 
-              onClick={() => scroll('right')}
-              className='p-2 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all active:scale-90 shadow-lg'
-            >
-              <ChevronRight size={24} />
-            </button>
+            <img src='https://fanatiz.com/fanatiz/web/playlists/lfp-icon.svg' alt='LFP' className='w-8 h-8' />
+            <h2 className='font-barlow text-3xl font-black uppercase tracking-[4px] text-white italic drop-shadow-md'>
+              {titulo}
+            </h2>
+          </div>
+          
+          <div className='flex items-center gap-6'>
+            <a href='#' className='text-[10px] font-black uppercase tracking-[2px] text-white/60 hover:text-white transition-colors border-b border-white/20 pb-0.5'>
+              Ir al canal
+            </a>
+            <div className='flex items-center gap-4'>
+              <button 
+                onClick={() => scroll('left')}
+                className='p-2 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90'
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button 
+                onClick={() => scroll('right')}
+                className='p-2 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90'
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
           </div>
         </div>
 
