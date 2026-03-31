@@ -24,6 +24,7 @@ create table if not exists partidos (
   orden int default 0,
   es_destacado boolean default false, -- Nuevo: Para marcar partidos top
   metadata jsonb default '{}', -- Nuevo: Para datos extra (TheSportsDB IDs, etc)
+  categoria text default null,
   creado_en timestamptz default now()
 );
 
@@ -31,6 +32,7 @@ create table if not exists partidos (
 create index if not exists idx_partidos_estado on partidos(estado);
 create index if not exists idx_partidos_orden on partidos(orden asc);
 create index if not exists idx_partidos_destacado on partidos(es_destacado) where es_destacado = true;
+create index if not exists idx_partidos_categoria on partidos(categoria);
 create index if not exists idx_partidos_creado on partidos(creado_en desc);
 
 -- 3. Seguridad RLS

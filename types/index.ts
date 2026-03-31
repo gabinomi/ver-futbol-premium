@@ -22,6 +22,7 @@ export interface Partido {
   orden: number
   es_destacado: boolean
   metadata: Record<string, any>
+  categoria: string | null
   creado_en: string
 }
 

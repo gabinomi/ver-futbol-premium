@@ -49,10 +49,10 @@ export default function PartidoForm({ partido, modo }: Props) {
     link3: '',
     img_video: '',
     img_og: '',
-    escudo_local: '',
     escudo_visitante: '',
     es_destacado: false,
     metadata: {},
+    categoria: null,
     ...partido,
   })
 
@@ -231,6 +231,22 @@ export default function PartidoForm({ partido, modo }: Props) {
                   <input className={inputCls} value={form.equipo_visitante} onChange={e => set('equipo_visitante', e.target.value)} placeholder='Ej: FC Barcelona' required />
                   <PreviewImg url={form.escudo_visitante} label='Shield Data Source' type='shield' />
                 </div>
+              </div>
+              <div className='flex gap-2 mb-8'>
+                {['Fútbol Argentino', 'Fútbol Internacional', 'Copas'].map(cat => (
+                  <button 
+                    key={cat} 
+                    type='button' 
+                    onClick={() => set('categoria', form.categoria === cat ? null : cat)}
+                    className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all ${
+                      form.categoria === cat 
+                      ? 'bg-blue-600 border-blue-500 text-white shadow-lg' 
+                      : 'bg-white/5 border-white/10 text-slate-500 hover:border-white/20'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
               </div>
 
               <div>

@@ -27,11 +27,11 @@ export function slugify(texto: string): string {
 export async function buscarEscudo(equipo: string): Promise<string | null> {
   try {
     const res = await fetch(
-      `https://www.thesportsdb.com/api/v1/json/1/searchteams.php?t=${encodeURIComponent(equipo)}`
+      `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(equipo)}`
     )
     const data = await res.json()
-    // TheSportsDB teams search returns a list
-    return data?.teams?.[0]?.strTeamBadge || null
+    // CRÍTICO: usar strBadge, NO strTeamBadge ni strTeamLogo (versión gratuita v3)
+    return data?.teams?.[0]?.strBadge || null
   } catch {
     return null
   }
@@ -89,7 +89,6 @@ export async function buscarFixture(
     const finalFixtures = coincidencias.length > 0 ? coincidencias : fixtures.slice(0, 5)
 
     const resultados = await Promise.all(finalFixtures.map(async (f: any) => {
-      // Cruzamos con TheSportsDB para los escudos como pidió el usuario
       const [eLocal, eVisitante] = await Promise.all([
         buscarEscudo(f.teams.home.name),
         buscarEscudo(f.teams.away.name),

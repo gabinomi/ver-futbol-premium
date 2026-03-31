@@ -4,10 +4,15 @@
 
 @layer base {
   :root {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+    --fanatiz-navy: 210 84% 10%; /* #04192e */
+    --fanatiz-bg: 210 84% 5%;
+    --card: 222 47% 4%;
+    --brand-blue: #2563eb;
     --dark-900: #060d1a;
     --dark-800: #081024;
     --brand-red: #dc2626;
-    --brand-blue: #2563eb;
   }
 }
 
