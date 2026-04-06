@@ -4,6 +4,7 @@ import PostCard from '@/components/public/PostCard'
 import FanatizCarousel from '@/components/public/FanatizCarousel'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import GlobalNav from '@/components/public/GlobalNav'
 
 export const metadata: Metadata = {
   title: 'Ver Fútbol EN VIVO Gratis | Partidos de Hoy',
@@ -27,7 +28,9 @@ export default async function HomePage() {
   const otros = partidos.filter(p => p.categoria !== 'Fútbol Argentino').slice(0, 4)
 
   return (
-    <main className='relative z-10 max-w-[1400px] mx-auto px-4 py-8'>
+    <div className='relative z-10 flex flex-col min-h-screen'>
+      <GlobalNav />
+      <main className='max-w-[1400px] w-full mx-auto px-4 py-8 flex flex-col flex-1'>
       {/* Banner top */}
       <div className='flex justify-center mb-6'>
         <div className='w-full max-w-[728px] h-[90px] bg-white/5 rounded-lg flex items-center justify-center text-white/20 text-xs tracking-widest uppercase border border-white/5'>
@@ -66,11 +69,12 @@ export default async function HomePage() {
       </div>
 
       {/* Banner bottom */}
-      <div className='flex justify-center'>
-        <div className='w-full max-w-[728px] h-[90px] bg-white/5 rounded-lg flex items-center justify-center text-white/20 text-xs tracking-widest uppercase border border-white/5'>
-          Banner Publicitario 728×90
+        <div className='flex justify-center'>
+          <div className='w-full max-w-[728px] h-[90px] bg-white/5 rounded-lg flex items-center justify-center text-white/20 text-xs tracking-widest uppercase border border-white/5'>
+            Banner Publicitario 728×90
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   )
 }

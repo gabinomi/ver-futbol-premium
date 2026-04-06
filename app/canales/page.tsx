@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import GlobalNav from '@/components/public/GlobalNav'
 
 interface Canal {
   id: string
@@ -30,8 +31,10 @@ export default function CanalesPage() {
   }, [])
 
   return (
-    <main className='relative z-10 flex flex-col min-h-screen max-w-[1400px] mx-auto px-4 py-8'>
-      <div className='flex justify-center mb-8'>
+    <div className='relative z-10 flex flex-col min-h-screen'>
+      <GlobalNav />
+      <main className='max-w-[1400px] w-full mx-auto px-4 py-8 flex flex-col flex-1'>
+        <div className='flex justify-center mb-8'>
         <div className='w-full max-w-[728px] h-[90px] bg-white/5 rounded-lg flex items-center justify-center text-white/20 text-xs tracking-widest uppercase'>Banner 728×90</div>
       </div>
 
@@ -92,9 +95,10 @@ export default function CanalesPage() {
         </div>
       )}
 
-      <div className='flex justify-center mt-auto py-10'>
-        <div className='w-full max-w-[728px] h-[90px] bg-white/5 rounded-lg flex items-center justify-center text-white/20 text-xs tracking-widest uppercase'>Banner 728×90</div>
-      </div>
-    </main>
+        <div className='flex justify-center mt-auto py-10'>
+          <div className='w-full max-w-[728px] h-[90px] bg-white/5 rounded-lg flex items-center justify-center text-white/20 text-xs tracking-widest uppercase'>Banner 728×90</div>
+        </div>
+      </main>
+    </div>
   )
 }

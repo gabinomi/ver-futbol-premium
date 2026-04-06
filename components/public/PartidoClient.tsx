@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Partido } from '@/types'
 import { Home, Play, Radio, Clock, Tv2, PlayCircle } from 'lucide-react'
+import GlobalNav from '@/components/public/GlobalNav'
 
 interface Props {
   partido: Partido
@@ -54,37 +55,22 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
   const imgVideo = partido.img_video || 'https://placehold.co/720x405/060d1a/1e40af?text=EN+VIVO'
 
   return (
-    <main className='relative z-10 flex justify-center px-4 py-8 gap-10 max-w-[1400px] mx-auto'>
+    <div className='relative z-10 flex flex-col min-h-screen'>
+      <GlobalNav />
+      <main className='flex justify-center px-4 py-8 gap-10 max-w-[1400px] mx-auto w-full'>
 
-      {/* LATERAL IZQ - Banner Fijo */}
-      <aside className='hidden xl:block w-40 flex-shrink-0 sticky top-12 self-start'>
-        <div className='w-40 h-[600px] bg-white/5 rounded-xl flex items-center justify-center text-white/10 text-[10px] font-black tracking-[4px] uppercase border border-white/5 shadow-2xl backdrop-blur-md'>
-          160×600
-        </div>
-      </aside>
+        {/* LATERAL IZQ - Banner Fijo */}
+        <aside className='hidden xl:block w-40 flex-shrink-0 sticky top-24 self-start'>
+          <div className='w-40 h-[600px] bg-white/5 rounded-xl flex items-center justify-center text-white/10 text-[10px] font-black tracking-[4px] uppercase border border-white/5 shadow-2xl backdrop-blur-md'>
+            160×600
+          </div>
+        </aside>
 
-      {/* CONTENIDO CENTRAL - COMPACTO (540px) */}
-      <div className='flex-1 max-w-[540px] w-full flex flex-col gap-6 animate-fade-in'>
-
-        {/* MENU Y NAVEGACIÓN RÁPIDA */}
-        <div className='flex flex-wrap justify-center gap-2 xl:gap-3 mb-2'>
-          <Link href='/' className='inline-flex items-center gap-1.5 text-white/50 hover:text-white text-[10px] font-black tracking-[2px] uppercase px-4 py-2 rounded-full border border-white/10 bg-white/5 transition-all outline-none hover:bg-white/10'>
-            <Home size={12} /> Inicio
-          </Link>
-          <Link href='/canales' className='inline-flex items-center gap-1.5 text-white/50 hover:text-white text-[10px] font-black tracking-[2px] uppercase px-4 py-2 rounded-full border border-white/10 bg-white/5 transition-all outline-none hover:bg-white/10'>
-            <Tv2 size={12} /> Canales en Vivo
-          </Link>
-          <Link href='/calendario' className='inline-flex items-center gap-1.5 text-white/50 hover:text-white text-[10px] font-black tracking-[2px] uppercase px-4 py-2 rounded-full border border-white/10 bg-white/5 transition-all outline-none hover:bg-white/10'>
-            <Clock size={12} /> Agenda Deportiva
-          </Link>
-          {/* Botón de Telegram habilitado como placeholder, ya visible */}
-          <button className='inline-flex items-center gap-1.5 text-white/50 hover:text-[#0088cc] text-[10px] font-black tracking-[2px] uppercase px-4 py-2 rounded-full border border-white/10 bg-white/5 transition-all outline-none hover:bg-[#0088cc]/10 hover:border-[#0088cc]/30'>
-            Telegram
-          </button>
-        </div>
+      {/* CONTENIDO CENTRAL */}
+      <div className='flex-1 max-w-[620px] w-full flex flex-col gap-6 animate-fade-in'>
 
         {/* CARD PRINCIPAL - ESTILO PREMIUM */}
-        <div className='rounded-[2.5rem] overflow-hidden border border-white/[0.08] bg-[#020810db] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] backdrop-blur-2xl ring-1 ring-white/10'>
+        <div className='rounded-xl overflow-hidden border border-white/[0.08] bg-[#020810db] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] backdrop-blur-2xl ring-1 ring-white/10'>
 
           {/* HEADER RIBBON */}
           <div className='bg-gradient-to-br from-[#0d2860] via-[#1746b8] to-[#1a3a9a] px-6 py-8 text-center relative overflow-hidden'>
@@ -148,7 +134,7 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
 
             {/* VIDEO THUMBNAIL */}
             <a href={links.video || '#'} target='_blank' rel='noopener'
-              className='relative block rounded-3xl overflow-hidden border border-white/10 aspect-video bg-black cursor-pointer group shadow-2xl'>
+              className='relative block rounded-xl overflow-hidden border border-white/10 aspect-video bg-black cursor-pointer group shadow-2xl'>
               <Image src={imgVideo} alt='Ver partido' fill className='object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out' />
               <div className='absolute inset-0 flex items-center justify-center'>
                 <div className='w-20 h-20 rounded-full bg-black/40 backdrop-blur-md border-2 border-white/40 flex items-center justify-center group-hover:bg-blue-600 group-hover:border-white transition-all transform group-hover:scale-110 duration-500'>
@@ -172,7 +158,7 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
 
             {/* HORARIOS */}
             {partido.estado !== 'FINALIZADO' && horarios && (
-              <div className='bg-white/[0.03] rounded-[2rem] px-6 py-6 border border-white/[0.05]'>
+              <div className='bg-white/[0.03] rounded-xl px-6 py-6 border border-white/[0.05]'>
                 <div className='flex items-center gap-3 text-[11px] uppercase tracking-[3px] text-white/30 font-black mb-5'>
                   <Clock size={16} className='text-white/20' />
                   Horarios por país
@@ -197,7 +183,7 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
                   <span className='flex-1 h-px bg-white/5' />
                 </div>
                 <a href={links.link1} target='_blank' rel='noopener'
-                  className='relative flex items-center justify-center gap-4 w-full bg-gradient-to-br from-blue-600 to-blue-800 text-white py-5 rounded-[1.5rem] font-barlow text-2xl font-black tracking-[2px] uppercase overflow-hidden shadow-[0_15px_40px_-10px_rgba(37,99,235,0.6)] group hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 transform-gpu'>
+                  className='relative flex items-center justify-center gap-4 w-full bg-gradient-to-br from-blue-600 to-blue-800 text-white py-5 rounded-lg font-barlow text-2xl font-black tracking-[2px] uppercase overflow-hidden shadow-[0_15px_40px_-10px_rgba(37,99,235,0.6)] group hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 transform-gpu'>
                   <PlayCircle size={28} className='flex-shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500' />
                   <span className='drop-shadow-lg italic'>VER TRANSMISIÓN HD</span>
                   {/* Animación local de brillo usando Before en vez de clases problemáticas globales */}
@@ -211,14 +197,14 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
               <div className='grid grid-cols-2 gap-4'>
                 {links.link2 && (
                   <a href={links.link2} target='_blank' rel='noopener'
-                    className='flex flex-col items-center justify-center gap-1 bg-white/5 border border-white/5 text-white/50 hover:bg-blue-600/20 hover:border-blue-600/40 hover:text-white py-4 rounded-2xl font-barlow text-[13px] font-black tracking-widest uppercase transition-all duration-300 shadow-lg group'>
+                    className='flex flex-col items-center justify-center gap-1 bg-white/5 border border-white/5 text-white/50 hover:bg-blue-600/20 hover:border-blue-600/40 hover:text-white py-4 rounded-lg font-barlow text-[13px] font-black tracking-widest uppercase transition-all duration-300 shadow-lg group'>
                     <Radio size={20} className='text-white/20 transition-all' /> 
                     <span>Opción 2</span>
                   </a>
                 )}
                 {links.link3 && (
                   <a href={links.link3} target='_blank' rel='noopener'
-                    className='flex flex-col items-center justify-center gap-1 bg-white/5 border border-white/5 text-white/50 hover:bg-blue-600/20 hover:border-blue-600/40 hover:text-white py-4 rounded-2xl font-barlow text-[13px] font-black tracking-widest uppercase transition-all duration-300 shadow-lg group'>
+                    className='flex flex-col items-center justify-center gap-1 bg-white/5 border border-white/5 text-white/50 hover:bg-blue-600/20 hover:border-blue-600/40 hover:text-white py-4 rounded-lg font-barlow text-[13px] font-black tracking-widest uppercase transition-all duration-300 shadow-lg group'>
                     <Radio size={20} className='text-white/20 group-hover:text-blue-400 group-hover:animate-pulse transition-all' /> 
                     <span>Opción 3</span>
                   </a>
@@ -228,7 +214,7 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
 
             {/* BOTÓN VER CANALES */}
             <a href='/canales' target='_blank' rel='noopener'
-              className='relative flex items-center justify-center gap-4 w-full bg-gradient-to-br from-red-600 to-red-800 text-white py-4 rounded-[1.5rem] font-barlow text-xl font-black tracking-[2px] uppercase overflow-hidden shadow-[0_15px_35px_-5px_rgba(220,38,38,0.5)] group hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 transform-gpu'>
+              className='relative flex items-center justify-center gap-4 w-full bg-gradient-to-br from-red-600 to-red-800 text-white py-4 rounded-lg font-barlow text-xl font-black tracking-[2px] uppercase overflow-hidden shadow-[0_15px_35px_-5px_rgba(220,38,38,0.5)] group hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 transform-gpu'>
               <span className='w-2 h-2 bg-white rounded-full animate-blink flex-shrink-0' />
               <Play size={18} className='fill-white group-hover:scale-110 transition-transform duration-500' />
               <span className='drop-shadow-lg'>Ver Canales EN VIVO</span>
@@ -248,12 +234,13 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
       </div>
 
       {/* LATERAL DER - Banner Fijo */}
-      <aside className='hidden xl:block w-40 flex-shrink-0 sticky top-12 self-start'>
-        <div className='w-40 h-[600px] bg-white/5 rounded-xl flex items-center justify-center text-white/10 text-[10px] font-black tracking-[4px] uppercase border border-white/5 shadow-2xl backdrop-blur-md'>
-          160×600
-        </div>
-      </aside>
+        <aside className='hidden xl:block w-40 flex-shrink-0 sticky top-24 self-start'>
+          <div className='w-40 h-[600px] bg-white/5 rounded-xl flex items-center justify-center text-white/10 text-[10px] font-black tracking-[4px] uppercase border border-white/5 shadow-2xl backdrop-blur-md'>
+            160×600
+          </div>
+        </aside>
 
-    </main>
+      </main>
+    </div>
   )
 }

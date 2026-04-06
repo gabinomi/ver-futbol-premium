@@ -2,6 +2,7 @@
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState, useRef, Suspense } from 'react'
 import { Play } from 'lucide-react'
+import GlobalNav from '@/components/public/GlobalNav'
 
 const DURACION = 15
 const MSGS = [
@@ -83,6 +84,7 @@ function EmbedContent() {
 
   return (
     <main className='relative z-10 flex flex-col min-h-screen'>
+      <GlobalNav />
       {/* Banner top */}
       <div className='flex justify-center py-3 px-4 bg-black/70 border-b border-white/5'>
         <div className='w-full max-w-[728px] h-[90px] bg-white/5 rounded flex items-center justify-center text-white/20 text-xs tracking-widest'>Banner 728×90</div>
@@ -190,7 +192,7 @@ function EmbedContent() {
                 </button>
               </div>
 
-              {/* Opciones extra */}
+          {/* Opciones extra */}
               {options.length > 0 && (
                 <div className='flex flex-col gap-2 mt-2'>
                   <span className='text-[10px] font-bold tracking-[2px] uppercase text-slate-500'>Opciones de transmisión</span>
@@ -210,9 +212,10 @@ function EmbedContent() {
             </>
           )}
 
-          {/* Banner 300x250 */}
+          {/* Banner 300x250 (Mobile) / 728x90 (Desktop/Tablet) */}
           <div className='flex justify-center w-full mt-4'>
-            <div className='w-[300px] h-[250px] bg-white/5 rounded-xl flex items-center justify-center text-white/20 text-xs tracking-widest'>300×250</div>
+            <div className='w-[300px] h-[250px] bg-white/5 rounded-xl flex items-center justify-center text-white/20 text-xs tracking-widest md:hidden'>300×250</div>
+            <div className='hidden md:flex w-full max-w-[728px] h-[90px] bg-white/5 rounded-xl items-center justify-center text-white/20 text-xs tracking-widest'>728×90</div>
           </div>
           
         </div>
