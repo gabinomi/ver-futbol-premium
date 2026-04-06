@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:version='2' class='v2' expr:dir='data:blog.languageDirection' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  <meta content='width=device-width,initial-scale=1' name='viewport'/>
+  <title>Ver Partido EN VIVO</title>
+  <meta content='noindex, nofollow' name='robots'/>
+  <link href='https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap' rel='stylesheet'/>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' rel='stylesheet'/>
+  <b:skin><![CDATA[
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #060d1a; color: #fff; min-height: 100vh; overflow-x: hidden; }
+
+.bg-stadium {
+  position: fixed; inset: 0;
+  will-change: transform; transform: translateZ(0);
+  background:
+    linear-gradient(rgb(6,13,26) 0%, rgb(6,13,26) 8%, rgba(6,13,26,0.5) 35%, rgba(6,13,26,0.5) 65%, rgb(6,13,26) 92%, rgb(6,13,26) 100%),
+    url('https://nextjs.fanatiz.com/fanatiz/strapi/production/estadio_OTT_9bf35dcea2.jpg') center center / cover no-repeat;
+  z-index: 0;
+}
+
+.page-wrap { position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* BANNER TOP/BOTTOM */
+.ad-bar { width: 100%; display: flex; justify-content: center; padding: 10px 16px; background: rgba(4,8,18,0.7); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.ad-bar.bottom { border-top: 1px solid rgba(255,255,255,0.05); border-bottom: none; margin-top: auto; }
+.ad-728 { display: block; } .ad-320 { display: none; }
+@media (max-width: 480px) { .ad-728 { display: none; } .ad-320 { display: block; } }
+
+/* LAYOUT */
+.main-wrap { flex: 1; display: flex; gap: 20px; max-width: 1400px; margin: 0 auto; padding: 20px 16px; width: 100%; align-items: flex-start; justify-content: center; }
+.ad-lateral { width: 160px; flex-shrink: 0; position: sticky; top: 20px; }
+@media (max-width: 1060px) { .ad-lateral { display: none !important; } }
+.center-col { flex: 1; min-width: 0; max-width: 860px; display: flex; flex-direction: column; gap: 14px; }
+
+/* HEADER DEL PARTIDO */
+.match-header {
+  background: linear-gradient(135deg, #0d2860 0%, #1746b8 60%, #1a3a9a 100%);
+  border-radius: 14px; padding: 16px 20px; text-align: center; position: relative; overflow: hidden;
+}
+.match-header::before { content: ''; position: absolute; top: -50px; left: -50px; right: -50px; height: 130px; background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.1), transparent 65%); }
+.match-title { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: #fff; position: relative; z-index: 1; }
+.match-subtitle { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; position: relative; z-index: 1; }
+
+/* REPRODUCTOR — imagen con play (estado inicial) */
+.player-wrap { position: relative; border-radius: 14px; overflow: hidden; background: #000; aspect-ratio: 16/9; }
+.player-thumb { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.75; }
+.player-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px;
+  background: rgba(0,0,0,0.35); cursor: pointer;
+  transition: background 0.2s;
+}
+.player-overlay:hover { background: rgba(0,0,0,0.5); }
+.play-circle {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(37,99,235,0.85);
+  border: 3px solid rgba(255,255,255,0.9);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 40px rgba(37,99,235,0.6);
+  transition: transform 0.2s, background 0.2s;
+}
+.player-overlay:hover .play-circle { transform: scale(1.08); background: #2563eb; }
+.play-circle i { font-size: 28px; color: #fff; margin-left: 4px; }
+.play-label { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.85); }
+
+/* CONTADOR */
+.counter-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.counter-label { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #475569; }
+.counter-ring { position: relative; width: 80px; height: 80px; }
+.counter-ring svg { width: 80px; height: 80px; transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 4; }
+.ring-progress { fill: none; stroke: #dc2626; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 201; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear, stroke 0.3s; }
+.counter-number { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 900; color: #fff; }
+.counter-msg { font-size: 11px; color: #475569; text-align: center; }
+
+/* BARRA PROGRESO */
+.progress-bar-wrap { width: 100%; height: 3px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #dc2626, #2563eb); border-radius: 4px; transform-origin: left; transform: scaleX(1); transition: transform 1s linear; }
+
+/* BANNER 300x250 */
+.ad-mid { display: flex; justify-content: center; margin: 4px 0; }
+
+/* BOTÓN VER */
+.btn-ver {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 16px 20px; border-radius: 12px;
+  font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 800;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  position: relative; overflow: hidden; cursor: pointer; border: none;
+  transition: filter 0.4s, box-shadow 0.4s;
+}
+.btn-ver.locked { background: #1e293b; color: #475569; pointer-events: none; filter: brightness(0.6); box-shadow: none; }
+.btn-ver.unlocked {
+  background: linear-gradient(135deg, #2563eb, #1a3ab8); color: #fff;
+  box-shadow: 0 6px 22px rgba(37,99,235,0.45);
+  animation: pulseBlue 2.5s ease-in-out infinite;
+}
+.btn-ver.unlocked::after { content: ''; position: absolute; top: -60%; left: -120%; width: 55%; height: 220%; background: rgba(255,255,255,0.14); transform: rotate(25deg); animation: shine 3.5s ease-in-out infinite; }
+.btn-ver i { font-size: 18px; flex-shrink: 0; }
+@keyframes pulseBlue { 0%,100%{box-shadow:0 6px 22px rgba(37,99,235,0.45)} 50%{box-shadow:0 8px 30px rgba(37,99,235,0.65)} }
+@keyframes shine { 0%{left:-120%} 25%{left:130%} 100%{left:130%} }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* OPCIONES EXTRA */
+.opciones-wrap { display: none; flex-direction: column; gap: 10px; }
+.opciones-wrap.visible { display: flex; }
+.opciones-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #475569; text-align: center; }
+.opciones-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.btn-opcion {
+  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+  background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.35);
+  color: #60a5fa; padding: 10px 18px; border-radius: 10px; border: none;
+  font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-opcion:hover { background: rgba(37,99,235,0.3); color: #fff; }
+.btn-opcion.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+.btn-opcion i { font-size: 12px; }
+
+/* IFRAME */
+.iframe-wrap { display: none; border-radius: 14px; overflow: hidden; background: #000; aspect-ratio: 16/9; }
+.iframe-wrap.visible { display: block; }
+.iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+
+/* CONTROLES IFRAME */
+.iframe-controls { display: none; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 0; }
+.iframe-controls.visible { display: flex; }
+.btn-ctrl {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: #94a3b8; padding: 8px 14px; border-radius: 8px;
+  font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s;
+}
+.btn-ctrl:hover { background: rgba(255,255,255,0.12); color: #fff; }
+.btn-ctrl.red { border-color: rgba(220,38,38,0.3); color: #f87171; }
+.btn-ctrl.red:hover { background: rgba(220,38,38,0.15); color: #fff; }
+.btn-ctrl i { font-size: 11px; }
+.nota { font-size: 11px; color: #334155; text-align: center; padding: 6px 0; }
+
+/* OCULTAR BLOGGER */
+.post-footer,.post-author,.post-timestamp,.post-labels,.blog-feeds,.status-msg-wrap,h3.post-title,#navbar,.blogger-navbar { display: none !important; }
+  ]]></b:skin>
+</head>
+<body>
+  <div class='bg-stadium'/>
+  <div class='page-wrap'>
+
+    <div class='ad-bar'>
+      <b:section id='ad-top' name='Banner Superior' showaddelement='true'>
+        <b:widget id='HTML1' locked='false' title='Banner Superior' type='HTML' version='1'>
+          <b:widget-settings>
+            <b:widget-setting name='content'><![CDATA[<div class="ad-728"><script>atOptions={'key':'4c0c74569908d34368285e5bb21a34d0','format':'iframe','height':90,'width':728,'params':{}};</script><script src="https://www.highperformanceformat.com/4c0c74569908d34368285e5bb21a34d0/invoke.js"></script></div><div class="ad-320"><script>atOptions={'key':'89a1538cba681f1d230c1209cdc6c58f','format':'iframe','height':50,'width':320,'params':{}};</script><script src="https://www.highperformanceformat.com/89a1538cba681f1d230c1209cdc6c58f/invoke.js"></script></div>]]></b:widget-setting>
+          </b:widget-settings>
+          <b:includable id='main'><data:content/></b:includable>
+        </b:widget>
+      </b:section>
+    </div>
+
+    <div class='main-wrap'>
+      <div class='ad-lateral'>
+        <script>atOptions={&#39;key&#39;:&#39;d029de84ce1c7d96e4e5af717e528c8b&#39;,&#39;format&#39;:&#39;iframe&#39;,&#39;height&#39;:600,&#39;width&#39;:160,&#39;params&#39;:{}};</script>
+        <script src='https://www.highperformanceformat.com/d029de84ce1c7d96e4e5af717e528c8b/invoke.js'/>
+      </div>
+
+      <div class='center-col'>
+
+        <!-- HEADER -->
+        <div class='match-header'>
+          <div class='match-title' id='match-title'>Cargando...</div>
+          <div class='match-subtitle'>Transmisión en vivo</div>
+        </div>
+
+        <!-- REPRODUCTOR (imagen + play) &#8212; visible inicialmente -->
+        <div class='player-wrap' id='player-thumb-wrap'>
+          <img alt='Ver partido' class='player-thumb' id='player-thumb' src='https://i.imgur.com/1CeQ09b.png'/>
+          <div class='player-overlay' id='player-overlay' onclick='iniciarReproductor()'>
+            <div class='play-circle'><i class='fa-solid fa-play'/></div>
+            <div class='play-label'>Tocá para ver el partido</div>
+          </div>
+        </div>
+
+        <!-- IFRAME (oculto hasta que el usuario hace click) -->
+        <div class='iframe-wrap' id='iframe-wrap'>
+          <iframe allow='encrypted-media' allowfullscreen='true' id='main-iframe' scrolling='no' src=''/>
+        </div>
+
+        <!-- CONTROLES DEL IFRAME -->
+        <div class='iframe-controls' id='iframe-controls'>
+          <button class='btn-ctrl' onclick='cambiarStream(currentUrl1, this)'><i class='fa-solid fa-signal'/>Manual (Global 1)</button>
+          <button class='btn-ctrl' onclick='cambiarStream(currentUrl2, this)'><i class='fa-solid fa-bolt'/>Auto (Global 2)</button>
+          <button class='btn-ctrl red' onclick='recargarIframe()'><i class='fa-solid fa-rotate-right'/>Recargar</button>
+          <button class='btn-ctrl' onclick='cerrarIframe()'><i class='fa-solid fa-xmark'/>Cerrar</button>
+        </div>
+
+        <!-- CONTADOR (visible antes de hacer click) -->
+        <div id='contador-section'>
+          <div class='counter-wrap'>
+            <div class='counter-label'>Esperando tu click</div>
+            <div class='counter-ring'>
+              <svg viewBox='0 0 80 80'>
+                <circle class='ring-bg' cx='40' cy='40' r='32'/>
+                <circle class='ring-progress' cx='40' cy='40' id='ring' r='32'/>
+              </svg>
+              <div class='counter-number' id='counter'>15</div>
+            </div>
+            <div class='counter-msg' id='counter-msg'>El botón se activa al finalizar</div>
+          </div>
+          <div class='progress-bar-wrap' style='margin-top:10px'>
+            <div class='progress-bar' id='progress-bar'/>
+          </div>
+        </div>
+
+        <!-- BANNER 300x250 -->
+        <div class='ad-mid'>
+          <script>atOptions={&#39;key&#39;:&#39;362b19d28dc22fb1dc217b103d01f4d6&#39;,&#39;format&#39;:&#39;iframe&#39;,&#39;height&#39;:250,&#39;width&#39;:300,&#39;params&#39;:{}};</script>
+          <script src='https://www.highperformanceformat.com/362b19d28dc22fb1dc217b103d01f4d6/invoke.js'/>
+        </div>
+
+        <!-- BOTÓN VER TRANSMISIÓN -->
+        <button class='btn-ver locked' id='btn-ver' onclick='activarStream()'>
+          <i class='fa-solid fa-circle-play'/>
+          Ver Transmisión EN VIVO
+        </button>
+
+        <!-- OPCIONES ADICIONALES -->
+        <div class='opciones-wrap' id='opciones-wrap'>
+          <div class='opciones-label'>Opciones de transmisión</div>
+          <div class='opciones-grid' id='opciones-grid'/>
+        </div>
+
+        <div class='nota'>Si el video no carga, probá otra opción o recargá la página.</div>
+
+      </div>
+
+      <div class='ad-lateral'>
+        <script>atOptions={&#39;key&#39;:&#39;d029de84ce1c7d96e4e5af717e528c8b&#39;,&#39;format&#39;:&#39;iframe&#39;,&#39;height&#39;:600,&#39;width&#39;:160,&#39;params&#39;:{}};</script>
+        <script src='https://www.highperformanceformat.com/d029de84ce1c7d96e4e5af717e528c8b/invoke.js'/>
+      </div>
+    </div>
+
+    <div class='ad-bar bottom'>
+      <b:section id='ad-bottom' name='Banner Inferior' showaddelement='true'>
+        <b:widget id='HTML2' locked='false' title='Banner Inferior' type='HTML' version='1'>
+          <b:widget-settings>
+            <b:widget-setting name='content'><![CDATA[<div class="ad-728"><script>atOptions={'key':'4c0c74569908d34368285e5bb21a34d0','format':'iframe','height':90,'width':728,'params':{}};</script><script src="https://www.highperformanceformat.com/4c0c74569908d34368285e5bb21a34d0/invoke.js"></script></div><div class="ad-320"><script>atOptions={'key':'89a1538cba681f1d230c1209cdc6c58f','format':'iframe','height':50,'width':320,'params':{}};</script><script src="https://www.highperformanceformat.com/89a1538cba681f1d230c1209cdc6c58f/invoke.js"></script></div>]]></b:widget-setting>
+          </b:widget-settings>
+          <b:includable id='main'><data:content/></b:includable>
+        </b:widget>
+      </b:section>
+    </div>
+
+  </div>
+
+  <script type='text/javascript'>
+  //<![CDATA[
+  var DURACION = 15;
+  var remaining = DURACION;
+  var circumference = 201;
+  var streamActivo = null;
+  var currentUrl1 = null;
+  var currentUrl2 = null;
+  var tickInterval = null;
+  var iframeAbierto = false;
+
+  var MSGS = [
+    'El botón se activa al finalizar',
+    'Preparando la transmisión...',
+    'Verificando disponibilidad...',
+    'Listo para reproducir'
+  ];
+
+  function getParam(name) {
+    var url = window.location.search;
+    var idx = url.indexOf(name + '=');
+    if (idx === -1) return null;
+    var start = idx + name.length + 1;
+    var end = url.indexOf('&', start);
+    return decodeURIComponent(end === -1 ? url.substring(start) : url.substring(start, end));
+  }
+
+  function buildGlobal2(url1) {
+    if (!url1) return null;
+    return url1.replace('global1.php', 'global2.php');
+  }
+
+  function init() {
+    var url1 = getParam('url');
+    var titulo = getParam('t') || 'Partido en vivo';
+    var img = getParam('img') || 'https://i.imgur.com/1CeQ09b.png';
+    var opt2 = getParam('opt2');
+    var opt3 = getParam('opt3');
+    var opt4 = getParam('opt4');
+
+    document.getElementById('match-title').textContent = decodeURIComponent(titulo);
+    document.getElementById('player-thumb').src = img;
+
+    if (!url1) {
+      document.getElementById('counter-msg').textContent = 'No se recibió enlace de transmisión';
+      return;
+    }
+
+    currentUrl1 = url1;
+    currentUrl2 = buildGlobal2(url1);
+    streamActivo = url1;
+
+    // Armar opciones adicionales
+    var opciones = [];
+    if (opt2) opciones.push(opt2);
+    if (opt3) opciones.push(opt3);
+    if (opt4) opciones.push(opt4);
+
+    if (opciones.length > 0) {
+      var grid = document.getElementById('opciones-grid');
+      opciones.forEach(function(link, i) {
+        var streamName = link.split('stream=')[1] || ('Opción ' + (i+2));
+        streamName = streamName.replace(/_/g,' ').toUpperCase();
+        var btn = document.createElement('button');
+        btn.className = 'btn-opcion';
+        btn.innerHTML = '<i class="fa-solid fa-signal"></i>' + streamName;
+        btn.onclick = function() { cambiarStream(link, btn); };
+        grid.appendChild(btn);
+      });
+    }
+
+    // Arrancar contador
+    startContador();
+  }
+
+  function startContador() {
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) clearInterval(tickInterval);
+      else tickInterval = setInterval(tick, 1000);
+    });
+    tickInterval = setInterval(tick, 1000);
+  }
+
+  function tick() {
+    remaining--;
+    var pct = remaining / DURACION;
+    var msgIdx = Math.min(Math.floor((1 - pct) * MSGS.length), MSGS.length - 1);
+
+    document.getElementById('counter').textContent = remaining > 0 ? remaining : '✓';
+    document.getElementById('counter-msg').textContent = remaining > 0 ? MSGS[msgIdx] : '¡Listo! Hacé click en el botón';
+    document.getElementById('progress-bar').style.transform = 'scaleX(' + pct + ')';
+
+    var ring = document.getElementById('ring');
+    ring.style.strokeDashoffset = circumference * (1 - pct);
+    ring.style.stroke = remaining <= 3 ? '#2563eb' : '#dc2626';
+
+    if (remaining <= 0) {
+      clearInterval(tickInterval);
+      var btn = document.getElementById('btn-ver');
+      btn.classList.remove('locked');
+      btn.classList.add('unlocked');
+    }
+  }
+
+  function activarStream() {
+    if (document.getElementById('btn-ver').classList.contains('locked')) return;
+    // Mostrar iframe, ocultar thumb y contador
+    document.getElementById('player-thumb-wrap').style.display = 'none';
+    document.getElementById('contador-section').style.display = 'none';
+    document.getElementById('btn-ver').style.display = 'none';
+
+    var iframeWrap = document.getElementById('iframe-wrap');
+    var controls = document.getElementById('iframe-controls');
+    var opciones = document.getElementById('opciones-wrap');
+
+    iframeWrap.classList.add('visible');
+    controls.classList.add('visible');
+    if (document.getElementById('opciones-grid').children.length > 0) {
+      opciones.classList.add('visible');
+    }
+
+    document.getElementById('main-iframe').src = streamActivo;
+    iframeAbierto = true;
+  }
+
+  function iniciarReproductor() {
+    if (!document.getElementById('btn-ver').classList.contains('locked')) {
+      activarStream();
+    }
+  }
+
+  function cambiarStream(url, btn) {
+    if (!url) return;
+    streamActivo = url;
+    currentUrl1 = url;
+    currentUrl2 = buildGlobal2(url);
+    document.getElementById('main-iframe').src = url;
+    document.querySelectorAll('.btn-opcion').forEach(function(b) { b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+  }
+
+  function recargarIframe() {
+    var iframe = document.getElementById('main-iframe');
+    var src = iframe.src;
+    iframe.src = '';
+    setTimeout(function() { iframe.src = src; }, 100);
+  }
+
+  function cerrarIframe() {
+    document.getElementById('iframe-wrap').classList.remove('visible');
+    document.getElementById('iframe-controls').classList.remove('visible');
+    document.getElementById('main-iframe').src = '';
+    document.getElementById('player-thumb-wrap').style.display = 'block';
+    iframeAbierto = false;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  //]]>
+  </script>
+
+</body>
+</html>

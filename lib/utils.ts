@@ -30,8 +30,11 @@ export async function buscarEscudo(equipo: string): Promise<string | null> {
       `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(equipo)}`
     )
     const data = await res.json()
-    // CRÍTICO: usar strBadge, NO strTeamBadge ni strTeamLogo (versión gratuita v3)
-    return data?.teams?.[0]?.strBadge || null
+    const team = data?.teams?.[0]
+    if (!team) return null
+    
+    // Fallback order: Badge -> Logo -> TeamBadge -> TeamLogo
+    return team.strBadge || team.strLogo || team.strTeamBadge || team.strTeamLogo || null
   } catch {
     return null
   }

@@ -33,9 +33,6 @@ export default function FanatizCarousel({ titulo, partidos }: Props) {
           </div>
           
           <div className='flex items-center gap-6'>
-            <a href='#' className='text-[10px] font-black uppercase tracking-[2px] text-white/60 hover:text-white transition-colors border-b border-white/20 pb-0.5'>
-              Ir al canal
-            </a>
             <div className='flex items-center gap-4'>
               <button 
                 onClick={() => scroll('left')}

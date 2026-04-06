@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:version='2' class='v2' expr:dir='data:blog.languageDirection' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  <meta content='width=device-width,initial-scale=1' name='viewport'/>
+  <title>TV Libre AR &#8212; Agenda Deportiva en Vivo</title>
+  <meta content='Ver fútbol en vivo gratis. Agenda deportiva diaria con horarios para Argentina y todos los partidos del día.' name='description'/>
+  <meta content='index, follow' name='robots'/>
+  <link href='https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap' rel='stylesheet'/>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' rel='stylesheet'/>
+  <b:skin><![CDATA[
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #060d1a;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.bg-stadium {
+  position: fixed; inset: 0;
+  will-change: transform; transform: translateZ(0);
+  background:
+    linear-gradient(rgb(6,13,26) 0%, rgb(6,13,26) 8%,
+    rgba(6,13,26,0.5) 35%, rgba(6,13,26,0.5) 65%,
+    rgb(6,13,26) 92%, rgb(6,13,26) 100%),
+    url('https://nextjs.fanatiz.com/fanatiz/strapi/production/estadio_OTT_9bf35dcea2.jpg')
+    center center / cover no-repeat;
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 2;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* HEADER */
+.site-header {
+  width: 100%; padding: 14px 20px;
+  background: rgba(6,13,26,0.95);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+}
+.site-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 900;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: #fff; text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.site-title i { color: #dc2626; }
+.site-date {
+  font-size: 12px; color: #475569;
+  font-weight: 600; letter-spacing: 1px;
+}
+
+/* BANNER */
+.ad-bar {
+  width: 100%; display: flex; justify-content: center;
+  padding: 10px 16px; background: rgba(4,8,18,0.7);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.ad-728 { display: block; }
+.ad-320 { display: none; }
+@media (max-width: 480px) { .ad-728 { display: none; } .ad-320 { display: block; } }
+
+/* LAYOUT */
+.main-wrap {
+  flex: 1; display: flex; gap: 20px;
+  max-width: 1400px; margin: 0 auto;
+  padding: 20px 16px; width: 100%;
+  align-items: flex-start; justify-content: center;
+}
+.ad-lateral {
+  width: 160px; flex-shrink: 0;
+  position: sticky; top: 20px;
+}
+@media (max-width: 1060px) { .ad-lateral { display: none !important; } }
+
+.center-col {
+  flex: 1; min-width: 0;
+  max-width: 860px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+/* TÍTULO AGENDA */
+.agenda-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 2px;
+}
+.agenda-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px; font-weight: 900;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: #fff;
+}
+.agenda-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(220,38,38,0.15);
+  border: 1px solid #dc2626; color: #f87171;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.agenda-badge span {
+  width: 5px; height: 5px; background: #dc2626;
+  border-radius: 50%; animation: blink 1s infinite;
+  display: inline-block;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* LOADING / ERROR */
+.agenda-loading {
+  text-align: center; padding: 40px;
+  color: #475569; font-size: 13px;
+  letter-spacing: 1px;
+}
+.agenda-loading i { font-size: 24px; margin-bottom: 8px; display: block; }
+
+/* PARTIDO ROW */
+.partido-row {
+  background: rgba(8,16,36,0.92);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px; overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.partido-row:hover {
+  border-color: rgba(37,99,235,0.4);
+  box-shadow: 0 4px 20px rgba(37,99,235,0.1);
+}
+.partido-row.en-vivo {
+  border-color: rgba(220,38,38,0.5);
+  box-shadow: 0 0 0 1px rgba(220,38,38,0.2), 0 0 16px rgba(220,38,38,0.1);
+  animation: borderPulse 2s ease-in-out infinite;
+}
+@keyframes borderPulse {
+  0%,100% { box-shadow: 0 0 0 1px rgba(220,38,38,0.2), 0 0 10px rgba(220,38,38,0.1); }
+  50%      { box-shadow: 0 0 0 2px rgba(220,38,38,0.5), 0 0 20px rgba(220,38,38,0.2); }
+}
+
+.partido-main {
+  display: flex; align-items: center;
+  gap: 12px; padding: 14px 16px;
+  cursor: pointer;
+}
+
+/* HORA */
+.partido-hora {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px; font-weight: 900;
+  color: #e2e8f0; min-width: 52px;
+  letter-spacing: 0.5px; flex-shrink: 0;
+}
+.partido-hora small {
+  display: block; font-size: 9px;
+  font-weight: 600; color: #475569;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+
+/* BANDERA */
+.partido-flag {
+  width: 28px; height: 20px; flex-shrink: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 2px;
+}
+
+/* INFO */
+.partido-info { flex: 1; min-width: 0; }
+.partido-liga {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: #475569; margin-bottom: 3px;
+}
+.partido-titulo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: #e2e8f0; line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* STATUS */
+.partido-status {
+  flex-shrink: 0;
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: 4px;
+}
+.status-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 20px;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+}
+.status-badge.live {
+  background: rgba(220,38,38,0.15);
+  border: 1px solid #dc2626; color: #f87171;
+}
+.status-badge.live span {
+  width: 5px; height: 5px; background: #dc2626;
+  border-radius: 50%; animation: blink 1s infinite;
+  display: inline-block;
+}
+.status-badge.soon {
+  background: rgba(37,99,235,0.12);
+  border: 1px solid #2563eb; color: #60a5fa;
+}
+.chevron {
+  color: #334155; font-size: 12px;
+  transition: transform 0.2s;
+}
+.partido-row.open .chevron { transform: rotate(180deg); }
+
+/* OPCIONES */
+.partido-opciones {
+  display: none; border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 12px 16px;
+  background: rgba(2,8,16,0.5);
+  flex-wrap: wrap; gap: 8px;
+}
+.partido-row.open .partido-opciones { display: flex; }
+.btn-opcion {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(37,99,235,0.12);
+  border: 1px solid rgba(37,99,235,0.35);
+  color: #60a5fa; padding: 9px 16px;
+  border-radius: 8px; cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.btn-opcion:hover {
+  background: rgba(37,99,235,0.3);
+  border-color: #2563eb; color: #fff;
+}
+.btn-opcion i { font-size: 12px; }
+.btn-opcion.primary {
+  background: linear-gradient(135deg, #2563eb, #1a3ab8);
+  border-color: #2563eb; color: #fff;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+}
+
+/* AD BOTTOM */
+.ad-bottom {
+  width: 100%; display: flex; justify-content: center;
+  padding: 10px 16px; background: rgba(4,8,18,0.7);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: auto;
+}
+
+/* OCULTAR BLOGGER */
+.post-footer, .post-author, .post-timestamp,
+.post-labels, .blog-feeds, .status-msg-wrap,
+h3.post-title, #navbar, .blogger-navbar,
+#blog-pager, .widget { display: none !important; }
+  ]]></b:skin>
+</head>
+<body>
+  <div class='bg-stadium'/>
+  <div class='page-wrap'>
+
+    <!-- HEADER -->
+    <div class='site-header'>
+      <a class='site-title' href='/'>
+        <i class='fa-solid fa-circle-play'/>
+        TV Libre AR
+      </a>
+      <span class='site-date' id='fecha-hoy'/>
+    </div>
+
+    <!-- BANNER TOP -->
+    <div class='ad-bar'>
+      <b:section id='ad-top' name='Banner Superior' showaddelement='true'>
+        <b:widget id='HTML1' locked='false' title='Banner Superior' type='HTML' version='1'>
+          <b:widget-settings>
+            <b:widget-setting name='content'><![CDATA[<div class="ad-728"><script>atOptions={'key':'4c0c74569908d34368285e5bb21a34d0','format':'iframe','height':90,'width':728,'params':{}};</script><script src="https://www.highperformanceformat.com/4c0c74569908d34368285e5bb21a34d0/invoke.js"></script></div><div class="ad-320"><script>atOptions={'key':'89a1538cba681f1d230c1209cdc6c58f','format':'iframe','height':50,'width':320,'params':{}};</script><script src="https://www.highperformanceformat.com/89a1538cba681f1d230c1209cdc6c58f/invoke.js"></script></div>]]></b:widget-setting>
+          </b:widget-settings>
+          <b:includable id='main'><data:content/></b:includable>
+        </b:widget>
+      </b:section>
+    </div>
+
+    <div class='main-wrap'>
+
+      <!-- LATERAL IZQ -->
+      <div class='ad-lateral'>
+        <script>atOptions={&#39;key&#39;:&#39;d029de84ce1c7d96e4e5af717e528c8b&#39;,&#39;format&#39;:&#39;iframe&#39;,&#39;height&#39;:600,&#39;width&#39;:160,&#39;params&#39;:{}};</script>
+        <script src='https://www.highperformanceformat.com/d029de84ce1c7d96e4e5af717e528c8b/invoke.js'/>
+      </div>
+
+      <div class='center-col'>
+
+        <!-- AGENDA HEADER -->
+        <div class='agenda-header'>
+          <div class='agenda-title'>Agenda Deportiva</div>
+          <div class='agenda-badge'><span/>EN VIVO</div>
+        </div>
+
+        <!-- FILTROS -->
+        <div id='filtros' style='display:flex;gap:8px;flex-wrap:wrap;'>
+          <button class='btn-filtro active' onclick='setFiltro(&quot;futbol&quot;,this)' style='display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:8px;border:1px solid #2563eb;background:rgba(37,99,235,0.2);color:#60a5fa;font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;'>
+            <i class='fa-solid fa-futbol'/>Solo Fútbol
+          </button>
+          <button class='btn-filtro' onclick='setFiltro(&quot;todos&quot;,this)' style='display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#94a3b8;font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;'>
+            <i class='fa-solid fa-list'/>Todos
+          </button>
+        </div>
+
+        <!-- LISTA DE PARTIDOS -->
+        <div id='agenda-lista'>
+          <div class='agenda-loading'>
+            <i class='fa-solid fa-spinner fa-spin'/>
+            Cargando partidos del día...
+          </div>
+        </div>
+
+        <!-- BANNER 300x250 entre partidos (medio de la lista) -->
+        <div style='display:flex;justify-content:center;margin:8px 0;'>
+          <script>atOptions={&#39;key&#39;:&#39;362b19d28dc22fb1dc217b103d01f4d6&#39;,&#39;format&#39;:&#39;iframe&#39;,&#39;height&#39;:250,&#39;width&#39;:300,&#39;params&#39;:{}};</script>
+          <script src='https://www.highperformanceformat.com/362b19d28dc22fb1dc217b103d01f4d6/invoke.js'/>
+        </div>
+
+      </div>
+
+      <!-- LATERAL DER -->
+      <div class='ad-lateral'>
+        <script>atOptions={&#39;key&#39;:&#39;d029de84ce1c7d96e4e5af717e528c8b&#39;,&#39;format&#39;:&#39;iframe&#39;,&#39;height&#39;:600,&#39;width&#39;:160,&#39;params&#39;:{}};</script>
+        <script src='https://www.highperformanceformat.com/d029de84ce1c7d96e4e5af717e528c8b/invoke.js'/>
+      </div>
+
+    </div>
+
+    <!-- BANNER BOTTOM -->
+    <div class='ad-bottom'>
+      <b:section id='ad-bottom' name='Banner Inferior' showaddelement='true'>
+        <b:widget id='HTML2' locked='false' title='Banner Inferior' type='HTML' version='1'>
+          <b:widget-settings>
+            <b:widget-setting name='content'><![CDATA[<div class="ad-728"><script>atOptions={'key':'4c0c74569908d34368285e5bb21a34d0','format':'iframe','height':90,'width':728,'params':{}};</script><script src="https://www.highperformanceformat.com/4c0c74569908d34368285e5bb21a34d0/invoke.js"></script></div><div class="ad-320"><script>atOptions={'key':'89a1538cba681f1d230c1209cdc6c58f','format':'iframe','height':50,'width':320,'params':{}};</script><script src="https://www.highperformanceformat.com/89a1538cba681f1d230c1209cdc6c58f/invoke.js"></script></div>]]></b:widget-setting>
+          </b:widget-settings>
+          <b:includable id='main'><data:content/></b:includable>
+        </b:widget>
+      </b:section>
+    </div>
+
+  </div>
+
+  <script type='text/javascript'>
+  //<![CDATA[
+
+  var REDIR = 'https://redirect-en-vivo.blogspot.com/';
+  var IMG_DEFAULT = 'https://i.imgur.com/9S9J4O0.jpeg';
+  var JSON_URL = 'https://ver-futbol-blogger.vercel.app/api/eventos';
+
+  // Fecha de hoy en Argentina
+  var hoy = new Date().toLocaleDateString('es-AR', {
+    weekday: 'long', year: 'numeric',
+    month: 'long', day: 'numeric',
+    timeZone: 'America/Argentina/Buenos_Aires'
+  });
+  var fechaEl = document.getElementById('fecha-hoy');
+  if (fechaEl) fechaEl.textContent = hoy.charAt(0).toUpperCase() + hoy.slice(1);
+
+  // Convertir hora UTC del JSON a hora Argentina
+  function utcToArg(timeStr) {
+    var parts = timeStr.split(':');
+    var h = parseInt(parts[0]);
+    var m = parseInt(parts[1]);
+    // JSON en UTC-5 (Panama), Argentina UTC-3 → +2hs
+    h = h + 2;
+    if (h >= 24) h -= 24;
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
+
+  var F = {
+    AR:  '//bestleague.world/jr/55.png',
+    ES:  '//bestleague.world/jr/34.png',
+    BR:  '//bestleague.world/jr/79.png',
+    EN:  '//bestleague.world/jr/61.png',
+    IT:  '//bestleague.world/jr/37.png',
+    DE:  '//bestleague.world/jr/96.png',
+    FR:  '//bestleague.world/jr/45.png',
+    PT:  '//bestleague.world/jr/43.png',
+    COL: '//bestleague.world/jr/118.png',
+    CH:  '//bestleague.world/jr/35.png',
+    URU: '//bestleague.world/jr/56.png',
+    PE:  '//bestleague.world/jr/127.png',
+    MEX: '//bestleague.world/jr/69.png',
+    PY:  '//bestleague.world/jr/47.png',
+    BOL: '//bestleague.world/jr/840.png',
+    VEN: '//bestleague.world/jr/591.png',
+    ECU: '//bestleague.world/jr/101.png',
+    USA: '//bestleague.world/jr/81.png',
+    HOL: '//bestleague.world/jr/38.png',
+    BEL: '//bestleague.world/jr/116.png',
+    TUR: '//bestleague.world/jr/123.png',
+    LIB: '//bestleague.world/jr/76.png',
+    CHA: '//bestleague.world/jr/5.png',
+    UE:  '//bestleague.world/jr/7.png',
+    FUT: 'https://static.futbolenlatv.com/img/32/20130618113222-futbol.png'
+  };
+  var FLAGS = F;
+
+  function inc(t, words) {
+    for (var i = 0; i < words.length; i++) { if (t.indexOf(words[i]) !== -1) return true; }
+    return false;
+  }
+
+  function detectarBandera(titulo) {
+    var t = titulo.toLowerCase();
+    if (inc(t,['liga profesional','copa argentina','primera nacional','defensa y justicia','chaco for ever','san lorenzo','estudiantes lp','banfield','talleres','atletico tucuman','lanus','platense','tigre','instituto','velez','independiente','huracan','river plate','boca juniors','san martin'])) return FLAGS.AR;
+    if (inc(t,['laliga','la liga','liga 2:','hypermotion','copa del rey','supercopa espa','atletico madrid','real madrid','barcelona','sevilla','valencia fc','villarreal','athletic bilbao','real betis','osasuna','celta','getafe','girona','mallorca','racing santander','sporting gij'])) return FLAGS.ES;
+    if (inc(t,['brasileirao','brasileirão','botafogo','fluminense','corinthians','palmeiras','flamengo','gremio','bahia','cruzeiro','atletico mineiro','vasco da gama','coritiba','mirassol','vitoria','athletico-pr','sao paulo','atletico go'])) return FLAGS.BR;
+    if (inc(t,['liga betplay','atletico nacional','santa fe','deportivo pasto','cucuta','llaneros','rionegro','tolima','junior fc','deportivo cali','fortaleza ceif','inter bogota','millonarios','america de cali'])) return FLAGS.COL;
+    if (inc(t,['primera division: o','primera division: c','copa de la liga: c','colo-colo','huachipato','everton de','deportes limache','u de chile','o higgins','audax italiano','cobresal','coquimbo'])) return FLAGS.CH;
+    if (inc(t,['copa de primera','olimpia','guarani','rubio nu','trinidense','libertad','cerro porteno'])) return FLAGS.PY;
+    if (inc(t,['primera division: nacional','primera division: pe','central espanol','defensor sp','danubio','nacional vs','penarol'])) return FLAGS.URU;
+    if (inc(t,['liga 1:','alianza lima','universitario','sporting cristal','cienciano','sport huancayo','adt '])) return FLAGS.PE;
+    if (inc(t,['liga mx','liga mex','puebla fc','juarez','tijuana','tigres uanl','chivas','america fc','cruz azul','pumas','monterrey','tudn','necaxa','mazatlan','atlas','leon fc','toluca','santos laguna','pachuca'])) return FLAGS.MEX;
+    if (inc(t,['premier league','fa cup','arsenal','chelsea','manchester','liverpool','tottenham','west ham','newcastle','brighton'])) return FLAGS.EN;
+    if (inc(t,['serie a','coppa italia','juventus','ac milan','inter milan','as roma','napoli','lazio','fiorentina','atalanta'])) return FLAGS.IT;
+    if (inc(t,['bundesliga','dfb pokal','bayern','dortmund','leverkusen','leipzig'])) return FLAGS.DE;
+    if (inc(t,['ligue 1','ligue1','paris saint','olympique','as monaco'])) return FLAGS.FR;
+    if (inc(t,['liga portugal','primeira liga','benfica','sporting cp','fc porto'])) return FLAGS.PT;
+    if (inc(t,['copa libertadores','copa sudamericana','recopa sudamericana'])) return FLAGS.LIB;
+    if (inc(t,['champions league','uefa champions'])) return FLAGS.CHA;
+    if (inc(t,['europa league','conference league'])) return FLAGS.UE;
+    if (inc(t,['liga pro ecuador','liga betecuador','barcelona sc','emelec','liga de quito','independiente del valle'])) return FLAGS.ECU;
+    if (inc(t,['mls','liga mx','usa soccer','usmnt','liga de naciones concacaf'])) return FLAGS.USA;
+    if (inc(t,['eredivisie','ajax','psv','feyenoord','az alkmaar'])) return FLAGS.HOL;
+    if (inc(t,['jupiler','anderlecht','club brugge','gent'])) return FLAGS.BEL;
+    if (inc(t,['super lig','galatasaray','fenerbahce','besiktas'])) return FLAGS.TUR;
+    return FLAGS.FUT;
+  }
+
+  // Extraer nombre de liga y nombre del partido
+  function parsearTitulo(titulo) {
+    var idx = titulo.indexOf(':');
+    if (idx !== -1) {
+      return {
+        liga: titulo.substring(0, idx).trim(),
+        partido: titulo.substring(idx + 1).trim()
+      };
+    }
+    return { liga: '', partido: titulo };
+  }
+
+  // Construir URL del redirector
+  function buildRedirUrl(links, titulo, img) {
+    var params = '?url=' + encodeURIComponent(links[0]);
+    params += '&t=' + encodeURIComponent(titulo);
+    params += '&img=' + encodeURIComponent(img || IMG_DEFAULT);
+    if (links[1]) params += '&opt2=' + encodeURIComponent(links[1]);
+    if (links[2]) params += '&opt3=' + encodeURIComponent(links[2]);
+    if (links[3]) params += '&opt4=' + encodeURIComponent(links[3]);
+    return REDIR + params;
+  }
+
+  // Render de la agenda
+  var todosEventos = [];
+  var filtroActivo = 'futbol';
+
+  function setFiltro(filtro, btn) {
+    filtroActivo = filtro;
+    document.querySelectorAll('.btn-filtro').forEach(function(b) {
+      b.style.background = 'rgba(255,255,255,0.05)';
+      b.style.borderColor = 'rgba(255,255,255,0.1)';
+      b.style.color = '#94a3b8';
+    });
+    btn.style.background = 'rgba(37,99,235,0.2)';
+    btn.style.borderColor = '#2563eb';
+    btn.style.color = '#60a5fa';
+    renderAgenda(todosEventos);
+  }
+
+  function esFutbol(e) {
+    var cat = (e.category || '').toLowerCase();
+    return cat.indexOf('f') !== -1 && (cat.indexOf('tbol') !== -1 || cat.indexOf('tbol') !== -1);
+  }
+
+  function renderAgenda(eventos) {
+    todosEventos = eventos;
+    var lista = document.getElementById('agenda-lista');
+    if (!eventos || eventos.length === 0) {
+      lista.innerHTML = '<div class="agenda-loading"><i class="fa-solid fa-calendar-xmark"></i>No hay partidos disponibles hoy</div>';
+      return;
+    }
+
+    var filtrados = filtroActivo === 'futbol'
+      ? eventos.filter(function(e) {
+          var cat = e.category || '';
+          return cat === 'Fútbol' || cat === 'Fútbol_cup' || cat === 'Futbol';
+        })
+      : eventos;
+
+    var futbol = filtrados;
+
+    // Agrupar por partido (mismo título + hora)
+    var grupos = {};
+    futbol.forEach(function(e) {
+      var key = e.title + '|' + e.time;
+      if (!grupos[key]) {
+        grupos[key] = {
+          title: e.title,
+          time: e.time,
+          status: e.status,
+          links: []
+        };
+      }
+      grupos[key].links.push(e.link);
+    });
+
+    // Ordenar por hora
+    var lista_grupos = Object.values(grupos).sort(function(a, b) {
+      return a.time.localeCompare(b.time);
+    });
+
+    var html = '';
+    lista_grupos.forEach(function(g, idx) {
+      var parsed = parsearTitulo(g.title);
+      var horaArg = utcToArg(g.time);
+      var bandera = detectarBandera(g.title);
+      var esVivo = g.status === 'en vivo';
+      var redirUrl = buildRedirUrl(g.links, g.title, IMG_DEFAULT);
+
+      var opcionesHtml = '';
+      g.links.forEach(function(link, i) {
+        var streamName = link.split('stream=')[1] || ('Opción ' + (i+1));
+        streamName = streamName.replace(/_/g, ' ').toUpperCase();
+        var isPrimary = i === 0 ? ' primary' : '';
+        opcionesHtml += '<a class="btn-opcion' + isPrimary + '" href="' + buildRedirUrl(g.links.slice(i), g.title, IMG_DEFAULT) + '" target="_blank"><i class="fa-solid fa-circle-play"></i>' + (i === 0 ? streamName : 'Opción ' + (i+1) + ' — ' + streamName) + '</a>';
+      });
+
+      html += '<div class="partido-row' + (esVivo ? ' en-vivo' : '') + '">';
+      html += '<div class="partido-main" onclick="togglePartido(this)">';
+      html += '<div class="partido-hora">' + horaArg + '<small>ARG</small></div>';
+      html += '<div class="partido-flag" style="background-image:url(' + bandera + ')"></div>';
+      html += '<div class="partido-info">';
+      if (parsed.liga) html += '<div class="partido-liga">' + parsed.liga + '</div>';
+      html += '<div class="partido-titulo">' + parsed.partido + '</div>';
+      html += '</div>';
+      html += '<div class="partido-status">';
+      if (esVivo) {
+        html += '<div class="status-badge live"><span></span>EN VIVO</div>';
+      } else {
+        html += '<div class="status-badge soon">PRONTO</div>';
+      }
+      html += '<i class="fa-solid fa-chevron-down chevron"></i>';
+      html += '</div>';
+      html += '</div>';
+      html += '<div class="partido-opciones">' + opcionesHtml + '</div>';
+      html += '</div>';
+    });
+
+    lista.innerHTML = html;
+  }
+
+  function togglePartido(el) {
+    var row = el.parentElement;
+    var isOpen = row.classList.contains('open');
+    // Cerrar todos
+    document.querySelectorAll('.partido-row.open').forEach(function(r) {
+      r.classList.remove('open');
+    });
+    if (!isOpen) row.classList.add('open');
+  }
+
+  // Fetch del JSON con CORS proxy si hace falta
+  fetch(JSON_URL)
+    .then(function(r) { return r.json(); })
+    .then(function(data) { renderAgenda(data); })
+    .catch(function(e) {
+      console.warn('Error cargando eventos:', e);
+      document.getElementById('agenda-lista').innerHTML =
+        '<div class="agenda-loading"><i class="fa-solid fa-triangle-exclamation"></i>No se pudo cargar la agenda. Intentá recargar la página.</div>';
+    });
+
+  //]]>
+  </script>
+
+</body>
+</html>

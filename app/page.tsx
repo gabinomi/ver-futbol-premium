@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase'
 import { Partido } from '@/types'
 import PostCard from '@/components/public/PostCard'
 import FanatizCarousel from '@/components/public/FanatizCarousel'
+import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -28,10 +29,20 @@ export default async function HomePage() {
   return (
     <main className='relative z-10 max-w-[1400px] mx-auto px-4 py-8'>
       {/* Banner top */}
-      <div className='flex justify-center mb-8'>
+      <div className='flex justify-center mb-6'>
         <div className='w-full max-w-[728px] h-[90px] bg-white/5 rounded-lg flex items-center justify-center text-white/20 text-xs tracking-widest uppercase border border-white/5'>
           Banner Publicitario 728×90
         </div>
+      </div>
+
+      {/* Navegación rápida (Automatizados) */}
+      <div className='flex flex-wrap justify-center gap-4 mb-10'>
+        <Link href='/calendario' className='px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:to-blue-500 rounded-xl font-barlow font-bold text-lg tracking-wider uppercase text-white shadow-[0_0_15px_rgba(37,99,235,0.4)] transition-all hover:scale-105'>
+          📅 Agenda Deportiva
+        </Link>
+        <Link href='/canales' className='px-6 py-3 bg-gradient-to-r from-emerald-700 to-emerald-600 hover:to-emerald-500 rounded-xl font-barlow font-bold text-lg tracking-wider uppercase text-white shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all hover:scale-105'>
+          📺 Canales en Vivo
+        </Link>
       </div>
 
       {/* Argentina Carousel */}

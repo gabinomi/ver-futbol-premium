@@ -41,8 +41,8 @@ body > *:not(.bg-stadium) {
 }
 
 @keyframes pulseRed {
-  0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.5); }
-  50%      { box-shadow: 0 0 0 9px rgba(220,38,38,0); }
+  0%,100% { box-shadow: 0 6px 20px rgba(220,38,38,0.45); }
+  50%      { box-shadow: 0 8px 32px rgba(220,38,38,0.7); }
 }
 @keyframes pulseBlue {
   0%,100% { box-shadow: 0 6px 22px rgba(37,99,235,0.45); }
@@ -52,27 +52,14 @@ body > *:not(.bg-stadium) {
   0%,100% { opacity: 1; }
   50%     { opacity: 0.2; }
 }
-@keyframes shine {
-  0%   { left: -120%; }
-  25%  { left: 130%; }
-  100% { left: 130%; }
-}
-@keyframes borderPulseRed {
-  0%,100% { box-shadow: 0 0 0 1px rgba(220,38,38,0.3), 0 0 10px rgba(220,38,38,0.15); }
-  50%     { box-shadow: 0 0 0 2px rgba(220,38,38,0.6), 0 0 22px rgba(220,38,38,0.35); }
+@keyframes shimmer {
+  0% { transform: translateX(-150%) skewX(-25deg); }
+  50% { transform: translateX(200%) skewX(-25deg); }
+  100% { transform: translateX(200%) skewX(-25deg); }
 }
 
-.animate-pulse-red   { animation: pulseRed 1.8s ease-in-out infinite; }
-.animate-pulse-blue  { animation: pulseBlue 2.5s ease-in-out infinite; }
-.animate-blink       { animation: blink 1s infinite; }
-.animate-shine::after {
-  content: '';
-  position: absolute;
-  top: -60%; left: -120%;
-  width: 55%; height: 220%;
-  background: rgba(255,255,255,0.14);
-  transform: rotate(25deg);
-  animation: shine 3.5s ease-in-out infinite;
+.btn-shining {
+  /* Removed buggy left position animation that caused layout shifts */
 }
 .card-en-vivo {
   border-color: #dc2626;
@@ -101,6 +88,14 @@ body > *:not(.bg-stadium) {
       radial-gradient(at 100% 0%, rgba(79, 70, 229, 0.1) 0px, transparent 50%),
       radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.1) 0px, transparent 50%),
       radial-gradient(at 0% 100%, rgba(37, 99, 235, 0.05) 0px, transparent 50%);
+  }
+
+  .ribbon-clip {
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 14px 50%);
+  }
+
+  .vs-badge {
+    @apply w-12 h-12 bg-red-600 rounded-md flex items-center justify-center shadow-[0_4px_16px_rgba(220,38,38,0.55)] -rotate-3 flex-shrink-0 border-2 border-white/10;
   }
 }
 

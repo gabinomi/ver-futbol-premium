@@ -1,0 +1,87 @@
+export const FLAGS: Record<string, string> = {
+  AR:  '//bestleague.world/jr/55.png',
+  ES:  '//bestleague.world/jr/34.png',
+  BR:  '//bestleague.world/jr/79.png',
+  EN:  '//bestleague.world/jr/61.png',
+  IT:  '//bestleague.world/jr/37.png',
+  DE:  '//bestleague.world/jr/96.png',
+  FR:  '//bestleague.world/jr/45.png',
+  PT:  '//bestleague.world/jr/43.png',
+  COL: '//bestleague.world/jr/118.png',
+  CH:  '//bestleague.world/jr/35.png',
+  URU: '//bestleague.world/jr/56.png',
+  PE:  '//bestleague.world/jr/127.png',
+  MEX: '//bestleague.world/jr/69.png',
+  PY:  '//bestleague.world/jr/47.png',
+  BOL: '//bestleague.world/jr/840.png',
+  VEN: '//bestleague.world/jr/591.png',
+  ECU: '//bestleague.world/jr/101.png',
+  USA: '//bestleague.world/jr/81.png',
+  HOL: '//bestleague.world/jr/38.png',
+  BEL: '//bestleague.world/jr/116.png',
+  TUR: '//bestleague.world/jr/123.png',
+  LIB: '//bestleague.world/jr/76.png',
+  CHA: '//bestleague.world/jr/5.png',
+  UE:  '//bestleague.world/jr/7.png',
+  FUT: 'https://static.futbolenlatv.com/img/32/20130618113222-futbol.png'
+}
+
+function inc(t: string, words: string[]): boolean {
+  return words.some(w => t.includes(w))
+}
+
+export function classificarCategoriaFútbol(cat: string): boolean {
+  const c = (cat || '').toLowerCase()
+  return c.includes('f') && (c.includes('tbol') || c.includes('tbol'))
+}
+
+export function parsearTitulo(titulo: string) {
+  const idx = titulo.indexOf(':')
+  if (idx !== -1) {
+    return {
+      liga: titulo.substring(0, idx).trim(),
+      partido: titulo.substring(idx + 1).trim()
+    }
+  }
+  return { liga: '', partido: titulo }
+}
+
+export function detectarBandera(titulo: string): string {
+  const t = (titulo || '').toLowerCase()
+  if (inc(t,['liga profesional','copa argentina','primera nacional','nacional b','b metropolitana','federal a','defensa y justicia','chaco for ever','san lorenzo','estudiantes lp','banfield','talleres','atletico tucuman','lanus','platense','tigre','instituto','velez','independiente','huracan','river plate','boca juniors','san martin'])) return FLAGS.AR;
+  if (inc(t,['laliga','la liga','liga 2:','hypermotion','copa del rey','supercopa espa','atletico madrid','real madrid','barcelona','sevilla','valencia fc','villarreal','athletic bilbao','real betis','osasuna','celta','getafe','girona','mallorca','racing santander','sporting gij'])) return FLAGS.ES;
+  if (inc(t,['brasileirao','brasileirão','botafogo','fluminense','corinthians','palmeiras','flamengo','gremio','bahia','cruzeiro','atletico mineiro','vasco da gama','coritiba','mirassol','vitoria','athletico-pr','sao paulo','atletico go'])) return FLAGS.BR;
+  if (inc(t,['liga betplay','atletico nacional','santa fe','deportivo pasto','cucuta','llaneros','rionegro','tolima','junior fc','deportivo cali','fortaleza ceif','inter bogota','millonarios','america de cali'])) return FLAGS.COL;
+  if (inc(t,['primera division: o','primera division: c','copa de la liga: c','colo-colo','huachipato','everton de','deportes limache','u de chile','o higgins','audax italiano','cobresal','coquimbo'])) return FLAGS.CH;
+  if (inc(t,['copa de primera','olimpia','guarani','rubio nu','trinidense','libertad','cerro porteno'])) return FLAGS.PY;
+  if (inc(t,['primera division: nacional','primera division: pe','central espanol','defensor sp','danubio','nacional vs','penarol'])) return FLAGS.URU;
+  if (inc(t,['liga 1:','alianza lima','universitario','sporting cristal','cienciano','sport huancayo','adt '])) return FLAGS.PE;
+  if (inc(t,['liga mx','liga mex','puebla fc','juarez','tijuana','tigres uanl','chivas','america fc','cruz azul','pumas','monterrey','tudn','necaxa','mazatlan','atlas','leon fc','toluca','santos laguna','pachuca'])) return FLAGS.MEX;
+  if (inc(t,['premier league','fa cup','arsenal','chelsea','manchester','liverpool','tottenham','west ham','newcastle','brighton'])) return FLAGS.EN;
+  if (inc(t,['serie a','coppa italia','juventus','ac milan','inter milan','as roma','napoli','lazio','fiorentina','atalanta'])) return FLAGS.IT;
+  if (inc(t,['bundesliga','dfb pokal','bayern','dortmund','leverkusen','leipzig'])) return FLAGS.DE;
+  if (inc(t,['ligue 1','ligue1','paris saint','olympique','as monaco'])) return FLAGS.FR;
+  if (inc(t,['liga portugal','primeira liga','benfica','sporting cp','fc porto'])) return FLAGS.PT;
+  if (inc(t,['copa libertadores','copa sudamericana','recopa sudamericana'])) return FLAGS.LIB;
+  if (inc(t,['champions league','uefa champions'])) return FLAGS.CHA;
+  if (inc(t,['europa league','conference league'])) return FLAGS.UE;
+  if (inc(t,['liga pro ecuador','liga betecuador','barcelona sc','emelec','liga de quito','independiente del valle'])) return FLAGS.ECU;
+  if (inc(t,['mls','usa soccer','usmnt','liga de naciones concacaf'])) return FLAGS.USA;
+  if (inc(t,['eredivisie','ajax','psv','feyenoord','az alkmaar'])) return FLAGS.HOL;
+  if (inc(t,['jupiler','anderlecht','club brugge','gent'])) return FLAGS.BEL;
+  if (inc(t,['super lig','galatasaray','fenerbahce','besiktas'])) return FLAGS.TUR;
+  return FLAGS.FUT;
+}
+
+export function utcToArg(timeStr: string): string {
+  const parts = timeStr.split(':')
+  let h = parseInt(parts[0], 10)
+  const m = parseInt(parts[1], 10)
+  // JSON en UTC-5 (Panama), Argentina UTC-3 → +2hs
+  h = h + 2
+  if (h >= 24) h -= 24
+  
+  const hd = h < 10 ? `0${h}` : `${h}`
+  const md = m < 10 ? `0${m}` : `${m}`
+  return `${hd}:${md}`
+}
