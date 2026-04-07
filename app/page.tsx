@@ -39,11 +39,11 @@ export default async function HomePage() {
       </div>
 
       {/* Navegación rápida (Automatizados) */}
-      <div className='flex flex-wrap justify-center gap-4 mb-10'>
-        <Link href='/calendario' className='px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:to-blue-500 rounded-xl font-barlow font-bold text-lg tracking-wider uppercase text-white shadow-[0_0_15px_rgba(37,99,235,0.4)] transition-all hover:scale-105'>
+      <div className='flex flex-wrap justify-center gap-3 mb-8'>
+        <Link href='/calendario' className='inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-700 to-blue-600 hover:to-blue-500 rounded-lg font-barlow font-bold text-sm tracking-wider uppercase text-white shadow-[0_0_12px_rgba(37,99,235,0.35)] transition-all hover:scale-105'>
           📅 Agenda Deportiva
         </Link>
-        <Link href='/canales' className='px-6 py-3 bg-gradient-to-r from-emerald-700 to-emerald-600 hover:to-emerald-500 rounded-xl font-barlow font-bold text-lg tracking-wider uppercase text-white shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all hover:scale-105'>
+        <Link href='/canales' className='inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-700 to-emerald-600 hover:to-emerald-500 rounded-lg font-barlow font-bold text-sm tracking-wider uppercase text-white shadow-[0_0_12px_rgba(16,185,129,0.25)] transition-all hover:scale-105'>
           📺 Canales en Vivo
         </Link>
       </div>
