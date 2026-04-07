@@ -17,8 +17,8 @@ export const CHANNEL_META: Record<string, ChannelMeta> = {
   'dsports2':    { name: 'DSports 2',    image: 'https://bestleague.world/img/dsports2.webp' },
   'dsportsplus': { name: 'DSports Plus', image: 'https://bestleague.world/img/dsportsplus.webp' },
   'tntsports':   { name: 'TNT Sports',   image: 'https://bestleague.world/img/tntar.svg' },
-  'futv':        { name: 'FUTV',         image: 'https://bestleague.world/img/futv.webp' },
-  'telefe':      { name: 'Telefe',       image: 'https://bestleague.world/img/telefe.webp' },
+  'futv':        { name: 'FUTV',         image: 'https://admin.futvcr.com/assets/img/logo-futv.webp' },
+  'telefe':      { name: 'Telefe',       image: 'https://bestleague.world/img/telefe.png' },
 }
 
 export function getChannelMeta(streamId: string, fallbackName: string) {

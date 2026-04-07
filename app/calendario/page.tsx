@@ -26,23 +26,37 @@ const IMG_DEFAULT = 'https://i.imgur.com/NwU54jR.jpeg'
 export default function CalendarioPage() {
   const [eventos, setEventos] = useState<Evento[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState(false)
   const [filtro, setFiltro] = useState<'futbol' | 'todos'>('futbol')
   const [openId, setOpenId] = useState<string | null>(null)
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
+
+  const fetchEventos = async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true)
+    else setLoading(true)
+    setError(false)
+    try {
+      // cache: no-store fuerza siempre datos frescos sin importar el service worker o cache del browser
+      const res = await fetch('/api/eventos', { cache: 'no-store' })
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      setEventos(data)
+      setLastUpdate(new Date())
+    } catch (err) {
+      console.error(err)
+      setError(true)
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
 
   useEffect(() => {
-    fetch('/api/eventos')
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) throw new Error(data.error)
-        setEventos(data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.error(err)
-        setError(true)
-        setLoading(false)
-      })
+    fetchEventos()
+    // Auto-actualizar cada 2 minutos
+    const interval = setInterval(() => fetchEventos(true), 120_000)
+    return () => clearInterval(interval)
   }, [])
 
   // Procesamiento
@@ -91,25 +105,42 @@ export default function CalendarioPage() {
 
         <div className='flex-1 max-w-[860px] flex flex-col gap-4'>
           {/* Header Agenda */}
-          <div className='flex items-center gap-3 px-1'>
-            <h1 className='font-barlow text-2xl font-black uppercase tracking-wide text-white'>Agenda Deportiva</h1>
+          <div className='flex items-center gap-3 px-1 flex-wrap'>
+            <h1 className='font-barlow text-xl font-black uppercase tracking-wide text-white'>Agenda Deportiva</h1>
             <div className='flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-600/15 border border-red-600/50 text-red-500 text-[10px] font-bold tracking-widest uppercase'>
               <span className='w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse' />
               EN VIVO
             </div>
+            {lastUpdate && (
+              <span className='text-[10px] text-slate-600 ml-auto'>
+                Act. {lastUpdate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            )}
           </div>
 
-          {/* Filtros */}
-          <div className='flex flex-wrap gap-2'>
-            <button 
+          {/* Filtros + Actualizar */}
+          <div className='flex flex-wrap gap-2 items-center'>
+            <button
               onClick={() => setFiltro('futbol')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-barlow text-[14px] font-bold uppercase tracking-wide transition-colors ${filtro === 'futbol' ? 'bg-blue-600/20 text-blue-400 border border-blue-600' : 'bg-white/5 text-slate-400 border border-white/10'}`}>
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide transition-colors ${filtro === 'futbol' ? 'bg-blue-600/20 text-blue-400 border border-blue-600' : 'bg-white/5 text-slate-400 border border-white/10'}`}>
               Solo Fútbol
             </button>
-            <button 
+            <button
               onClick={() => setFiltro('todos')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-barlow text-[14px] font-bold uppercase tracking-wide transition-colors ${filtro === 'todos' ? 'bg-blue-600/20 text-blue-400 border border-blue-600' : 'bg-white/5 text-slate-400 border border-white/10'}`}>
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide transition-colors ${filtro === 'todos' ? 'bg-blue-600/20 text-blue-400 border border-blue-600' : 'bg-white/5 text-slate-400 border border-white/10'}`}>
               Todos
+            </button>
+            {/* Botón Actualizar */}
+            <button
+              onClick={() => fetchEventos(true)}
+              disabled={refreshing || loading}
+              className='ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide border border-emerald-600/40 bg-emerald-600/10 text-emerald-400 hover:bg-emerald-600/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'>
+              {refreshing ? (
+                <svg className='w-3.5 h-3.5 animate-spin' fill='none' viewBox='0 0 24 24'><circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'/><path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v8z'/></svg>
+              ) : (
+                <svg className='w-3.5 h-3.5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15' /></svg>
+              )}
+              Actualizar
             </button>
           </div>
 

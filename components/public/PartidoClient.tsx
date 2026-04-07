@@ -73,35 +73,35 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
         <div className='rounded-xl overflow-hidden border border-white/[0.08] bg-[#020810db] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] backdrop-blur-2xl ring-1 ring-white/10'>
 
           {/* HEADER RIBBON */}
-          <div className='bg-gradient-to-br from-[#0d2860] via-[#1746b8] to-[#1a3a9a] px-6 py-8 text-center relative overflow-hidden'>
+          <div className='bg-gradient-to-br from-[#0d2860] via-[#1746b8] to-[#1a3a9a] px-5 py-5 text-center relative overflow-hidden'>
             <div className='absolute inset-x-0 -top-12 h-48 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.15),transparent_70%)]' />
             <div className='relative z-10'>
-              <span className={`inline-flex items-center gap-2 ${badge.cls} text-white px-4 py-1.5 rounded-full text-[10px] font-black tracking-[2px] uppercase mb-4 shadow-lg ring-1 ring-white/20`}>
-                {badge.dot && <span className='w-2 h-2 bg-white rounded-full animate-blink' />}
+              <span className={`inline-flex items-center gap-1.5 ${badge.cls} text-white px-3 py-1 rounded-full text-[10px] font-black tracking-[2px] uppercase mb-3 shadow-md ring-1 ring-white/20`}>
+                {badge.dot && <span className='w-1.5 h-1.5 bg-white rounded-full animate-blink' />}
                 {badge.label}
               </span>
-              <h1 className='font-barlow text-3xl font-black tracking-[4px] uppercase text-white drop-shadow-2xl italic'>
+              <h1 className='font-barlow text-xl font-black tracking-[3px] uppercase text-white drop-shadow-xl'>
                 FÚTBOL EN DIRECTO
               </h1>
             </div>
           </div>
 
           {/* MATCH HERO - CINTAS ESTILO BLOGGER */}
-          <div className='match-hero flex items-center justify-center py-6 px-4 bg-gradient-to-b from-[#0d286088] to-transparent relative min-h-[90px]'>
-            <div className='absolute inset-x-0 top-1/2 -translate-y-1/2 h-[45px] bg-[#1746b8] opacity-60 ribbon-clip' />
+          <div className='match-hero flex items-center justify-center py-4 px-3 bg-gradient-to-b from-[#0d286088] to-transparent relative min-h-[70px]'>
+            <div className='absolute inset-x-0 top-1/2 -translate-y-1/2 h-[38px] bg-[#1746b8] opacity-60 ribbon-clip' />
             
             <div className='flex-1 text-center z-10 px-2'>
-              <span className='font-barlow text-xl sm:text-2xl font-black uppercase tracking-wider text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] transition-all hover:scale-105 line-clamp-2'>
+              <span className='font-barlow text-base sm:text-lg font-black uppercase tracking-wide text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] line-clamp-2'>
                 {partido.equipo_local}
               </span>
             </div>
 
-            <div className='vs-badge z-20 mx-4'>
-              <span className='font-barlow text-2xl font-black text-white italic tracking-tighter'>VS</span>
+            <div className='vs-badge z-20 mx-3'>
+              <span className='font-barlow text-lg font-black text-white tracking-tight'>VS</span>
             </div>
 
             <div className='flex-1 text-center z-10 px-2'>
-              <span className='font-barlow text-xl sm:text-2xl font-black uppercase tracking-wider text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] transition-all hover:scale-105 line-clamp-2'>
+              <span className='font-barlow text-base sm:text-lg font-black uppercase tracking-wide text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] line-clamp-2'>
                 {partido.equipo_visitante}
               </span>
             </div>

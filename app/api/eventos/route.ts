@@ -8,7 +8,7 @@ export async function GET() {
         'Referer': 'https://streamtpnew.com/',
         'Accept': 'application/json',
       },
-      next: { revalidate: 300 }, // Cache response for 5 minutes
+      cache: 'no-store', // Siempre datos frescos, sin caché de Next.js
     })
 
     if (!res.ok) {
@@ -21,7 +21,7 @@ export async function GET() {
     return NextResponse.json(data, {
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
       },
     })
   } catch (error: any) {
