@@ -21,7 +21,7 @@ interface PartidoGrupo {
   links: string[]
 }
 
-const IMG_DEFAULT = 'https://i.imgur.com/9S9J4O0.jpeg'
+const IMG_DEFAULT = 'https://i.imgur.com/NwU54jR.jpeg'
 
 export default function CalendarioPage() {
   const [eventos, setEventos] = useState<Evento[]>([])

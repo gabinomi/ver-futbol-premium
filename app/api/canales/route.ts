@@ -26,7 +26,7 @@ export async function GET() {
     
     // 2. Extraer los datos seguros mediante regex
     const regex = /'([^']+)'\s*:\s*'([^']+)'/g
-    const parsedChannels = []
+    const parsedChannels: { id: string; name: string; url: string; image: string }[] = []
     let match
 
     while ((match = regex.exec(channelsBlock)) !== null) {
@@ -48,23 +48,21 @@ export async function GET() {
       }
     }
 
-    // Filtrar solo los canales que realmente queremos mostrar
-    // (O todos, pero ordenados. En este caso dejaremos los más importantes primero o los definidos en nuestro metadata).
-    // Para respetar el diseño del usuario (ESPN, FOX, TYC, TNT)
-    const priorityIds = ['espn', 'espn2', 'espn3', 'espnpremium', 'fox1ar', 'fox2ar', 'fox3ar', 'tycsports', 'tycinternacional', 'dsportsplus', 'tntsports']
-    
-    const sortedChannels = parsedChannels.sort((a, b) => {
-      const idxA = priorityIds.indexOf(a.id)
-      const idxB = priorityIds.indexOf(b.id)
-      if (idxA !== -1 && idxB !== -1) return idxA - idxB
-      if (idxA !== -1) return -1
-      if (idxB !== -1) return 1
-      return a.name.localeCompare(b.name)
-    })
+    // Lista blanca estricta: solo estos canales se muestran, en este orden exacto
+    const WHITELIST = [
+      'espn', 'espn2', 'espn3', 'espnpremium',
+      'fox1ar', 'fox2ar', 'fox3ar',
+      'tycsports', 'tycinternacional',
+      'dsports', 'dsports2', 'dsportsplus',
+      'tntsports', 'futv', 'telefe'
+    ]
 
-    // Retorna sólo los más importantes (los del CSV de la imagen y otros si hace falta, pero dándole prioridad).
-    // Tomaré el top (CSV indicaba unos 10 canales clave). Podríamos devolver todos.
-    return NextResponse.json({ canales: sortedChannels }, {
+    // Filtrar solo los de la whitelist y ordenarlos según el orden de la lista
+    const filteredChannels = WHITELIST
+      .map(wlId => parsedChannels.find(c => c.id === wlId))
+      .filter((c): c is NonNullable<typeof c> => c !== undefined)
+
+    return NextResponse.json({ canales: filteredChannels }, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1200'

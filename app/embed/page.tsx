@@ -19,7 +19,7 @@ function EmbedContent() {
   const params = useSearchParams()
   const destUrl = params.get('url')
   const titulo = params.get('t') || 'Transmisión en vivo'
-  const imgUrl = params.get('img') || IMG_DEFAULT_AGENDA
+  const imgUrl = params.get('img') || 'https://i.imgur.com/NwU54jR.jpeg'
 
   const opt2 = params.get('opt2')
   const opt3 = params.get('opt3')
