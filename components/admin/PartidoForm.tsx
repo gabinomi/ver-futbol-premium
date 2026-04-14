@@ -262,11 +262,42 @@ export default function PartidoForm({ partido, modo }: Props) {
               </div>
 
               {/* API ESPN ID Field para automatización */}
+              {/* API ESPN ID Field para automatización */}
               <div className='bg-blue-600/10 border border-blue-500/20 rounded-2xl p-5'>
-                <label className='text-[10px] font-black uppercase tracking-[2.5px] text-blue-400 mb-2 flex items-center gap-2'>
-                  <RefreshCw size={14} className='text-blue-500' />
-                  ID ESPN (Auto-Marcadores y Reloj)
-                </label>
+                <div className='flex items-center justify-between mb-2'>
+                  <label className='text-[10px] font-black uppercase tracking-[2.5px] text-blue-400 flex items-center gap-2'>
+                    <RefreshCw size={14} className='text-blue-500' />
+                    ID ESPN (Auto-Marcadores y Reloj)
+                  </label>
+                  <button 
+                    type='button' 
+                    onClick={async () => {
+                      if (!form.equipo_local || !form.equipo_visitante) {
+                        toast('Completa los nombres de los equipos primero', 'error')
+                        return
+                      }
+                      try {
+                        const res = await fetch('/api/admin/buscar-espn', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ local: form.equipo_local, visitante: form.equipo_visitante })
+                        })
+                        const data = await res.json()
+                        if (res.ok && data.espn_id) {
+                          set('metadata', { ...form.metadata, espn_id: data.espn_id })
+                          toast('¡Partido detectado en ESPN automáticamente!', 'success')
+                        } else {
+                          toast(data.error || 'No se pudo detectar el ID', 'error')
+                        }
+                      } catch (e) {
+                        toast('Error conectando al buscador', 'error')
+                      }
+                    }}
+                    className='text-[9px] bg-blue-500 hover:bg-blue-400 text-white font-bold uppercase tracking-[1px] px-3 py-1 rounded shadow-md transition-colors'
+                  >
+                    🔍 Auto-Detectar
+                  </button>
+                </div>
                 <input 
                   type='text'
                   className='w-full bg-[#081024]/80 border border-blue-500/30 rounded-xl px-4 py-2.5 text-white placeholder-blue-300/30 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm font-mono'
@@ -278,7 +309,7 @@ export default function PartidoForm({ partido, modo }: Props) {
                   placeholder='Ej: 740912 (Dejar vacío si no se requiere)' 
                 />
                 <p className='text-[10px] text-blue-300/60 font-medium mt-2'>
-                  Si ingresás el ID de un partido de ESPN, los marcadores y el tiempo se actualizarán solos.
+                  Si ingresás el ID de un partido de ESPN, los marcadores y el tiempo se actualizarán solos. Podés buscarlo también en la URL del partido en espn.com
                 </p>
               </div>
             </div>
