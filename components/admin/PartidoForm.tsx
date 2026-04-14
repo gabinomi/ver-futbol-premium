@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Partido, Estado } from '@/types'
-import { Search, Save, Loader2, Calendar, Target, Image as ImageIcon, CheckCircle2, AlertCircle, Info, Radio, Tv, X, Plus } from 'lucide-react'
+import { Search, Save, Loader2, Calendar, Target, Image as ImageIcon, CheckCircle2, AlertCircle, Info, Radio, Tv, X, Plus, RefreshCw } from 'lucide-react'
 import { useToast } from '@/components/ui/Toaster'
 import { AnimatePresence, motion } from 'framer-motion'
 import { getTimezoneEstimates } from '@/lib/utils'
@@ -306,7 +306,6 @@ export default function PartidoForm({ partido, modo }: Props) {
                   <input type='number' min={0} className={`${inputCls} text-center font-black text-lg`} value={form.gol_visitante} onChange={e => set('gol_visitante', +e.target.value)} />
                 </div>
               </div>
-            </div>
           </section>
 
           <section className='glass-panel rounded-[2.5rem] p-10'>

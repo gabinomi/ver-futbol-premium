@@ -79,6 +79,9 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
               <span className={`inline-flex items-center gap-1.5 ${badge.cls} text-white px-3 py-1 rounded-full text-[10px] font-black tracking-[2px] uppercase mb-3 shadow-md ring-1 ring-white/20`}>
                 {badge.dot && <span className='w-1.5 h-1.5 bg-white rounded-full animate-blink' />}
                 {badge.label}
+                {partido.estado === 'EN-VIVO' && partido.metadata?.reloj && (
+                  <span className='ml-1 text-white border-l border-white/30 pl-2'>{partido.metadata.reloj}</span>
+                )}
               </span>
               <h1 className='font-barlow text-xl font-black tracking-[3px] uppercase text-white drop-shadow-xl'>
                 FÚTBOL EN DIRECTO
