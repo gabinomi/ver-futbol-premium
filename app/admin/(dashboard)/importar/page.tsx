@@ -80,7 +80,10 @@ export default function ImportarAgendaPage() {
   }, [])
 
   const eventosFiltrados = filtro === 'futbol'
-    ? eventos.filter(e => CATEGORIAS_FUTBOL.includes(e.category))
+    ? eventos.filter(e => 
+        CATEGORIAS_FUTBOL.includes(e.category) || 
+        ['en vivo', 'pronto', 'proximo', 'próximo'].includes(e.status.toLowerCase())
+      )
     : eventos
 
   const toggleSeleccion = (key: string) => {

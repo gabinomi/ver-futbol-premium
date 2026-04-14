@@ -74,8 +74,8 @@ export function matchEspnEvent(
 
   // Primero buscar coincidencia estricta en displayName
   for (const ev of espnEvents) {
-     const homeTeam = ev.competitors.find(c => c.homeAway === 'home')?.team.displayName || ''
-     const awayTeam = ev.competitors.find(c => c.homeAway === 'away')?.team.displayName || ''
+     const homeTeam = ev.competitors?.find(c => c.homeAway === 'home')?.team.displayName || ''
+     const awayTeam = ev.competitors?.find(c => c.homeAway === 'away')?.team.displayName || ''
      
      const espnL = norm(homeTeam)
      const espnV = norm(awayTeam)
@@ -89,8 +89,8 @@ export function matchEspnEvent(
 
   // Si no encuentra, tratar de ser mas agresivo comparando las primeras letras (útil para "Talleres (C)" vs "Talleres")
   for (const ev of espnEvents) {
-    const homeTeam = ev.competitors.find(c => c.homeAway === 'home')?.team.displayName || ''
-    const awayTeam = ev.competitors.find(c => c.homeAway === 'away')?.team.displayName || ''
+    const homeTeam = ev.competitors?.find(c => c.homeAway === 'home')?.team.displayName || ''
+    const awayTeam = ev.competitors?.find(c => c.homeAway === 'away')?.team.displayName || ''
     
     const espnL = norm(homeTeam).split(' ')[0]
     const espnV = norm(awayTeam).split(' ')[0]

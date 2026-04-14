@@ -26,8 +26,8 @@ export async function GET(request: Request) {
     const espnData = await fetchEspnEventSummary(espnId)
     if (!espnData) continue // No lo encontro o falla temporal
 
-    const home = espnData.competitors.find(c => c.homeAway === 'home')
-    const away = espnData.competitors.find(c => c.homeAway === 'away')
+    const home = espnData.competitors?.find(c => c.homeAway === 'home')
+    const away = espnData.competitors?.find(c => c.homeAway === 'away')
 
     if (!home || !away) continue
 
