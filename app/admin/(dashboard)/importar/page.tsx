@@ -136,6 +136,25 @@ export default function ImportarAgendaPage() {
       try {
         const equipos = parsearEquipos(grupo.parsed)
         
+        // Convertir "HH:mm" → ISO timestamp completo en UTC usando la fecha de hoy
+        const buildHoraUtc = (timeStr: string): string => {
+          const parts = timeStr.split(':')
+          if (parts.length < 2) return new Date().toISOString()
+          const h = parseInt(parts[0], 10)
+          const m = parseInt(parts[1], 10)
+          const now = new Date()
+          return new Date(Date.UTC(
+            now.getUTCFullYear(),
+            now.getUTCMonth(),
+            now.getUTCDate(),
+            isNaN(h) ? 0 : h,
+            isNaN(m) ? 0 : m,
+            0
+          )).toISOString()
+        }
+
+        const hora_utc = buildHoraUtc(grupo.time)
+        
         // Construir slug automático
         const slug = `${equipos.local}-vs-${equipos.visitante}-${Date.now()}`
           .toLowerCase()
@@ -147,7 +166,7 @@ export default function ImportarAgendaPage() {
           equipo_local: equipos.local,
           equipo_visitante: equipos.visitante,
           slug,
-          hora_utc: grupo.time,          // ya viene como ISO/UTC del API
+          hora_utc: hora_utc,          // ISO completo: "2026-04-14T19:30:00.000Z"
           estado: grupo.status === 'en vivo' ? 'EN-VIVO' : 'PROXIMO',
           link1: grupo.links[0] || null,
           link2: grupo.links[1] || null,
