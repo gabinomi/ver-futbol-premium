@@ -141,10 +141,22 @@ export default function PartidoForm({ partido, modo }: Props) {
     const url = modo === 'nuevo' ? '/api/admin/partidos' : `/api/admin/partidos/${partido?.id}`
     const method = modo === 'nuevo' ? 'POST' : 'PUT'
     try {
+      // En modo edición, excluir campos inmutables para evitar errores de constraint
+      let body: Partial<Partido> = { ...form }
+      if (modo === 'editar') {
+        const { id, slug, creado_en, orden, ...editable } = body as any
+        // Regenerar slug solo si cambiaron los nombres de equipo
+        const slugNuevo = `${form.equipo_local}-vs-${form.equipo_visitante}`
+          .toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '')
+        body = { ...editable, slug: slugNuevo }
+      }
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(body),
       })
       const data = await res.json()
       if (res.ok) {

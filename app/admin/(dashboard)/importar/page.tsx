@@ -136,19 +136,22 @@ export default function ImportarAgendaPage() {
       try {
         const equipos = parsearEquipos(grupo.parsed)
         
-        // Convertir "HH:mm" → ISO timestamp completo en UTC usando la fecha de hoy
+        // StreamTP usa UTC-5 (Panamá). Para guardar en Supabase (UTC real) sumar +5h.
+        // Así: 19:30 StreamTP → 00:30 UTC → 21:30 ARG (UTC-3) ✓
         const buildHoraUtc = (timeStr: string): string => {
           const parts = timeStr.split(':')
           if (parts.length < 2) return new Date().toISOString()
           const h = parseInt(parts[0], 10)
           const m = parseInt(parts[1], 10)
+          if (isNaN(h) || isNaN(m)) return new Date().toISOString()
+          // UTC = StreamTP_time + 5h (porque StreamTP es UTC-5)
           const now = new Date()
           return new Date(Date.UTC(
             now.getUTCFullYear(),
             now.getUTCMonth(),
             now.getUTCDate(),
-            isNaN(h) ? 0 : h,
-            isNaN(m) ? 0 : m,
+            h + 5,   // +5 → UTC-5 a UTC real
+            m,
             0
           )).toISOString()
         }

@@ -159,9 +159,9 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
                   : []
               if (lista.length === 0) return null
               return (
-                <div className='flex items-center gap-3 bg-white/5 border border-dashed border-blue-500/30 rounded-xl px-4 py-3 group hover:bg-blue-500/5 transition-colors'>
+                <div className='flex items-center justify-center gap-3 bg-white/5 border border-dashed border-blue-500/30 rounded-xl px-4 py-3 group hover:bg-blue-500/5 transition-colors'>
                   <Tv2 size={15} className='text-blue-500 flex-shrink-0' />
-                  <div className='flex flex-wrap items-center gap-x-1.5 gap-y-1'>
+                  <div className='flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1'>
                     {lista.map((canal, i) => (
                       <span key={i} className='flex items-center gap-1.5'>
                         <span className='text-[13px] font-semibold text-slate-300 tracking-wide'>{canal}</span>
