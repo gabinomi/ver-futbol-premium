@@ -261,7 +261,29 @@ export default function PartidoForm({ partido, modo }: Props) {
                 ))}
               </div>
 
-              <div>
+              {/* API ESPN ID Field para automatización */}
+              <div className='bg-blue-600/10 border border-blue-500/20 rounded-2xl p-5'>
+                <label className='text-[10px] font-black uppercase tracking-[2.5px] text-blue-400 mb-2 flex items-center gap-2'>
+                  <RefreshCw size={14} className='text-blue-500' />
+                  ID ESPN (Auto-Marcadores y Reloj)
+                </label>
+                <input 
+                  type='text'
+                  className='w-full bg-[#081024]/80 border border-blue-500/30 rounded-xl px-4 py-2.5 text-white placeholder-blue-300/30 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm font-mono'
+                  value={form.metadata?.espn_id || ''} 
+                  onChange={e => {
+                    const val = e.target.value.replace(/[^0-9]/g, '') // Solo números
+                    set('metadata', { ...form.metadata, espn_id: val ? val : null })
+                  }} 
+                  placeholder='Ej: 740912 (Dejar vacío si no se requiere)' 
+                />
+                <p className='text-[10px] text-blue-300/60 font-medium mt-2'>
+                  Si ingresás el ID de un partido de ESPN, los marcadores y el tiempo se actualizarán solos.
+                </p>
+              </div>
+            </div>
+
+            <div className='mt-8'>
                 <button type='button' onClick={buscarPartido} disabled={buscando}
                   className='relative w-full group overflow-hidden bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-blue-500/30 py-5 rounded-[1.5rem] transition-all duration-300'>
                   <div className='relative z-10 flex items-center justify-center gap-3'>
