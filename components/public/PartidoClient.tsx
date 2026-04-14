@@ -148,13 +148,32 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
               )}
             </a>
 
-            {/* INFO CANALES */}
-            {partido.canales && (
-              <div className='flex items-center gap-4 bg-white/5 border border-dashed border-blue-500/30 rounded-2xl px-5 py-4 text-sm group hover:bg-blue-500/5 transition-colors'>
-                <Tv2 size={20} className='text-blue-500 flex-shrink-0 animate-pulse' />
-                <span className='font-medium text-slate-300 tracking-wide text-[14px] sm:text-[16px] leading-relaxed'>{partido.canales}</span>
-              </div>
-            )}
+            {/* INFO CANALES — normaliza string legacy o array nuevo */}
+            {(() => {
+              // Supabase puede devolver string (datos viejos) o array (datos nuevos)
+              const raw = partido.canales as unknown
+              const lista: string[] = Array.isArray(raw)
+                ? (raw as string[]).filter(Boolean)
+                : typeof raw === 'string' && (raw as string).trim()
+                  ? (raw as string).split(',').map(s => s.trim()).filter(Boolean)
+                  : []
+              if (lista.length === 0) return null
+              return (
+                <div className='flex items-center gap-3 bg-white/5 border border-dashed border-blue-500/30 rounded-xl px-4 py-3 group hover:bg-blue-500/5 transition-colors'>
+                  <Tv2 size={15} className='text-blue-500 flex-shrink-0' />
+                  <div className='flex flex-wrap items-center gap-x-1.5 gap-y-1'>
+                    {lista.map((canal, i) => (
+                      <span key={i} className='flex items-center gap-1.5'>
+                        <span className='text-[13px] font-semibold text-slate-300 tracking-wide'>{canal}</span>
+                        {i < lista.length - 1 && (
+                          <span className='text-slate-500 text-[11px] select-none font-bold'>·</span>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )
+            })()}
 
             {/* HORARIOS */}
             {partido.estado !== 'FINALIZADO' && horarios && (

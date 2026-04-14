@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { 
   LayoutDashboard, Plus, LogOut, Settings, Globe, 
   ShieldCheck, ChevronLeft, ChevronRight, Pin, PinOff,
-  Activity, BarChart3, Database
+  Activity, BarChart3, Database, CalendarCheck
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -18,6 +18,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const navItems = [
     { href: '/admin/partidos', icon: LayoutDashboard, label: 'Partidos', sub: 'Gestión de eventos' },
     { href: '/admin/partidos/new', icon: Plus, label: 'Nuevo Partido', sub: 'Crear entrada' },
+    { href: '/admin/importar', icon: CalendarCheck, label: 'Importar Agenda', sub: 'Desde eventos en vivo' },
   ]
 
   const SidebarWidth = isPinned ? (isCollapsed ? 'w-24' : 'w-72') : (isHovered && isCollapsed ? 'w-72' : 'w-24')
