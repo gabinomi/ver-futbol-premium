@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { utcToArg, parsearTitulo } from '@/lib/flags'
+import { fetchEspnDailyScoreboard, matchEspnEvent, ESPNEventInfo } from '@/lib/espn'
 import { Play, RefreshCw, CheckCircle2, Clock, Filter, Loader2, CalendarCheck, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react'
 
 interface Evento {
@@ -132,10 +133,22 @@ export default function ImportarAgendaPage() {
     const resultOk: string[] = []
     const resultErr: string[] = []
 
+    let espnEvents: ESPNEventInfo[] = []
+    try {
+      espnEvents = await fetchEspnDailyScoreboard()
+    } catch (e) {
+      console.warn("No se pudo cargar el scoreboard de ESPN", e)
+    }
+
     for (const grupo of grupos) {
       try {
         const equipos = parsearEquipos(grupo.parsed)
         
+        let espnId: string | null = null
+        if (espnEvents.length > 0) {
+          espnId = matchEspnEvent(equipos.local, equipos.visitante, espnEvents)
+        }
+
         // StreamTP usa UTC-5 (Panamá). Para guardar en Supabase (UTC real) sumar +5h.
         // Así: 19:30 StreamTP → 00:30 UTC → 21:30 ARG (UTC-3) ✓
         const buildHoraUtc = (timeStr: string): string => {
@@ -186,6 +199,7 @@ export default function ImportarAgendaPage() {
             importado_de: 'agenda',
             titulo_original: grupo.title,
             liga: grupo.parsed.liga || null,
+            espn_id: espnId || null
           },
         }
 
