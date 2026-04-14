@@ -283,55 +283,7 @@ export default function PartidoForm({ partido, modo }: Props) {
               </div>
             </div>
 
-            <div className='mt-8'>
-                <button type='button' onClick={buscarPartido} disabled={buscando}
-                  className='relative w-full group overflow-hidden bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-blue-500/30 py-5 rounded-[1.5rem] transition-all duration-300'>
-                  <div className='relative z-10 flex items-center justify-center gap-3'>
-                    {buscando ? <Loader2 size={18} className='animate-spin text-blue-500' /> : <Search size={18} className='text-blue-500 group-hover:scale-110 transition-transform' />}
-                    <span className='font-barlow font-black uppercase tracking-[3px] text-xs text-white'>Buscar Fixture en Tiempo Real</span>
-                  </div>
-                  <div className='absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity' />
-                </button>
 
-                <AnimatePresence>
-                  {fixturesFound.length > 1 && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      className='mt-6 glass-panel rounded-3xl p-6 border-blue-500/20'
-                    >
-                      <div className='flex items-center gap-2 mb-4'>
-                        <Info size={14} className='text-blue-500' />
-                        <span className='text-[10px] font-black uppercase tracking-[2px] text-blue-400'>Múltiples coincidencias (API)</span>
-                      </div>
-                      <div className='flex flex-col gap-3'>
-                        {fixturesFound.map((f) => (
-                          <button
-                            key={f.fixture_id}
-                            type='button'
-                            onClick={() => seleccionarFixture(f)}
-                            className='flex items-center justify-between p-4 bg-white/5 hover:bg-blue-600/10 rounded-2xl transition-all border border-white/5 hover:border-blue-500/20 group text-left'
-                          >
-                            <div className='flex flex-col'>
-                              <span className='text-sm font-barlow font-black text-white uppercase tracking-wider group-hover:text-blue-400'>
-                                {f.local} <span className='text-slate-600 italic'>vs</span> {f.visitante}
-                              </span>
-                              <span className='text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-1'>
-                                {new Date(f.hora_utc).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                            </div>
-                            <div className='flex items-center gap-2'>
-                              <img src={f.escudo_local || ''} className='w-8 h-8 object-contain' />
-                              <img src={f.escudo_visitante || ''} className='w-8 h-8 object-contain' />
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
 
               <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
                 <div className='group'>
