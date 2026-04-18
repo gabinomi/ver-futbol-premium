@@ -241,7 +241,7 @@ export default function MarcadoresPage() {
                                 <div className='flex items-center justify-end flex-1 bg-white/[0.02] border border-white/[0.04] p-2.5 rounded-xl gap-2 sm:gap-3 min-w-0'>
                                   <span className='font-barlow text-sm sm:text-base font-bold text-slate-200 truncate'>{homeName}</span>
                                   <div className='relative w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0'>
-                                    {homeLogo && <Image src={homeLogo} alt={homeName} fill className='object-contain drop-shadow-md' />}
+                                    {homeLogo && <img src={homeLogo} alt={homeName} className='w-full h-full object-contain drop-shadow-md' />}
                                   </div>
                                 </div>
 
@@ -278,7 +278,7 @@ export default function MarcadoresPage() {
                                 {/* Visitante */}
                                 <div className='flex items-center justify-start flex-1 bg-white/[0.02] border border-white/[0.04] p-2.5 rounded-xl gap-2 sm:gap-3 min-w-0'>
                                   <div className='relative w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0'>
-                                    {awayLogo && <Image src={awayLogo} alt={awayName} fill className='object-contain drop-shadow-md' />}
+                                    {awayLogo && <img src={awayLogo} alt={awayName} className='w-full h-full object-contain drop-shadow-md' />}
                                   </div>
                                   <span className='font-barlow text-sm sm:text-base font-bold text-slate-200 truncate'>{awayName}</span>
                                 </div>

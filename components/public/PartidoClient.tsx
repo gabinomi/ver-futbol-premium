@@ -52,12 +52,7 @@ function TeamShield({ name, initialUrl }: { name: string; initialUrl: string | n
 }
 
 export default function PartidoClient({ partido, escudoLocal, escudoVisitante, horarios, links }: Props) {
-  const liveState = useLiveMatch(partido.metadata?.espn_id, {
-    golLocal: partido.gol_local,
-    golVisitante: partido.gol_visitante,
-    estado: partido.estado,
-    reloj: partido.metadata?.reloj || null
-  })
+  const liveState = useLiveMatch(partido)
 
   const badge = estadoBadge[liveState.estado as keyof typeof estadoBadge] || estadoBadge['PROXIMO']
   const imgVideo = partido.img_video || 'https://placehold.co/720x405/060d1a/1e40af?text=EN+VIVO'
