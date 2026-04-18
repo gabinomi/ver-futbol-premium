@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Partido } from '@/types'
 import { Home, Play, Radio, Clock, Tv2, PlayCircle } from 'lucide-react'
 import GlobalNav from '@/components/public/GlobalNav'
+import { useLiveMatch } from '@/hooks/useLiveMatch'
 
 interface Props {
   partido: Partido
@@ -51,7 +52,14 @@ function TeamShield({ name, initialUrl }: { name: string; initialUrl: string | n
 }
 
 export default function PartidoClient({ partido, escudoLocal, escudoVisitante, horarios, links }: Props) {
-  const badge = estadoBadge[partido.estado] || estadoBadge['PROXIMO']
+  const liveState = useLiveMatch(partido.metadata?.espn_id, {
+    golLocal: partido.gol_local,
+    golVisitante: partido.gol_visitante,
+    estado: partido.estado,
+    reloj: partido.metadata?.reloj || null
+  })
+
+  const badge = estadoBadge[liveState.estado as keyof typeof estadoBadge] || estadoBadge['PROXIMO']
   const imgVideo = partido.img_video || 'https://placehold.co/720x405/060d1a/1e40af?text=EN+VIVO'
 
   return (
@@ -79,8 +87,8 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
               <span className={`inline-flex items-center gap-1.5 ${badge.cls} text-white px-3 py-1 rounded-full text-[10px] font-black tracking-[2px] uppercase mb-3 shadow-md ring-1 ring-white/20`}>
                 {badge.dot && <span className='w-1.5 h-1.5 bg-white rounded-full animate-blink' />}
                 {badge.label}
-                {partido.estado === 'EN-VIVO' && partido.metadata?.reloj && (
-                  <span className='ml-1 text-white border-l border-white/30 pl-2'>{partido.metadata.reloj}</span>
+                {liveState.estado === 'EN-VIVO' && liveState.reloj && (
+                  <span className='ml-1 text-white border-l border-white/30 pl-2'>{liveState.reloj}</span>
                 )}
               </span>
               <h1 className='font-barlow text-xl font-black tracking-[3px] uppercase text-white drop-shadow-xl'>
@@ -116,9 +124,9 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
               <TeamShield name={partido.equipo_local} initialUrl={escudoLocal} />
             </div>
             <div className='flex items-center gap-4 flex-1 justify-center scale-110'>
-              <span className='font-barlow text-5xl font-black text-white leading-none min-w-10 text-center tracking-tighter drop-shadow-2xl'>{partido.gol_local}</span>
+              <span className='font-barlow text-5xl font-black text-white leading-none min-w-10 text-center tracking-tighter drop-shadow-2xl'>{liveState.golLocal}</span>
               <span className='font-barlow text-3xl font-bold text-white/20 italic'>-</span>
-              <span className='font-barlow text-5xl font-black text-white leading-none min-w-10 text-center tracking-tighter drop-shadow-2xl'>{partido.gol_visitante}</span>
+              <span className='font-barlow text-5xl font-black text-white leading-none min-w-10 text-center tracking-tighter drop-shadow-2xl'>{liveState.golVisitante}</span>
             </div>
             <div className='w-14 h-14 rounded-full bg-white/5 border border-white/10 overflow-hidden flex-shrink-0 shadow-inner group hover:border-blue-500/50 transition-colors'>
               <TeamShield name={partido.equipo_visitante} initialUrl={escudoVisitante} />
@@ -129,7 +137,7 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
           <div className='px-6 py-6 flex flex-col gap-5'>
 
             {/* BARRA RESULTADO FINAL (Oculta si no es Finalizado) */}
-            {partido.estado === 'FINALIZADO' && (
+            {liveState.estado === 'FINALIZADO' && (
               <div className='flex items-center justify-center gap-3 bg-red-600/10 border border-red-600/20 py-3 rounded-2xl'>
                 <span className='text-[10px] font-black uppercase tracking-[3px] text-red-400'>Resultado Final</span>
               </div>
@@ -144,7 +152,7 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
                   <Play size={28} className='text-white ml-1 fill-white shadow-white group-hover:scale-125 transition-transform' />
                 </div>
               </div>
-              {partido.estado === 'EN-VIVO' && (
+              {liveState.estado === 'EN-VIVO' && (
                 <div className='absolute top-4 left-4 bg-red-600 text-white text-[10px] font-black tracking-[2px] px-3 py-1 rounded-lg flex items-center gap-2 uppercase shadow-lg ring-1 ring-white/20 animate-pulse-red'>
                   <span className='w-2 h-2 bg-white rounded-full animate-blink' /> EN VIVO
                 </div>
@@ -179,7 +187,7 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
             })()}
 
             {/* HORARIOS */}
-            {partido.estado !== 'FINALIZADO' && horarios && (
+            {liveState.estado !== 'FINALIZADO' && horarios && (
               <div className='bg-white/[0.03] rounded-xl px-6 py-6 border border-white/[0.05]'>
                 <div className='flex items-center gap-3 text-[11px] uppercase tracking-[3px] text-white/30 font-black mb-5'>
                   <Clock size={16} className='text-white/20' />
