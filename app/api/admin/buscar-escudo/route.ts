@@ -13,15 +13,24 @@ export async function GET(request: Request) {
   try {
     const events = await fetchEspnDailyScoreboard()
     
-    for (const ev of events) {
-      const home = ev.competitors?.find(c => c.homeAway === 'home')?.team
-      const away = ev.competitors?.find(c => c.homeAway === 'away')?.team
+    for (const ev of events as any[]) {
+      // ESPN real structure: ev.competitions[0].competitors[]
+      const comp = ev.competitions?.[0]
+      const competitors = comp?.competitors || ev.competitors || []
       
-      if (home?.displayName && home?.logo && coincide(home.displayName, name)) {
-        return NextResponse.json({ url: home.logo })
+      const home = competitors.find((c: any) => c.homeAway === 'home')
+      const away = competitors.find((c: any) => c.homeAway === 'away')
+      
+      const homeName = home?.team?.displayName || home?.team?.name || ''
+      const awayName = away?.team?.displayName || away?.team?.name || ''
+      const homeLogo = home?.team?.logo || null
+      const awayLogo = away?.team?.logo || null
+      
+      if (homeName && homeLogo && coincide(homeName, name)) {
+        return NextResponse.json({ url: homeLogo })
       }
-      if (away?.displayName && away?.logo && coincide(away.displayName, name)) {
-        return NextResponse.json({ url: away.logo })
+      if (awayName && awayLogo && coincide(awayName, name)) {
+        return NextResponse.json({ url: awayLogo })
       }
     }
     

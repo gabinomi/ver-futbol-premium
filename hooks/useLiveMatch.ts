@@ -26,21 +26,50 @@ const SLUG_MAP: Record<string, string> = {
   'liga betplay': 'col.1', 'liga mx': 'mex.1',
 }
 
-function getSlugs(categoria: string | null): string[] {
-  const cat = (categoria || '').toLowerCase().trim()
-  if (SLUG_MAP[cat]) return [SLUG_MAP[cat]]
-  
-  const slugs: string[] = []
-  Object.keys(SLUG_MAP).forEach(k => {
-    if (cat.includes(k) && !slugs.includes(SLUG_MAP[k])) {
-      slugs.push(SLUG_MAP[k])
-    }
-  })
-  
-  if (!slugs.length) {
-    return ['arg.1', 'arg.copa', 'conmebol.libertadores', 'conmebol.sudamericana']
+function getSlugs(partido: Partido): string[] {
+  // 1. Intentar con metadata.liga (nombre real de la liga importada del calendario)
+  // Esto es equivalente a como Blogger usaba las "etiquetas" del post
+  const liga = ((partido.metadata?.liga as string) || '').toLowerCase().trim()
+  if (liga) {
+    // Match directo
+    if (SLUG_MAP[liga]) return [SLUG_MAP[liga]]
+    // Match parcial (ej: "LaLiga" encuentra "laliga")
+    const slugs: string[] = []
+    Object.keys(SLUG_MAP).forEach(k => {
+      if (liga.includes(k) || k.includes(liga)) {
+        if (!slugs.includes(SLUG_MAP[k])) slugs.push(SLUG_MAP[k])
+      }
+    })
+    if (slugs.length) return slugs
   }
-  return slugs
+
+  // 2. Fallback: intentar con categoria  
+  const cat = ((partido.categoria) || '').toLowerCase().trim()
+  if (cat) {
+    if (SLUG_MAP[cat]) return [SLUG_MAP[cat]]
+    const slugs: string[] = []
+    Object.keys(SLUG_MAP).forEach(k => {
+      if (cat.includes(k) && !slugs.includes(SLUG_MAP[k])) {
+        slugs.push(SLUG_MAP[k])
+      }
+    })
+    if (slugs.length) return slugs
+  }
+
+  // 3. Fallback: intentar con el titulo original del calendario
+  const tituloOrig = ((partido.metadata?.titulo_original as string) || '').toLowerCase().trim()
+  if (tituloOrig) {
+    const slugs: string[] = []
+    Object.keys(SLUG_MAP).forEach(k => {
+      if (tituloOrig.includes(k) && !slugs.includes(SLUG_MAP[k])) {
+        slugs.push(SLUG_MAP[k])
+      }
+    })
+    if (slugs.length) return slugs
+  }
+
+  // 4. Último recurso: ligas argentinas por defecto
+  return ['arg.1', 'arg.copa', 'conmebol.libertadores', 'conmebol.sudamericana']
 }
 
 export function norm(s: string) {
@@ -84,8 +113,10 @@ export function useLiveMatch(partido: Partido) {
       const away = comps.find((c: any) => c.homeAway === 'away')
       if (!home || !away) return false
 
-      const state = comp.status?.type?.state || 'pre'
-      const detail = comp.status?.type?.shortDetail || ''
+      // IMPORTANTE: ESPN pone status a nivel de EVENTO (ev.status), no dentro de competition
+      // Esto es exactamente como funciona en la plantilla de Blogger (línea 1747-1748)
+      const state = ev.status?.type?.state || comp.status?.type?.state || 'pre'
+      const detail = ev.status?.type?.shortDetail || comp.status?.type?.shortDetail || ''
       const golL = home.score !== undefined ? parseInt(home.score, 10) : 0
       const golV = away.score !== undefined ? parseInt(away.score, 10) : 0
       
@@ -115,7 +146,7 @@ export function useLiveMatch(partido: Partido) {
     }
 
     const fetchLive = async () => {
-      const slugs = getSlugs(partido.categoria)
+      const slugs = getSlugs(partido)
       const espnId = partido.metadata?.espn_id
 
       try {

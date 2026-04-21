@@ -60,41 +60,55 @@ export async function fetchEspnEventSummary(eventId: string): Promise<ESPNEventI
         return null
     }
 }
-
 // 3. Emparejamiento borroso (Fuzzy Matcher)
 // Trata de buscar dentro del scoreboard de ESPN el ID del evento de nuestro partido.
+// NOTA: La API de ESPN anida competitors en: event.competitions[0].competitors[]
 export function matchEspnEvent(
   localTitle: string, 
   visitanteTitle: string, 
-  espnEvents: ESPNEventInfo[]
+  espnEvents: any[]
 ): string | null {
   const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, '')
   
   const targetLocal = norm(localTitle)
   const targetVisita = norm(visitanteTitle)
 
-  // Primero buscar coincidencia estricta en displayName
-  for (const ev of espnEvents) {
-     const homeTeam = ev.competitors?.find(c => c.homeAway === 'home')?.team.displayName || ''
-     const awayTeam = ev.competitors?.find(c => c.homeAway === 'away')?.team.displayName || ''
-     
-     const espnL = norm(homeTeam)
-     const espnV = norm(awayTeam)
-
-     // Si ambos lados se incluyen o coinciden
-     if ((espnL.includes(targetLocal) || targetLocal.includes(espnL)) && 
-         (espnV.includes(targetVisita) || targetVisita.includes(espnV))) {
-             return ev.id
-     }
+  // Helper: extraer competitors del evento (manejar ambas estructuras)
+  function getTeams(ev: any): { homeName: string; awayName: string } | null {
+    // Estructura real: ev.competitions[0].competitors[]
+    const comp = ev.competitions?.[0]
+    const competitors = comp?.competitors || ev.competitors || []
+    const home = competitors.find((c: any) => c.homeAway === 'home')
+    const away = competitors.find((c: any) => c.homeAway === 'away')
+    if (!home || !away) return null
+    return {
+      homeName: home.team?.displayName || home.team?.name || '',
+      awayName: away.team?.displayName || away.team?.name || ''
+    }
   }
 
-  // Si no encuentra, tratar de ser mas agresivo comparando las primeras letras (útil para "Talleres (C)" vs "Talleres")
+  // Primero buscar coincidencia estricta en displayName
   for (const ev of espnEvents) {
-    const homeTeam = ev.competitors?.find(c => c.homeAway === 'home')?.team.displayName || ''
-    const awayTeam = ev.competitors?.find(c => c.homeAway === 'away')?.team.displayName || ''
+    const teams = getTeams(ev)
+    if (!teams) continue
+     
+    const espnL = norm(teams.homeName)
+    const espnV = norm(teams.awayName)
+
+    // Si ambos lados se incluyen o coinciden
+    if ((espnL.includes(targetLocal) || targetLocal.includes(espnL)) && 
+        (espnV.includes(targetVisita) || targetVisita.includes(espnV))) {
+            return ev.id
+    }
+  }
+
+  // Si no encuentra, tratar de ser mas agresivo comparando las primeras letras
+  for (const ev of espnEvents) {
+    const teams = getTeams(ev)
+    if (!teams) continue
     
-    const espnL = norm(homeTeam).split(' ')[0]
-    const espnV = norm(awayTeam).split(' ')[0]
+    const espnL = norm(teams.homeName).split(' ')[0]
+    const espnV = norm(teams.awayName).split(' ')[0]
 
     const tgtL = targetLocal.split(' ')[0]
     const tgtV = targetVisita.split(' ')[0]
