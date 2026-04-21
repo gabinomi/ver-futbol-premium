@@ -246,18 +246,18 @@ export default function MarcadoresPage() {
                                 </div>
 
                                 {/* Centro */}
-                                <div className='flex flex-col items-center justify-center w-[90px] sm:w-[110px] flex-shrink-0'>
+                                <div className='flex flex-col items-center justify-center min-w-[100px] sm:min-w-[130px] flex-shrink-0'>
                                   {isLive ? (
-                                    <div className='bg-red-600/10 border border-red-500 text-red-500 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black tracking-widest uppercase flex items-center gap-1 mb-2 shadow-sm'>
+                                    <div className='bg-red-600/10 border border-red-500 text-red-500 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black tracking-widest uppercase flex items-center gap-1 mb-2 shadow-sm whitespace-nowrap'>
                                       <span className='w-1.5 h-1.5 bg-red-500 rounded-full animate-blink' />
                                       {detail || (period === 1 ? '1er T' : period === 2 ? '2do T' : 'EN VIVO')}
                                     </div>
                                   ) : state === 'post' ? (
-                                    <div className='bg-slate-800/60 border border-slate-600 text-slate-400 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black tracking-widest uppercase mb-2'>
+                                    <div className='bg-slate-800/60 border border-slate-600 text-slate-400 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black tracking-widest uppercase mb-2 whitespace-nowrap'>
                                       Finalizado
                                     </div>
                                   ) : (
-                                    <div className='bg-blue-600/10 border border-blue-500 text-blue-400 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black tracking-widest uppercase mb-2'>
+                                    <div className='bg-blue-600/10 border border-blue-500 text-blue-400 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-black tracking-widest uppercase mb-2 whitespace-nowrap'>
                                       {timeStr} ARG
                                     </div>
                                   )}

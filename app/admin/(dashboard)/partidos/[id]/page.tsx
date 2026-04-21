@@ -3,6 +3,9 @@ import { Partido } from '@/types'
 import PartidoForm from '@/components/admin/PartidoForm'
 import { notFound } from 'next/navigation'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function EditarPartidoPage({ params }: { params: { id: string } }) {
   const { data } = await supabaseAdmin()
     .from('partidos')

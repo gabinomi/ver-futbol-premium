@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react'
 import PartidosTable from '@/components/admin/PartidosTable'
 
 export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function AdminPartidosPage() {
   const { data } = await supabaseAdmin()

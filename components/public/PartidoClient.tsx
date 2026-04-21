@@ -82,9 +82,6 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
               <span className={`inline-flex items-center gap-1.5 ${badge.cls} text-white px-3 py-1 rounded-full text-[10px] font-black tracking-[2px] uppercase mb-3 shadow-md ring-1 ring-white/20`}>
                 {badge.dot && <span className='w-1.5 h-1.5 bg-white rounded-full animate-blink' />}
                 {badge.label}
-                {liveState.estado === 'EN-VIVO' && liveState.reloj && (
-                  <span className='ml-1 text-white border-l border-white/30 pl-2'>{liveState.reloj}</span>
-                )}
               </span>
               <h1 className='font-barlow text-xl font-black tracking-[3px] uppercase text-white drop-shadow-xl'>
                 FÚTBOL EN DIRECTO
@@ -113,21 +110,7 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
             </div>
           </div>
 
-          {/* SCORE BAR COMPACTA */}
-          <div className='flex items-center justify-center gap-6 px-8 py-5 bg-black/40 border-y border-white/5'>
-            <div className='w-14 h-14 rounded-full bg-white/5 border border-white/10 overflow-hidden flex-shrink-0 shadow-inner group hover:border-blue-500/50 transition-colors'>
-              <TeamShield name={partido.equipo_local} initialUrl={escudoLocal} />
-            </div>
-            <div className='flex items-center gap-4 flex-1 justify-center scale-110'>
-              <span className='font-barlow text-5xl font-black text-white leading-none min-w-10 text-center tracking-tighter drop-shadow-2xl'>{liveState.golLocal}</span>
-              <span className='font-barlow text-3xl font-bold text-white/20 italic'>-</span>
-              <span className='font-barlow text-5xl font-black text-white leading-none min-w-10 text-center tracking-tighter drop-shadow-2xl'>{liveState.golVisitante}</span>
-            </div>
-            <div className='w-14 h-14 rounded-full bg-white/5 border border-white/10 overflow-hidden flex-shrink-0 shadow-inner group hover:border-blue-500/50 transition-colors'>
-              <TeamShield name={partido.equipo_visitante} initialUrl={escudoVisitante} />
-            </div>
-          </div>
-
+          {/* REUBICACIÓN: SCORE BAR AHORA ESTÁ ABAJO DEL VIDEO */}
           {/* CONTENIDO INTERNO */}
           <div className='px-6 py-6 flex flex-col gap-5'>
 
@@ -150,9 +133,25 @@ export default function PartidoClient({ partido, escudoLocal, escudoVisitante, h
               {liveState.estado === 'EN-VIVO' && (
                 <div className='absolute top-4 left-4 bg-red-600 text-white text-[10px] font-black tracking-[2px] px-3 py-1 rounded-lg flex items-center gap-2 uppercase shadow-lg ring-1 ring-white/20 animate-pulse-red'>
                   <span className='w-2 h-2 bg-white rounded-full animate-blink' /> EN VIVO
+                  {liveState.reloj && <span className='ml-1 border-l border-white/30 pl-2'>{liveState.reloj}</span>}
                 </div>
               )}
             </a>
+
+            {/* SCORE BAR COMPACTA (REUBICADA AQUÍ) */}
+            <div className='flex items-center justify-center gap-6 py-4 bg-black/20 rounded-2xl border border-white/5 shadow-inner mt-2'>
+              <div className='w-14 h-14 rounded-full bg-white/5 border border-white/10 overflow-hidden flex-shrink-0 shadow-inner group hover:border-blue-500/50 transition-colors'>
+                <TeamShield name={partido.equipo_local} initialUrl={escudoLocal} />
+              </div>
+              <div className='flex items-center gap-4 flex-1 justify-center scale-110'>
+                <span className='font-barlow text-5xl font-black text-white leading-none min-w-10 text-center tracking-tighter drop-shadow-2xl'>{liveState.golLocal}</span>
+                <span className='font-barlow text-3xl font-bold text-white/20 italic'>-</span>
+                <span className='font-barlow text-5xl font-black text-white leading-none min-w-10 text-center tracking-tighter drop-shadow-2xl'>{liveState.golVisitante}</span>
+              </div>
+              <div className='w-14 h-14 rounded-full bg-white/5 border border-white/10 overflow-hidden flex-shrink-0 shadow-inner group hover:border-blue-500/50 transition-colors'>
+                <TeamShield name={partido.equipo_visitante} initialUrl={escudoVisitante} />
+              </div>
+            </div>
 
             {/* INFO CANALES — normaliza string legacy o array nuevo */}
             {(() => {
