@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { supabaseAdmin } from '@/lib/supabase'
 import { slugify } from '@/lib/utils'
+
+export const dynamic = 'force-dynamic'
 
 function checkAuth(req: NextRequest) {
   const auth = req.cookies.get('admin_auth')
@@ -25,5 +28,6 @@ export async function POST(req: NextRequest) {
     .select()
     .single()
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  revalidatePath('/', 'layout')
   return NextResponse.json(data)
 }

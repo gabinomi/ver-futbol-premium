@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { supabaseAdmin } from '@/lib/supabase'
+
+export const dynamic = 'force-dynamic'
 
 function checkAuth(req: NextRequest) {
   return req.cookies.get('admin_auth')?.value === process.env.ADMIN_SECRET
@@ -16,6 +19,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     .select()
     .single()
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  revalidatePath('/', 'layout')
   return NextResponse.json(data)
 }
 
@@ -24,6 +28,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   if (!checkAuth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const { error } = await supabaseAdmin().from('partidos').delete().eq('id', params.id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  revalidatePath('/', 'layout')
   return NextResponse.json({ ok: true })
 }
 

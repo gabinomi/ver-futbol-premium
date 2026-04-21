@@ -43,14 +43,14 @@ function getSlugs(categoria: string | null): string[] {
   return slugs
 }
 
-function norm(s: string) {
+export function norm(s: string) {
   return s.toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .replace(/\b(fc|cf|ac|sc|cd|ca|club|atletico|athletic|real|sporting|rc|ud|sd|as)\b/gi, '')
     .replace(/[^a-z0-9 ]/g, '').replace(/  +/g, ' ').trim()
 }
 
-function coincide(a: string, b: string) {
+export function coincide(a: string, b: string) {
   const na = norm(a), nb = norm(b)
   if (na.length < 3 || nb.length < 3) return false
   const m = Math.min(5, Math.min(na.length, nb.length))

@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import GlobalNav from '@/components/public/GlobalNav'
 import Image from 'next/image'
 import { RefreshCw, CalendarDays, MapPin } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { coincide } from '@/hooks/useLiveMatch'
 
 // Configuracion de Ligas
 const LIGAS = [
@@ -26,6 +28,7 @@ const BASE_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/'
 
 export default function MarcadoresPage() {
   const [resultados, setResultados] = useState<Record<string, any[]>>({})
+  const [partidosDb, setPartidosDb] = useState<any[]>([])
   const [ligaActiva, setLigaActiva] = useState<string>('todas')
   const [cargando, setCargando] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
@@ -54,6 +57,17 @@ export default function MarcadoresPage() {
     )
 
     setResultados(nuevosResultados)
+    
+    // Fetch local matches that might be playing today
+    const { data: locales } = await supabase
+      .from('partidos')
+      .select('slug, equipo_local, equipo_visitante, metadata')
+      .neq('estado', 'FINALIZADO')
+    
+    if (locales) {
+      setPartidosDb(locales)
+    }
+
     setCargando(false)
     setRefreshing(false)
     setLastUpdated(new Date().toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }))
@@ -218,6 +232,12 @@ export default function MarcadoresPage() {
                           const venueCity = comp.venue?.address?.city || ''
                           const venueName = (venueFull && venueCity) ? `${venueFull}, ${venueCity}` : (venueFull || venueCity || '')
 
+                          // Cruce con nuestra base de datos
+                          const dbMatch = partidosDb.find(p => {
+                            if (p.metadata?.espn_id && String(p.metadata.espn_id) === String(ev.id)) return true
+                            return coincide(p.equipo_local, homeName) && coincide(p.equipo_visitante, awayName)
+                          })
+
                           return (
                             <div key={ev.id} className={`flex flex-col bg-[#081024] border rounded-xl overflow-hidden transition-colors ${isLive ? 'border-red-600/40 shadow-[0_0_15px_-3px_rgba(220,38,38,0.2)]' : 'border-white/5 hover:border-white/10'}`}>
                               
@@ -283,6 +303,15 @@ export default function MarcadoresPage() {
                                   <span className='font-barlow text-sm sm:text-base font-bold text-slate-200 truncate'>{awayName}</span>
                                 </div>
                               </div>
+
+                              {/* Botón Ver Partido si existe en DB local */}
+                              {dbMatch && (
+                                <div className='px-4 pb-4 flex justify-center'>
+                                  <a href={`/partido/${dbMatch.slug}`} className='flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-barlow text-xs sm:text-sm font-black tracking-widest uppercase px-6 py-2 rounded-lg shadow-lg hover:-translate-y-0.5 active:scale-95 transition-all w-full max-w-sm'>
+                                    ▶ Ver Partido
+                                  </a>
+                                </div>
+                              )}
                             </div>
                           )
                         })}

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { supabaseAdmin } from '@/lib/supabase'
 import { fetchEspnEventSummary } from '@/lib/espn'
 
@@ -65,6 +66,10 @@ export async function GET(request: Request) {
       .eq('id', partido.id)
 
     actualizados.push(partido.id)
+  }
+
+  if (actualizados.length > 0) {
+    revalidatePath('/', 'layout')
   }
 
   return NextResponse.json({ 
