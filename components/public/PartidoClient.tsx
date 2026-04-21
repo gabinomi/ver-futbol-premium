@@ -27,6 +27,8 @@ function TeamShield({ name, initialUrl }: { name: string; initialUrl: string | n
 
   useEffect(() => {
     if (!url) {
+      /*
+      // VERSIÓN THESPORTSDB (Comentada a petición)
       fetch(`https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(name)}`)
         .then(r => r.json())
         .then(data => {
@@ -34,6 +36,17 @@ function TeamShield({ name, initialUrl }: { name: string; initialUrl: string | n
           if (team) {
             const badge = team.strBadge || team.strLogo || team.strTeamBadge || team.strTeamLogo
             if (badge) setUrl(badge)
+          }
+        })
+        .catch(() => {})
+      */
+
+      // NUEVA VERSIÓN: Buscar en la API de ESPN (basado en el nombre)
+      fetch(`/api/admin/buscar-escudo?t=${encodeURIComponent(name)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data?.url) {
+            setUrl(data.url)
           }
         })
         .catch(() => {})

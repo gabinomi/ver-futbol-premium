@@ -46,7 +46,7 @@ function getSlugs(categoria: string | null): string[] {
 export function norm(s: string) {
   return s.toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/\b(fc|cf|ac|sc|cd|ca|club|atletico|athletic|real|sporting|rc|ud|sd|as)\b/gi, '')
+    .replace(/\b(fc|cf|ac|sc|cd|ca|rc|ud|sd|as)\b/gi, '')
     .replace(/[^a-z0-9 ]/g, '').replace(/  +/g, ' ').trim()
 }
 

@@ -25,6 +25,7 @@ export interface ESPNEventInfo {
       name: string
       displayName: string // "River Plate"
       abbreviation: string
+      logo?: string
     }
   }[]
 }
