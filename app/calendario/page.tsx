@@ -169,31 +169,31 @@ export default function CalendarioPage() {
                 const isOpen = openId === id
 
                 return (
-                  <div key={id} className={`bg-[#081024e6] border rounded-xl overflow-hidden transition-all duration-200 ${esVivo ? 'border-red-600/50 shadow-[0_0_16px_rgba(220,38,38,0.1)]' : 'border-white/5 hover:border-blue-600/40 hover:shadow-[0_4px_20px_rgba(37,99,235,0.1)]'}`}>
-                    <div className='flex items-center gap-3 px-4 py-3.5 cursor-pointer select-none' onClick={() => togglePartido(id)}>
-                      <div className='font-barlow text-lg font-black text-slate-200 w-12 flex-shrink-0 tracking-wide'>
+                  <div key={id} className={`bg-[#081024e6] border rounded-[12px] overflow-hidden transition-all duration-200 ${esVivo ? 'border-red-600/50 shadow-[0_0_16px_rgba(220,38,38,0.1)]' : 'border-white/5 hover:border-blue-600/40 hover:shadow-[0_4px_20px_rgba(37,99,235,0.1)]'}`}>
+                    <div className='flex items-center gap-3 px-4 py-3 cursor-pointer select-none' onClick={() => togglePartido(id)}>
+                      <div className='font-barlow text-[15px] font-black text-slate-200 w-11 flex-shrink-0 tracking-wide'>
                         {horaArg}
-                        <span className='block text-[9px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5'>ARG</span>
+                        <span className='block text-[8px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5'>ARG</span>
                       </div>
                       
-                      <div className='w-7 h-5 flex-shrink-0 bg-center bg-no-repeat bg-contain rounded-sm' style={{ backgroundImage: `url(${bandera})` }} />
+                      <div className='w-6 h-4 flex-shrink-0 bg-center bg-no-repeat bg-contain rounded-sm' style={{ backgroundImage: `url(${bandera})` }} />
                       
                       <div className='flex-1 min-w-0'>
-                        {parsed.liga && <div className='text-[10px] font-semibold tracking-[1.5px] uppercase text-slate-500 mb-0.5 truncate'>{parsed.liga}</div>}
-                        <div className='font-barlow text-[17px] font-extrabold uppercase tracking-wide text-slate-200 leading-tight truncate'>{parsed.partido}</div>
+                        {parsed.liga && <div className='text-[9px] font-semibold tracking-[1px] uppercase text-slate-500 mb-0.5 truncate'>{parsed.liga}</div>}
+                        <div className='font-barlow text-[14px] font-extrabold uppercase tracking-wide text-slate-200 leading-tight truncate'>{parsed.partido}</div>
                       </div>
 
                       <div className='flex flex-col items-end gap-1 flex-shrink-0'>
                         {esVivo ? (
-                          <div className='flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-600/15 border border-red-600/50 text-red-500 text-[9px] font-bold tracking-widest uppercase'>
+                          <div className='flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-600/15 border border-red-600/50 text-red-500 text-[8px] font-bold tracking-widest uppercase'>
                             <span className='w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse' /> EN VIVO
                           </div>
                         ) : (
-                          <div className='flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-600/12 border border-blue-600/50 text-blue-400 text-[9px] font-bold tracking-widest uppercase'>
+                          <div className='flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-600/12 border border-blue-600/50 text-blue-400 text-[8px] font-bold tracking-widest uppercase'>
                             PRONTO
                           </div>
                         )}
-                        <svg className={`w-3.5 h-3.5 text-slate-600 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                        <svg className={`w-3.5 h-3.5 text-slate-600 transition-transform duration-200 mt-0.5 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                       </div>
                     </div>
 

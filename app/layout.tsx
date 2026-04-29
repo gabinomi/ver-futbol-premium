@@ -28,10 +28,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${inter.variable} font-inter bg-[#060d1a] text-white min-h-screen overflow-x-hidden`}>
         <div className='bg-stadium fixed inset-0 z-[-1]' />
-        <Providers>
-          {children}
-          <GlobalFABs />
-        </Providers>
+        <div className='content-wrapper'>
+          <Providers>
+            {children}
+          </Providers>
+        </div>
+        <GlobalFABs />
       </body>
     </html>
   )
