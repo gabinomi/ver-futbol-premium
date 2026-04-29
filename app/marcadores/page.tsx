@@ -4,7 +4,6 @@ import GlobalNav from '@/components/public/GlobalNav'
 import Image from 'next/image'
 import { RefreshCw, CalendarDays, MapPin } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { coincide } from '@/hooks/useLiveMatch'
 
 // Configuracion de Ligas
 const LIGAS = [
@@ -232,10 +231,25 @@ export default function MarcadoresPage() {
                           const venueCity = comp.venue?.address?.city || ''
                           const venueName = (venueFull && venueCity) ? `${venueFull}, ${venueCity}` : (venueFull || venueCity || '')
 
-                          // Cruce con nuestra base de datos
+                          // Cruce ESTRICTO con nuestra base de datos
+                          // Usamos coincidencia más estricta que coincide() para evitar falsos positivos
+                          // (ej: "Real Madrid" no debe matchear con "Real Sociedad")
+                          const strictNorm = (s: string) => s.toLowerCase()
+                            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                            .replace(/[^a-z0-9 ]/g, '').replace(/  +/g, ' ').trim()
+
                           const dbMatch = partidosDb.find(p => {
+                            // Match por ESPN ID (100% confiable)
                             if (p.metadata?.espn_id && String(p.metadata.espn_id) === String(ev.id)) return true
-                            return coincide(p.equipo_local, homeName) && coincide(p.equipo_visitante, awayName)
+                            // Match estricto: ambos nombres normalizados deben incluirse mutuamente
+                            const dbLocal = strictNorm(p.equipo_local)
+                            const dbVisit = strictNorm(p.equipo_visitante)
+                            const espnHome = strictNorm(homeName)
+                            const espnAway = strictNorm(awayName)
+                            if (dbLocal.length < 3 || dbVisit.length < 3 || espnHome.length < 3 || espnAway.length < 3) return false
+                            const localOk = espnHome.includes(dbLocal) || dbLocal.includes(espnHome)
+                            const visitOk = espnAway.includes(dbVisit) || dbVisit.includes(espnAway)
+                            return localOk && visitOk
                           })
 
                           return (

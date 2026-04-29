@@ -57,6 +57,11 @@ body > *:not(.bg-stadium) {
   50% { transform: translateX(200%) skewX(-25deg); }
   100% { transform: translateX(200%) skewX(-25deg); }
 }
+@keyframes slPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(37,99,235,0.5); }
+  70%  { box-shadow: 0 0 0 18px rgba(37,99,235,0); }
+  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+}
 
 .btn-shining {
   /* Removed buggy left position animation that caused layout shifts */
