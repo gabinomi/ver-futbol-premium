@@ -97,6 +97,53 @@ export default function CanalesPage() {
 
   const canalData = canalActivo !== null ? CANALES[canalActivo] : null
 
+  function renderFilaCanales(indices: number[], label: string) {
+    return (
+      <div>
+        <div className='text-[10px] font-bold tracking-[2px] uppercase text-white/20 mb-2 pl-1'>{label}</div>
+        <div className='grid grid-cols-2 md:grid-cols-4 gap-3'>
+          {indices.map(idx => {
+            const canal = CANALES[idx]
+            if (!canal) return null
+            return (
+              <div
+                key={idx}
+                onClick={() => abrirCanal(idx)}
+                className={`relative flex flex-col items-center justify-between p-4 h-[155px] rounded-xl border cursor-pointer transition-all duration-200 hover:-translate-y-0.5 ${
+                  canalActivo === idx
+                    ? 'border-red-500 shadow-[0_0_0_2px_rgba(220,38,38,0.3),0_4px_20px_rgba(220,38,38,0.15)] bg-[#081024]'
+                    : 'border-white/[0.07] hover:border-blue-500/50 hover:shadow-[0_4px_20px_rgba(37,99,235,0.15)] bg-[#070b16cc]'
+                }`}
+              >
+                {/* Live badge */}
+                <span className='absolute top-2 right-2 flex items-center gap-1 bg-red-600/15 border border-red-600/40 text-red-400 px-1.5 py-0.5 rounded-full text-[7px] font-bold tracking-widest uppercase'>
+                  <span className='w-1 h-1 bg-red-500 rounded-full animate-blink' /> VIVO
+                </span>
+
+                {/* Logo */}
+                <div className='w-16 h-11 flex items-center justify-center mt-1'>
+                  <img src={canal.img} alt={canal.nombre} className='max-w-full max-h-full object-contain brightness-90' loading='lazy' />
+                </div>
+
+                {/* Name - fixed single line */}
+                <span className='font-barlow text-[13px] font-extrabold uppercase tracking-wide text-slate-300 text-center leading-tight truncate w-full'>{canal.nombre}</span>
+
+                {/* CTA - always at bottom */}
+                <div className={`w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-barlow font-bold uppercase tracking-wide border transition-all ${
+                  canalActivo === idx
+                    ? 'bg-red-600 border-red-600 text-white'
+                    : 'bg-blue-600/12 border-blue-600/35 text-blue-400'
+                }`}>
+                  <Play size={10} fill='currentColor' /> Ver Canal
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className='relative z-10 flex flex-col min-h-screen'>
       <GlobalNav />
@@ -206,50 +253,23 @@ export default function CanalesPage() {
               </div>
             )}
 
-            {/* ═══ GRID DE CANALES ═══ */}
-            <div>
-              <div className='flex items-center gap-3 mb-4'>
+            {/* ═══ CANALES AGRUPADOS ═══ */}
+            <div className='flex flex-col gap-6'>
+              <div className='flex items-center gap-3'>
                 <h1 className='font-barlow text-xl font-black uppercase tracking-[2px] text-white'>Canales Deportivos</h1>
                 <span className='flex items-center gap-1.5 bg-red-600/15 border border-red-600/40 text-red-400 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-widest uppercase'>
                   <span className='w-[5px] h-[5px] bg-red-500 rounded-full animate-blink' /> EN VIVO
                 </span>
               </div>
 
-              <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3'>
-                {CANALES.map((canal, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => abrirCanal(idx)}
-                    className={`relative flex flex-col items-center p-5 gap-3 rounded-xl border cursor-pointer transition-all duration-200 hover:-translate-y-0.5 ${
-                      canalActivo === idx
-                        ? 'border-red-500 shadow-[0_0_0_2px_rgba(220,38,38,0.3),0_4px_20px_rgba(220,38,38,0.15)] bg-[#081024]'
-                        : 'border-white/[0.07] hover:border-blue-500/50 hover:shadow-[0_4px_20px_rgba(37,99,235,0.15)] bg-[#070b16cc]'
-                    }`}
-                  >
-                    {/* Live badge */}
-                    <span className='absolute top-2 right-2 flex items-center gap-1 bg-red-600/15 border border-red-600/40 text-red-400 px-1.5 py-0.5 rounded-full text-[7px] font-bold tracking-widest uppercase'>
-                      <span className='w-1 h-1 bg-red-500 rounded-full animate-blink' /> VIVO
-                    </span>
-
-                    {/* Logo */}
-                    <div className='w-20 h-[52px] flex items-center justify-center'>
-                      <img src={canal.img} alt={canal.nombre} className='max-w-full max-h-full object-contain brightness-90 hover:brightness-110 transition-all' loading='lazy' />
-                    </div>
-
-                    {/* Name */}
-                    <span className='font-barlow text-sm font-extrabold uppercase tracking-wide text-slate-300 text-center leading-tight'>{canal.nombre}</span>
-
-                    {/* CTA */}
-                    <div className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[12px] font-barlow font-bold uppercase tracking-wide border transition-all ${
-                      canalActivo === idx
-                        ? 'bg-red-600 border-red-600 text-white'
-                        : 'bg-blue-600/12 border-blue-600/35 text-blue-400 group-hover:bg-blue-600/25 group-hover:text-white'
-                    }`}>
-                      <Play size={11} fill='currentColor' /> Ver Canal
-                    </div>
-                  </div>
-                ))}
-              </div>
+              {/* Fila 1: ESPN (0-3) */}
+              {renderFilaCanales([0,1,2,3], 'ESPN')}
+              {/* Fila 2: FOX 1,2,3 + TNT (4,5,6,14) */}
+              {renderFilaCanales([4,5,6,14], 'FOX / TNT')}
+              {/* Fila 3: TyC 7,8 + Win 12,13 */}
+              {renderFilaCanales([7,8,12,13], 'TyC / Win Sports')}
+              {/* Fila 4: DSports 9,10,11 */}
+              {renderFilaCanales([9,10,11], 'DSports')}
             </div>
           </div>
 
