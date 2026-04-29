@@ -193,12 +193,16 @@ function EmbedContent() {
 
               {/* Controles Iframe */}
               <div className='flex flex-wrap gap-2 py-1 items-center'>
-                <button onClick={() => setActiveStream(destUrl)} className={`px-3 py-1.5 rounded-lg text-xs font-barlow font-bold uppercase tracking-wider transition-colors ${activeStream === destUrl ? 'bg-blue-600 text-white' : 'bg-white/10 text-slate-400 hover:bg-white/20 hover:text-white'}`}>
-                  Manual (Global 1)
-                </button>
-                <button onClick={() => setActiveStream(buildGlobal2(destUrl))} className={`px-3 py-1.5 rounded-lg text-xs font-barlow font-bold uppercase tracking-wider transition-colors ${activeStream === buildGlobal2(destUrl) ? 'bg-blue-600 text-white' : 'bg-white/10 text-slate-400 hover:bg-white/20 hover:text-white'}`}>
-                  Auto (Global 2)
-                </button>
+                {(!destUrl?.includes('/html/fl/?get=')) && (
+                  <>
+                    <button onClick={() => setActiveStream(destUrl)} className={`px-3 py-1.5 rounded-lg text-xs font-barlow font-bold uppercase tracking-wider transition-colors ${activeStream === destUrl ? 'bg-blue-600 text-white' : 'bg-white/10 text-slate-400 hover:bg-white/20 hover:text-white'}`}>
+                      Manual (Global 1)
+                    </button>
+                    <button onClick={() => setActiveStream(buildGlobal2(destUrl))} className={`px-3 py-1.5 rounded-lg text-xs font-barlow font-bold uppercase tracking-wider transition-colors ${activeStream === buildGlobal2(destUrl) ? 'bg-blue-600 text-white' : 'bg-white/10 text-slate-400 hover:bg-white/20 hover:text-white'}`}>
+                      Auto (Global 2)
+                    </button>
+                  </>
+                )}
                 <button onClick={reloadIframe} className='px-3 py-1.5 rounded-lg text-xs font-barlow font-bold uppercase tracking-wider bg-white/5 text-red-400 border border-red-500/30 hover:bg-red-500/20 hover:text-white transition-colors'>
                   Recargar
                 </button>

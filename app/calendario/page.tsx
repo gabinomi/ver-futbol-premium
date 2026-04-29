@@ -1,9 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { utcToArg, detectarBandera, parsearTitulo } from '@/lib/flags'
-import { Play } from 'lucide-react'
+import { Play, Star } from 'lucide-react'
 import Link from 'next/link'
 import GlobalNav from '@/components/public/GlobalNav'
+import { CANALES, BASE_JW } from '@/lib/canales-data'
 
 interface Evento {
   title: string
@@ -207,12 +208,29 @@ export default function CalendarioPage() {
                           const redirUrl = buildRedirUrl(sliceLinks.slice(0, 4), g.title, IMG_DEFAULT)
                           
                           const isPrimary = i === 0
-                          
+
+                          // Buscar si el link corresponde a un canal con HD
+                          const sid = (link.split('stream=')[1] || '').toLowerCase()
+                          const canalHD = CANALES.find(c => c.hd && c.enlace.toLowerCase().includes(sid))
+                          const hdRedirUrl = canalHD && canalHD.hd ? buildRedirUrl([(BASE_JW + canalHD.hd), ...sliceLinks.slice(1)], g.title, IMG_DEFAULT) : null
+
                           return (
-                            <Link key={i} href={redirUrl} className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-colors ${isPrimary ? 'bg-gradient-to-br from-blue-600 to-[#1a3ab8] text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)]' : 'bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/30 hover:text-white'}`}>
-                              <Play className='w-3 h-3' fill={isPrimary ? 'currentColor' : 'none'} />
-                              {isPrimary ? streamName : `Opción ${i+1} — ${streamName}`}
-                            </Link>
+                            <div key={i} className='flex flex-wrap gap-2 w-full'>
+                              {hdRedirUrl && (
+                                <div className='w-full mb-1 bg-yellow-500/10 border border-yellow-500/20 p-2 rounded-lg flex flex-col items-start'>
+                                  <span className='text-[9px] font-bold tracking-[2px] uppercase text-yellow-600 mb-1.5 flex items-center gap-1'><Star size={10} /> Versión Premium</span>
+                                  <Link href={hdRedirUrl} className='inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-all bg-gradient-to-br from-yellow-500 to-yellow-600 text-black shadow-[0_4px_14px_rgba(234,179,8,0.25)] hover:scale-[1.02]'>
+                                    <Star className='w-3 h-3' fill='currentColor' />
+                                    {streamName} <span className='bg-black text-yellow-500 text-[8px] font-black px-1 rounded ml-1'>HD</span>
+                                  </Link>
+                                </div>
+                              )}
+                              
+                              <Link href={redirUrl} className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-colors ${isPrimary ? 'bg-gradient-to-br from-blue-600 to-[#1a3ab8] text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)]' : 'bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/30 hover:text-white'}`}>
+                                <Play className='w-3 h-3' fill={isPrimary ? 'currentColor' : 'none'} />
+                                {isPrimary ? streamName : `Opción ${i+1} — ${streamName}`}
+                              </Link>
+                            </div>
                           )
                         })}
                       </div>

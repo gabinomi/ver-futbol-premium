@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 
 import { Providers } from '@/components/Providers'
+import GlobalFABs from '@/components/public/GlobalFABs'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className='bg-stadium fixed inset-0 z-[-1]' />
         <Providers>
           {children}
+          <GlobalFABs />
         </Providers>
       </body>
     </html>
