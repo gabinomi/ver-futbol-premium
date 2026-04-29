@@ -52,6 +52,14 @@ function EmbedContent() {
 
   useEffect(() => {
     if (!destUrl) return
+
+    // Resetear estado si cambia la URL (al hacer clic en otro partido del FAB)
+    setRemaining(DURACION)
+    setDone(false)
+    setShowPlayer(false)
+    setActiveStream(destUrl)
+
+    if (intervalRef.current) clearInterval(intervalRef.current)
     startContador()
 
     const onVisibility = () => {

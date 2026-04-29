@@ -98,7 +98,7 @@ export default function GlobalFABs() {
       </div>
 
       {openPanel && (
-        <div className='fixed bottom-[80px] md:bottom-[90px] right-4 z-[9998] w-[320px] max-w-[92vw] bg-[#0d1221] border border-white/10 rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.6)] flex flex-col max-h-[70vh]'>
+        <div className='fixed bottom-[120px] md:bottom-[130px] right-4 z-[9998] w-[320px] max-w-[92vw] bg-[#0d1221] border border-white/10 rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.6)] flex flex-col max-h-[70vh]'>
           <div className='flex items-center justify-between mb-3'>
             <span className='font-barlow text-[15px] font-black uppercase text-white'>
               {openPanel === 'live' ? 'En Vivo Ahora' : 'Próximos Partidos'}
