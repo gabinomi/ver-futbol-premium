@@ -77,13 +77,13 @@ export default function GlobalFABs() {
     <>
       <div className='fixed bottom-5 right-4 z-[9999] flex flex-col gap-2 items-end'>
         {enVivo.length > 0 && (
-          <button
-            onClick={() => setOpenPanel(openPanel === 'live' ? null : 'live')}
-            className={`flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 rounded-full font-barlow text-[13px] font-black tracking-wide uppercase transition-all shadow-[0_4px_16px_rgba(0,0,0,0.4)] hover:scale-105 ${openPanel === 'live' ? 'bg-red-700 text-white border border-red-500' : 'bg-red-600/90 text-white border-none'}`}
+          <Link
+            href='/en-vivo'
+            className={`flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 rounded-full font-barlow text-[13px] font-black tracking-wide uppercase transition-all shadow-[0_4px_16px_rgba(0,0,0,0.4)] hover:scale-105 bg-red-600/90 text-white border-none`}
           >
             <span className='w-1.5 h-1.5 rounded-full bg-white animate-blink block' />
             EN VIVO <span className='bg-black/30 px-2 py-0.5 rounded-full text-[11px]'>{enVivo.length}</span>
-          </button>
+          </Link>
         )}
 
         {proximos.length > 0 && (

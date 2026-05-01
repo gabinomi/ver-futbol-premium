@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { utcToArg, detectarBandera, parsearTitulo } from '@/lib/flags'
+import { utcToArg, detectarBandera, parsearTitulo, esFutbolReal } from '@/lib/flags'
 import { Play, Star } from 'lucide-react'
 import Link from 'next/link'
 import GlobalNav from '@/components/public/GlobalNav'
@@ -62,8 +62,8 @@ export default function CalendarioPage() {
 
   // Procesamiento
   const filtrados = filtro === 'futbol' 
-    ? eventos.filter(e => e.category === 'Fútbol' || e.category === 'Fútbol_cup' || e.category === 'Futbol')
-    : eventos
+    ? eventos.filter(e => e.category === 'Fútbol' || e.category === 'Fútbol_cup' || e.category === 'Futbol' || esFutbolReal(e.title))
+    : eventos.filter(e => !(e.category === 'Fútbol' || e.category === 'Fútbol_cup' || e.category === 'Futbol' || esFutbolReal(e.title)))
 
   const gruposMap: Record<string, PartidoGrupo> = {}
   filtrados.forEach(e => {
@@ -129,7 +129,7 @@ export default function CalendarioPage() {
             <button
               onClick={() => setFiltro('todos')}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide transition-colors ${filtro === 'todos' ? 'bg-blue-600/20 text-blue-400 border border-blue-600' : 'bg-white/5 text-slate-400 border border-white/10'}`}>
-              Todos
+              Otros Deportes
             </button>
             {/* Botón Actualizar */}
             <button

@@ -222,14 +222,14 @@ export default function CanalesPage() {
                 </span>
               </div>
 
-              {/* Fila 1: ESPN (0-3) */}
-              {renderFilaCanales([0,1,2,3], 'ESPN')}
-              {/* Fila 2: FOX 1,2,3 + TNT (4,5,6,14) */}
-              {renderFilaCanales([4,5,6,14], 'FOX / TNT')}
-              {/* Fila 3: TyC 7,8 + Win 12,13 */}
-              {renderFilaCanales([7,8,12,13], 'TyC / Win Sports')}
-              {/* Fila 4: DSports 9,10,11 */}
-              {renderFilaCanales([9,10,11], 'DSports')}
+              {/* Fila 1: ESPN (0-5) */}
+              {renderFilaCanales([0,1,2,3,4,5], 'ESPN')}
+              {/* Fila 2: FOX 1,2,3 + TNT (8,9,10,18) */}
+              {renderFilaCanales([8,9,10,18], 'FOX / TNT')}
+              {/* Fila 3: TyC 11,12 + Win 16,17 */}
+              {renderFilaCanales([11,12,16,17], 'TyC / Win Sports')}
+              {/* Fila 4: DSports 13,14,15 */}
+              {renderFilaCanales([13,14,15], 'DSports')}
             </div>
           </div>
 

@@ -23,6 +23,9 @@ export const FLAGS: Record<string, string> = {
   LIB: '//bestleague.world/jr/76.png',
   CHA: '//bestleague.world/jr/5.png',
   UE:  '//bestleague.world/jr/7.png',
+  F1:  'https://futbollibreenhd.net/flags/f1.png',
+  F2:  'https://futbollibreenhd.net/flags/f2.png',
+  NBA: 'https://bestleague.world/img/nba.svg',
   FUT: 'https://static.futbolenlatv.com/img/32/20130618113222-futbol.png'
 }
 
@@ -33,6 +36,11 @@ function inc(t: string, words: string[]): boolean {
 export function classificarCategoriaFútbol(cat: string): boolean {
   const c = (cat || '').toLowerCase()
   return c.includes('f') && (c.includes('tbol') || c.includes('tbol'))
+}
+
+export function esFutbolReal(t: string): boolean {
+  const c = (t || '').toLowerCase()
+  return inc(c, ['liga profesional','copa argentina','primera nacional','laliga','la liga','liga 2:','hypermotion','copa del rey','supercopa','brasileirao','brasileirão','premier league','fa cup','serie a','coppa italia','bundesliga','dfb','ligue 1','liga portugal','liga betplay','liga mx','primera division','copa de primera','liga 1:','copa libertadores','copa sudamericana','champions league','europa league','conference league','copa del mundo','mundial','eliminatorias','concacaf','gold cup','copa america','nations league','futbol','fútbol'])
 }
 
 export function parsearTitulo(titulo: string) {
@@ -48,6 +56,9 @@ export function parsearTitulo(titulo: string) {
 
 export function detectarBandera(titulo: string): string {
   const t = (titulo || '').toLowerCase()
+  if (inc(t,['formula 1', ' f1 ', 'f1'])) return FLAGS.F1;
+  if (inc(t,['formula 2', ' f2 ', 'f2'])) return FLAGS.F2;
+  if (inc(t,['nba '])) return FLAGS.NBA;
   if (inc(t,['liga profesional','copa argentina','primera nacional','nacional b','b metropolitana','federal a','defensa y justicia','chaco for ever','san lorenzo','estudiantes lp','banfield','talleres','atletico tucuman','lanus','platense','tigre','instituto','velez','independiente','huracan','river plate','boca juniors','san martin'])) return FLAGS.AR;
   if (inc(t,['laliga','la liga','liga 2:','hypermotion','copa del rey','supercopa espa','atletico madrid','real madrid','barcelona','sevilla','valencia fc','villarreal','athletic bilbao','real betis','osasuna','celta','getafe','girona','mallorca','racing santander','sporting gij'])) return FLAGS.ES;
   if (inc(t,['brasileirao','brasileirão','botafogo','fluminense','corinthians','palmeiras','flamengo','gremio','bahia','cruzeiro','atletico mineiro','vasco da gama','coritiba','mirassol','vitoria','athletico-pr','sao paulo','atletico go'])) return FLAGS.BR;

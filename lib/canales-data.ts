@@ -8,6 +8,7 @@ export interface Canal {
   enlace: string
   img: string
   hd: string | null
+  hidden?: boolean
 }
 
 export const CANALES: Canal[] = [
@@ -15,6 +16,10 @@ export const CANALES: Canal[] = [
   { nombre: 'ESPN 1',       enlace: 'https://streamtpnew.com/global1.php?stream=espn',        img: 'https://bestleague.world/img/espn.webp',        hd: _k('RVNQ','TjJI','RA') },
   { nombre: 'ESPN 2',       enlace: 'https://streamtpnew.com/global1.php?stream=espn2',       img: 'https://bestleague.world/img/espn2.webp',       hd: _k('RVNQ','TjJf','QXJn') },
   { nombre: 'ESPN 3',       enlace: 'https://streamtpnew.com/global1.php?stream=espn3',       img: 'https://bestleague.world/img/espn3.webp',       hd: _k('RVNQ','TjM','') },
+  { nombre: 'ESPN 4',       enlace: 'https://streamtpnew.com/global1.php?stream=espn4',       img: 'https://bestleague.world/img/espn4.webp',       hd: _k('RVNQ','Tkh','E') },
+  { nombre: 'ESPN 5',       enlace: 'https://streamtpnew.com/global1.php?stream=espn5',       img: 'https://bestleague.world/img/espn5.webp',       hd: _k('RVNQ','TjQ','=') },
+  { nombre: 'ESPN 1 CO',    enlace: 'https://streamtpnew.com/global1.php?stream=espn',        img: 'https://bestleague.world/img/espn.webp',        hd: _k('RVNQ','Tl9V','WQ=='), hidden: true },
+  { nombre: 'ESPN 2 CO',    enlace: 'https://streamtpnew.com/global1.php?stream=espn2',       img: 'https://bestleague.world/img/espn2.webp',       hd: _k('RVNQ','TjJf','VVk='), hidden: true },
   { nombre: 'FOX Sports 1', enlace: 'https://streamtpnew.com/global1.php?stream=fox1ar',      img: 'https://bestleague.world/img/foxnew.png',       hd: _k('Rm94','U3Bv','cnRz') },
   { nombre: 'FOX Sports 2', enlace: 'https://streamtpnew.com/global1.php?stream=fox2ar',      img: 'https://bestleague.world/img/foxnew2.png',      hd: _k('Rm94','U3Bv','cnRzMkhE') },
   { nombre: 'FOX Sports 3', enlace: 'https://streamtpnew.com/global1.php?stream=fox3ar',      img: 'https://bestleague.world/img/foxnew3.png',      hd: _k('Rm94','U3Bv','cnRzM0hE') },
