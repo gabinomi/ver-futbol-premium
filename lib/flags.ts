@@ -58,7 +58,7 @@ export function detectarBandera(titulo: string): string {
   const t = (titulo || '').toLowerCase()
   if (inc(t,['formula 1', ' f1 ', 'f1'])) return FLAGS.F1;
   if (inc(t,['formula 2', ' f2 ', 'f2'])) return FLAGS.F2;
-  if (inc(t,['nba '])) return FLAGS.NBA;
+  if (inc(t,['nba'])) return FLAGS.NBA;
   if (inc(t,['liga profesional','copa argentina','primera nacional','nacional b','b metropolitana','federal a','defensa y justicia','chaco for ever','san lorenzo','estudiantes lp','banfield','talleres','atletico tucuman','lanus','platense','tigre','instituto','velez','independiente','huracan','river plate','boca juniors','san martin'])) return FLAGS.AR;
   if (inc(t,['laliga','la liga','liga 2:','hypermotion','copa del rey','supercopa espa','atletico madrid','real madrid','barcelona','sevilla','valencia fc','villarreal','athletic bilbao','real betis','osasuna','celta','getafe','girona','mallorca','racing santander','sporting gij'])) return FLAGS.ES;
   if (inc(t,['brasileirao','brasileirão','botafogo','fluminense','corinthians','palmeiras','flamengo','gremio','bahia','cruzeiro','atletico mineiro','vasco da gama','coritiba','mirassol','vitoria','athletico-pr','sao paulo','atletico go'])) return FLAGS.BR;

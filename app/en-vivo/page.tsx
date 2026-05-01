@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import GlobalNav from '@/components/public/GlobalNav'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,6 +8,14 @@ import { detectarBandera, parsearTitulo, esFutbolReal } from '@/lib/flags'
 import { Play, Star } from 'lucide-react'
 
 // Reutilizamos la configuracion de Ligas para buscar los escudos
+const DURACION = 15
+const MSGS = [
+  'El botón se activa al finalizar',
+  'Preparando la transmisión...',
+  'Verificando disponibilidad...',
+  'Listo para reproducir'
+]
+
 const LIGAS = [
   { slug: 'arg.1' }, { slug: 'arg.copa' }, { slug: 'conmebol.libertadores' }, { slug: 'conmebol.sudamericana' },
   { slug: 'esp.1' }, { slug: 'esp.2' }, { slug: 'uefa.champions' }, { slug: 'uefa.europa' },
@@ -35,6 +43,48 @@ export default function EnVivoPage() {
   const [eventosLive, setEventosLive] = useState<PartidoGrupo[]>([])
   const [espnEvents, setEspnEvents] = useState<any[]>([])
   const [cargando, setCargando] = useState(true)
+
+  const [playerSrc, setPlayerSrc] = useState('')
+  const [playerTitle, setPlayerTitle] = useState('')
+  const [remaining, setRemaining] = useState(DURACION)
+  const [done, setDone] = useState(false)
+  const [showPlayer, setShowPlayer] = useState(false)
+  const playerRef = useRef<HTMLDivElement>(null)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+
+  const startContador = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    setRemaining(DURACION)
+    setDone(false)
+    setShowPlayer(false)
+    intervalRef.current = setInterval(() => {
+      setRemaining(r => {
+        if (r <= 1) {
+          clearInterval(intervalRef.current!)
+          setDone(true)
+          return 0
+        }
+        return r - 1
+      })
+    }, 1000)
+  }
+
+  const reproducir = (url: string, title: string) => {
+    setPlayerSrc(url)
+    setPlayerTitle(title)
+    startContador()
+    setTimeout(() => {
+      if (playerRef.current) {
+        playerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }, 100)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+    }
+  }, [])
 
   const cargarDatos = useCallback(async () => {
     setCargando(true)
@@ -107,8 +157,7 @@ export default function EnVivoPage() {
 
   const procesarEnlaces = (linksOriginales: string[], titulo: string) => {
     // Retornamos una lista de opciones a renderizar
-    const opciones: { nombre: string, url: string, isHD: boolean, isPremium: boolean }[] = []
-    const imgDefault = 'https://i.imgur.com/NwU54jR.jpeg'
+    const opciones: { nombre: string, urlDirecta: string, isHD: boolean, isPremium: boolean }[] = []
     
     // Primero, opciones normales y HD del propio canal
     linksOriginales.forEach((linkStr, idx) => {
@@ -127,7 +176,7 @@ export default function EnVivoPage() {
         // SD Version
         opciones.push({
           nombre: `${canalObj.nombre} (SD)`,
-          url: `/embed?url=${encodeURIComponent(linkStr)}&t=${encodeURIComponent(titulo)}&img=${encodeURIComponent(imgDefault)}`,
+          urlDirecta: linkStr,
           isHD: false,
           isPremium: false
         })
@@ -138,7 +187,7 @@ export default function EnVivoPage() {
           if (hdLink) {
             opciones.push({
               nombre: `${canalObj.nombre} HD`,
-              url: `/embed?url=${encodeURIComponent(hdLink)}&t=${encodeURIComponent(titulo)}&img=${encodeURIComponent(imgDefault)}`,
+              urlDirecta: hdLink,
               isHD: true,
               isPremium: true
             })
@@ -151,7 +200,7 @@ export default function EnVivoPage() {
           if (co && co.hd) {
             opciones.push({
               nombre: 'ESPN 1 CO HD',
-              url: `/embed?url=${encodeURIComponent(getEnlaceHD(co)!)}&t=${encodeURIComponent(titulo)}&img=${encodeURIComponent(imgDefault)}`,
+              urlDirecta: getEnlaceHD(co)!,
               isHD: true,
               isPremium: true
             })
@@ -161,7 +210,7 @@ export default function EnVivoPage() {
           if (co && co.hd) {
             opciones.push({
               nombre: 'ESPN 2 CO HD',
-              url: `/embed?url=${encodeURIComponent(getEnlaceHD(co)!)}&t=${encodeURIComponent(titulo)}&img=${encodeURIComponent(imgDefault)}`,
+              urlDirecta: getEnlaceHD(co)!,
               isHD: true,
               isPremium: true
             })
@@ -172,7 +221,7 @@ export default function EnVivoPage() {
         // Canal genérico / desconocido
         opciones.push({
           nombre: `Opción ${idx + 1}`,
-          url: `/embed?url=${encodeURIComponent(linkStr)}&t=${encodeURIComponent(titulo)}&img=${encodeURIComponent(imgDefault)}`,
+          urlDirecta: linkStr,
           isHD: false,
           isPremium: false
         })
@@ -221,6 +270,76 @@ export default function EnVivoPage() {
           </button>
         </div>
 
+        {playerSrc && (
+          <div ref={playerRef} className='mb-8 max-w-[1000px] w-full mx-auto bg-[#0a0f1c] rounded-2xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-white/10 animate-fade-in'>
+            <div className='bg-gradient-to-r from-[#0d2860] to-[#1a3a9a] px-5 py-3 border-b border-white/10 flex items-center justify-between'>
+              <h2 className='font-barlow text-lg font-black uppercase text-white tracking-wide truncate pr-4'>{playerTitle}</h2>
+              <button onClick={() => setPlayerSrc('')} className='text-[10px] uppercase font-bold tracking-widest text-white/70 hover:text-white transition-colors bg-black/20 hover:bg-black/40 px-3 py-1.5 rounded-lg border border-white/10'>
+                Cerrar
+              </button>
+            </div>
+            
+            <div className='p-4 md:p-6'>
+              {!showPlayer ? (
+                <div className='flex flex-col gap-6 max-w-[600px] mx-auto'>
+                  <div className='bg-black/40 rounded-xl px-5 py-4 border border-white/5 flex items-center gap-5'>
+                    <div className='relative w-16 h-16 flex-shrink-0'>
+                      <svg className='w-16 h-16 -rotate-90' viewBox='0 0 80 80'>
+                        <circle cx='40' cy='40' r='32' fill='none' stroke='rgba(255,255,255,0.06)' strokeWidth='5' />
+                        <circle cx='40' cy='40' r='32' fill='none'
+                          stroke={remaining <= 3 ? '#2563eb' : '#dc2626'}
+                          strokeWidth='5' strokeLinecap='round'
+                          strokeDasharray={2 * Math.PI * 32}
+                          strokeDashoffset={(2 * Math.PI * 32) * (1 - (DURACION - remaining) / DURACION)}
+                          style={{ transition: 'stroke-dashoffset 1s linear, stroke 0.3s' }}
+                        />
+                      </svg>
+                      <div className='absolute inset-0 flex items-center justify-center font-barlow text-2xl font-black text-white'>
+                        {done ? '✓' : remaining}
+                      </div>
+                    </div>
+                    <div className='flex-1 flex flex-col gap-2'>
+                      <p className='text-xs text-slate-400 font-bold uppercase tracking-widest'>
+                        {done ? '¡Listo! Tocá el botón para ver' : MSGS[Math.floor(((DURACION - remaining) / DURACION) * (MSGS.length - 1))]}
+                      </p>
+                      <div className='w-full h-1.5 bg-white/5 rounded-full overflow-hidden'>
+                        <div className='h-full bg-gradient-to-r from-red-600 to-blue-600 rounded-full origin-left transition-transform duration-1000 linear'
+                          style={{ transform: `scaleX(${1 - (remaining / DURACION)})` }} />
+                      </div>
+                      <p className='text-[10px] text-slate-500 uppercase tracking-wider'>
+                        {done ? 'Transmisión lista' : `Espera ${remaining}s para activar`}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={() => setShowPlayer(true)}
+                    disabled={!done}
+                    className={`relative flex items-center justify-center gap-2 w-full py-4 rounded-xl font-barlow text-lg font-black tracking-[1px] uppercase transition-all duration-300 ${
+                      done
+                        ? 'bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-[0_6px_25px_rgba(37,99,235,0.3)] hover:scale-[1.02]'
+                        : 'bg-slate-800/50 text-slate-600 cursor-not-allowed border border-white/5'
+                    }`}>
+                    <Play size={18} className='flex-shrink-0' fill={done ? 'currentColor' : 'none'} />
+                    Ver transmisión en vivo
+                  </button>
+                </div>
+              ) : (
+                <div className='relative w-full rounded-xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)]' style={{ aspectRatio: '16/9' }}>
+                  <iframe 
+                    key={playerSrc}
+                    src={playerSrc.includes('streamtp') || playerSrc.includes('tvlibr3') ? playerSrc : `/embed?url=${encodeURIComponent(playerSrc)}`}
+                    className='absolute inset-0 w-full h-full border-none bg-black'
+                    allowFullScreen
+                    scrolling='no'
+                    referrerPolicy='no-referrer'
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {cargando && eventosLive.length === 0 ? (
           <div className='flex justify-center items-center py-20'>
             <div className='w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin' />
@@ -263,7 +382,7 @@ export default function EnVivoPage() {
                       <div className='flex-1 flex items-center justify-center gap-6 w-full'>
                         <div className='flex flex-col items-center gap-2 flex-1'>
                           <div className='w-14 h-14 relative'>
-                            <Image src={home.team.logo || bandera} alt={home.team.name} fill className='object-contain' />
+                            <img src={home.team.logo || bandera} alt={home.team.name} className='object-contain w-full h-full' loading="lazy" />
                           </div>
                           <span className='font-barlow text-sm font-bold text-center text-slate-200'>{home.team.name}</span>
                         </div>
@@ -276,7 +395,7 @@ export default function EnVivoPage() {
 
                         <div className='flex flex-col items-center gap-2 flex-1'>
                           <div className='w-14 h-14 relative'>
-                            <Image src={away.team.logo || bandera} alt={away.team.name} fill className='object-contain' />
+                            <img src={away.team.logo || bandera} alt={away.team.name} className='object-contain w-full h-full' loading="lazy" />
                           </div>
                           <span className='font-barlow text-sm font-bold text-center text-slate-200'>{away.team.name}</span>
                         </div>
@@ -288,9 +407,9 @@ export default function EnVivoPage() {
                       <div className='text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-3 pl-1'>Opciones de Transmisión</div>
                       <div className='flex flex-wrap gap-2'>
                         {opcionesStreaming.map((op, opIdx) => (
-                          <Link 
+                          <button 
                             key={opIdx} 
-                            href={op.url}
+                            onClick={() => reproducir(op.urlDirecta, parseado.partido || parseado.liga)}
                             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-barlow text-sm font-extrabold uppercase tracking-wide transition-all ${
                               op.isPremium 
                                 ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(234,179,8,0.15)]'
@@ -299,7 +418,7 @@ export default function EnVivoPage() {
                           >
                             {op.isPremium ? <Star size={14} fill='currentColor' /> : <Play size={14} />}
                             {op.nombre}
-                          </Link>
+                          </button>
                         ))}
                       </div>
                     </div>
@@ -312,7 +431,7 @@ export default function EnVivoPage() {
                 <div key={idx} className='bg-[#0b1326] border border-white/10 rounded-2xl overflow-hidden shadow-xl'>
                   <div className='p-5 flex items-center gap-4 relative overflow-hidden'>
                     <div className='w-12 h-10 flex-shrink-0 relative'>
-                      <Image src={bandera} alt='Bandera' fill className='object-contain opacity-80' />
+                      <img src={bandera} alt='Bandera' className='object-contain w-full h-full opacity-80' loading="lazy" />
                     </div>
                     <div className='flex-1'>
                       {parseado.liga && <div className='text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1'>{parseado.liga}</div>}
@@ -325,9 +444,9 @@ export default function EnVivoPage() {
                     <div className='text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-3 pl-1'>Opciones de Transmisión</div>
                     <div className='flex flex-wrap gap-2'>
                       {opcionesStreaming.map((op, opIdx) => (
-                        <Link 
+                        <button 
                           key={opIdx} 
-                          href={op.url}
+                          onClick={() => reproducir(op.urlDirecta, parseado.partido || parseado.liga)}
                           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-barlow text-sm font-extrabold uppercase tracking-wide transition-all ${
                             op.isPremium 
                               ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(234,179,8,0.15)]'
@@ -336,7 +455,7 @@ export default function EnVivoPage() {
                         >
                           {op.isPremium ? <Star size={14} fill='currentColor' /> : <Play size={14} />}
                           {op.nombre}
-                        </Link>
+                        </button>
                       ))}
                     </div>
                   </div>
