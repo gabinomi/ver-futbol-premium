@@ -147,14 +147,15 @@ export default function CanalesPage() {
                   {/* SmartLink Overlay */}
                   {showOverlay && (
                     <div
-                      className='absolute inset-0 z-10 bg-[#040812]/95 flex flex-col items-center justify-center gap-5 cursor-pointer rounded-xl'
+                      className='absolute inset-0 z-10 bg-black flex flex-col items-center justify-center gap-5 cursor-pointer rounded-xl overflow-hidden'
                       onClick={confirmarClick}
                     >
-                      <div className='w-[72px] h-[72px] rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center shadow-[0_0_0_0_rgba(37,99,235,0.5)] animate-[slPulse_1.8s_ease-in-out_infinite]'>
+                      <img src='https://i.imgur.com/NwU54jR.jpeg' alt='Thumb' className='absolute inset-0 w-full h-full object-cover opacity-50' />
+                      <div className='relative z-10 w-[72px] h-[72px] rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center shadow-[0_0_0_0_rgba(37,99,235,0.5)] animate-[slPulse_1.8s_ease-in-out_infinite]'>
                         <Play size={26} className='text-white ml-1' fill='white' />
                       </div>
-                      <div className='font-barlow text-xl font-black uppercase tracking-wider text-white'>Hacé click para ver el canal</div>
-                      <div className='text-xs text-slate-500 tracking-wider'>Tocá en cualquier parte para continuar</div>
+                      <div className='relative z-10 font-barlow text-xl font-black uppercase tracking-wider text-white shadow-black drop-shadow-md'>Hacé click para ver el canal</div>
+                      <div className='relative z-10 text-xs text-slate-300 tracking-wider font-bold shadow-black drop-shadow-md'>Tocá en cualquier parte para continuar</div>
                     </div>
                   )}
                   {iframeSrc && (

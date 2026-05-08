@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { utcToArg, detectarBandera, parsearTitulo, esFutbolReal } from '@/lib/flags'
 import { Play, Star } from 'lucide-react'
 import Link from 'next/link'
@@ -23,6 +23,13 @@ interface PartidoGrupo {
 }
 
 const IMG_DEFAULT = 'https://i.imgur.com/NwU54jR.jpeg'
+const DURACION = 5
+const MSGS = [
+  'El botón se activa al finalizar',
+  'Preparando la transmisión...',
+  'Verificando disponibilidad...',
+  'Listo para reproducir'
+]
 
 export default function CalendarioPage() {
   const [eventos, setEventos] = useState<Evento[]>([])
@@ -32,6 +39,48 @@ export default function CalendarioPage() {
   const [filtro, setFiltro] = useState<'futbol' | 'todos'>('futbol')
   const [openId, setOpenId] = useState<string | null>(null)
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
+
+  const [playerSrc, setPlayerSrc] = useState('')
+  const [playerTitle, setPlayerTitle] = useState('')
+  const [remaining, setRemaining] = useState(DURACION)
+  const [done, setDone] = useState(false)
+  const [showPlayer, setShowPlayer] = useState(false)
+  const playerRef = useRef<HTMLDivElement>(null)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+
+  const startContador = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    setRemaining(DURACION)
+    setDone(false)
+    setShowPlayer(false)
+    intervalRef.current = setInterval(() => {
+      setRemaining(r => {
+        if (r <= 1) {
+          clearInterval(intervalRef.current!)
+          setDone(true)
+          return 0
+        }
+        return r - 1
+      })
+    }, 1000)
+  }
+
+  const reproducir = (url: string, title: string) => {
+    setPlayerSrc(url)
+    setPlayerTitle(title)
+    startContador()
+    setTimeout(() => {
+      if (playerRef.current) {
+        playerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }, 100)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+    }
+  }, [])
 
   const fetchEventos = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true)
@@ -98,6 +147,100 @@ export default function CalendarioPage() {
         <div className='flex justify-center mb-6'>
         <div className='w-full max-w-[728px] h-[90px] bg-white/5 rounded-lg flex items-center justify-center text-white/20 text-xs tracking-widest uppercase'>Banner 728×90</div>
       </div>
+
+      {/* ═══ REPRODUCTOR INLINE ═══ */}
+      {playerSrc && (
+        <div ref={playerRef} className='mb-8 max-w-[1000px] w-full mx-auto bg-[#0a0f1c] rounded-2xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-white/10 animate-fade-in'>
+          <div className='bg-gradient-to-r from-[#0d2860] to-[#1a3a9a] px-5 py-3 border-b border-white/10 flex items-center justify-between'>
+            <h2 className='font-barlow text-lg font-black uppercase text-white tracking-wide truncate pr-4'>{playerTitle}</h2>
+            <button onClick={() => setPlayerSrc('')} className='text-[10px] uppercase font-bold tracking-widest text-white/70 hover:text-white transition-colors bg-black/20 hover:bg-black/40 px-3 py-1.5 rounded-lg border border-white/10'>
+              Cerrar
+            </button>
+          </div>
+          
+          <div className='p-4 md:p-6'>
+            {!showPlayer ? (
+              <div className='flex flex-col gap-6 max-w-[600px] mx-auto'>
+                <div className='bg-black/40 rounded-xl px-5 py-4 border border-white/5 flex items-center gap-5'>
+                  <div className='relative w-16 h-16 flex-shrink-0'>
+                    <svg className='w-16 h-16 -rotate-90' viewBox='0 0 80 80'>
+                      <circle cx='40' cy='40' r='32' fill='none' stroke='rgba(255,255,255,0.06)' strokeWidth='5' />
+                      <circle cx='40' cy='40' r='32' fill='none'
+                        stroke={remaining <= 3 ? '#2563eb' : '#dc2626'}
+                        strokeWidth='5' strokeLinecap='round'
+                        strokeDasharray={2 * Math.PI * 32}
+                        strokeDashoffset={(2 * Math.PI * 32) * (1 - (DURACION - remaining) / DURACION)}
+                        style={{ transition: 'stroke-dashoffset 1s linear, stroke 0.3s' }}
+                      />
+                    </svg>
+                    <div className='absolute inset-0 flex items-center justify-center font-barlow text-2xl font-black text-white'>
+                      {done ? '✓' : remaining}
+                    </div>
+                  </div>
+                  <div className='flex-1 flex flex-col gap-2'>
+                    <p className='text-xs text-slate-400 font-bold uppercase tracking-widest'>
+                      {done ? '¡Listo! Tocá el botón para ver' : MSGS[Math.floor(((DURACION - remaining) / DURACION) * (MSGS.length - 1))]}
+                    </p>
+                    <div className='w-full h-1.5 bg-white/5 rounded-full overflow-hidden'>
+                      <div className='h-full bg-gradient-to-r from-red-600 to-blue-600 rounded-full origin-left transition-transform duration-1000 linear'
+                        style={{ transform: `scaleX(${1 - (remaining / DURACION)})` }} />
+                    </div>
+                    <p className='text-[10px] text-slate-500 uppercase tracking-wider'>
+                      {done ? 'Transmisión lista' : `Espera ${remaining}s para activar`}
+                    </p>
+                  </div>
+                </div>
+                
+                <div
+                  className={`relative rounded-xl overflow-hidden bg-black aspect-video select-none border border-white/10 ${done ? 'cursor-pointer' : 'cursor-default'}`}
+                  onClick={() => {
+                    if (done) {
+                      window.open('https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644', '_blank')
+                      setShowPlayer(true)
+                    }
+                  }}
+                >
+                  <img src={IMG_DEFAULT} alt='Thumb' className='w-full h-full object-cover opacity-75' />
+                  <div className='absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/35 hover:bg-black/50 transition-colors'>
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center border-[3px] shadow-[0_0_40px_rgba(37,99,235,0.6)] transition-transform duration-200 ${done ? 'bg-blue-600/85 border-white/90 scale-100 hover:scale-110' : 'bg-slate-700/50 border-slate-500/50 scale-90 grayscale opacity-60'}`}>
+                      <Play fill='currentColor' className='text-white w-7 h-7 ml-1' />
+                    </div>
+                    <div className='font-barlow text-sm font-extrabold tracking-[2px] uppercase text-white/85'>
+                      {done ? 'Tocá para ver el partido' : 'Esperando tiempo...'}
+                    </div>
+                  </div>
+                </div>
+                
+                <button
+                  onClick={() => {
+                    window.open('https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644', '_blank')
+                    setShowPlayer(true)
+                  }}
+                  disabled={!done}
+                  className={`relative flex items-center justify-center gap-2 w-full py-4 rounded-xl font-barlow text-lg font-black tracking-[1px] uppercase transition-all duration-300 ${
+                    done
+                      ? 'bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-[0_6px_25px_rgba(37,99,235,0.3)] hover:scale-[1.02]'
+                      : 'bg-slate-800/50 text-slate-600 cursor-not-allowed border border-white/5'
+                  }`}>
+                  <Play size={18} className='flex-shrink-0' fill={done ? 'currentColor' : 'none'} />
+                  Ver transmisión en vivo
+                </button>
+              </div>
+            ) : (
+              <div className='relative w-full rounded-xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)]' style={{ aspectRatio: '16/9' }}>
+                <iframe 
+                  key={playerSrc}
+                  src={playerSrc.includes('streamtp') || playerSrc.includes('tvlibr3') ? playerSrc : `/embed?url=${encodeURIComponent(playerSrc)}`}
+                  className='absolute inset-0 w-full h-full border-none bg-black'
+                  allowFullScreen
+                  scrolling='no'
+                  referrerPolicy='no-referrer'
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className='flex gap-5 items-start justify-center'>
         <aside className='hidden xl:block w-40 flex-shrink-0 sticky top-6'>
@@ -203,33 +346,29 @@ export default function CalendarioPage() {
                         {g.links.map((link, i) => {
                           let streamName = link.split('stream=')[1] || `Opción ${i+1}`
                           streamName = streamName.replace(/_/g, ' ').toUpperCase()
-                          
-                          const sliceLinks = [link, ...g.links.filter(l => l !== link)]
-                          const redirUrl = buildRedirUrl(sliceLinks.slice(0, 4), g.title, IMG_DEFAULT)
-                          
                           const isPrimary = i === 0
-
+                          const urlOpt = isPrimary ? link : link // actually we just need the link itself
                           // Buscar si el link corresponde a un canal con HD
                           const sid = (link.split('stream=')[1] || '').toLowerCase()
                           const canalHD = CANALES.find(c => c.hd && c.enlace.toLowerCase().includes(sid))
-                          const hdRedirUrl = canalHD && canalHD.hd ? buildRedirUrl([(BASE_JW + canalHD.hd), ...sliceLinks.slice(1)], g.title, IMG_DEFAULT) : null
+                          const hdUrl = canalHD && canalHD.hd ? (BASE_JW + canalHD.hd) : null
 
                           return (
                             <div key={i} className='flex flex-wrap gap-2 w-full'>
-                              {hdRedirUrl && (
+                              {hdUrl && (
                                 <div className='w-full mb-1 bg-yellow-500/10 border border-yellow-500/20 p-2 rounded-lg flex flex-col items-start'>
                                   <span className='text-[9px] font-bold tracking-[2px] uppercase text-yellow-600 mb-1.5 flex items-center gap-1'><Star size={10} /> Versión Premium</span>
-                                  <Link href={hdRedirUrl} className='inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-all bg-gradient-to-br from-yellow-500 to-yellow-600 text-black shadow-[0_4px_14px_rgba(234,179,8,0.25)] hover:scale-[1.02]'>
+                                  <button onClick={() => reproducir(hdUrl, g.title)} className='inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-all bg-gradient-to-br from-yellow-500 to-yellow-600 text-black shadow-[0_4px_14px_rgba(234,179,8,0.25)] hover:scale-[1.02]'>
                                     <Star className='w-3 h-3' fill='currentColor' />
                                     {streamName} <span className='bg-black text-yellow-500 text-[8px] font-black px-1 rounded ml-1'>HD</span>
-                                  </Link>
+                                  </button>
                                 </div>
                               )}
                               
-                              <Link href={redirUrl} className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-colors ${isPrimary ? 'bg-gradient-to-br from-blue-600 to-[#1a3ab8] text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)]' : 'bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/30 hover:text-white'}`}>
+                              <button onClick={() => reproducir(link, g.title)} className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-colors ${isPrimary ? 'bg-gradient-to-br from-blue-600 to-[#1a3ab8] text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)]' : 'bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/30 hover:text-white'}`}>
                                 <Play className='w-3 h-3' fill={isPrimary ? 'currentColor' : 'none'} />
                                 {isPrimary ? streamName : `Opción ${i+1} — ${streamName}`}
-                              </Link>
+                              </button>
                             </div>
                           )
                         })}

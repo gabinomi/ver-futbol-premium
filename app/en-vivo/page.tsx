@@ -312,6 +312,26 @@ export default function EnVivoPage() {
                     </div>
                   </div>
                   
+                  <div
+                    className={`relative rounded-xl overflow-hidden bg-black aspect-video select-none border border-white/10 ${done ? 'cursor-pointer' : 'cursor-default'}`}
+                    onClick={() => {
+                      if (done) {
+                        window.open('https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644', '_blank')
+                        setShowPlayer(true)
+                      }
+                    }}
+                  >
+                    <img src='https://i.imgur.com/NwU54jR.jpeg' alt='Thumb' className='w-full h-full object-cover opacity-75' />
+                    <div className='absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/35 hover:bg-black/50 transition-colors'>
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center border-[3px] shadow-[0_0_40px_rgba(37,99,235,0.6)] transition-transform duration-200 ${done ? 'bg-blue-600/85 border-white/90 scale-100 hover:scale-110' : 'bg-slate-700/50 border-slate-500/50 scale-90 grayscale opacity-60'}`}>
+                        <Play fill='currentColor' className='text-white w-7 h-7 ml-1' />
+                      </div>
+                      <div className='font-barlow text-sm font-extrabold tracking-[2px] uppercase text-white/85'>
+                        {done ? 'Tocá para ver el partido' : 'Esperando tiempo...'}
+                      </div>
+                    </div>
+                  </div>
+                  
                   <button
                     onClick={() => {
                       window.open('https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644', '_blank')

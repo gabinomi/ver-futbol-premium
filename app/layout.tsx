@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='es'>
+    <html lang='es' className='overflow-x-hidden'>
       <head>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link
@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel='stylesheet'
         />
       </head>
-      <body className={`${inter.variable} font-inter bg-[#060d1a] text-white min-h-screen overflow-x-hidden`}>
+      <body className={`${inter.variable} font-inter bg-[#060d1a] text-white min-h-screen`}>
         <div className='bg-stadium fixed inset-0 z-[-1]' />
         <div className='content-wrapper'>
           <Providers>
