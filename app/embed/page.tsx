@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, Suspense } from 'react'
 import { Play } from 'lucide-react'
 import GlobalNav from '@/components/public/GlobalNav'
 
-const DURACION = 15
+const DURACION = 5
 const MSGS = [
   'El botón se activa al finalizar',
   'Preparando la transmisión...',
@@ -74,7 +74,10 @@ function EmbedContent() {
   }, [destUrl])
 
   const handlePlayClick = () => {
-    if (done) setShowPlayer(true)
+    if (done) {
+      window.open('https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644', '_blank')
+      setShowPlayer(true)
+    }
   }
 
   const reloadIframe = () => {

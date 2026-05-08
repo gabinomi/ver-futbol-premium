@@ -8,7 +8,7 @@ import { detectarBandera, parsearTitulo, esFutbolReal } from '@/lib/flags'
 import { Play, Star } from 'lucide-react'
 
 // Reutilizamos la configuracion de Ligas para buscar los escudos
-const DURACION = 15
+const DURACION = 5
 const MSGS = [
   'El botón se activa al finalizar',
   'Preparando la transmisión...',
@@ -313,7 +313,10 @@ export default function EnVivoPage() {
                   </div>
                   
                   <button
-                    onClick={() => setShowPlayer(true)}
+                    onClick={() => {
+                      window.open('https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644', '_blank')
+                      setShowPlayer(true)
+                    }}
                     disabled={!done}
                     className={`relative flex items-center justify-center gap-2 w-full py-4 rounded-xl font-barlow text-lg font-black tracking-[1px] uppercase transition-all duration-300 ${
                       done

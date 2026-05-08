@@ -4,7 +4,7 @@ import GlobalNav from '@/components/public/GlobalNav'
 import { Play, Signal, Zap, Star, RotateCw, X } from 'lucide-react'
 import { CANALES, getEnlace, getEnlaceHD } from '@/lib/canales-data'
 
-const SMARTLINK = 'https://www.profitablecpmratenetwork.com/werazu5j?key=91427af14d8002e45221edbb97a3cf92'
+const SMARTLINK = 'https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644'
 
 export default function CanalesPage() {
   const [canalActivo, setCanalActivo] = useState<number | null>(null)
