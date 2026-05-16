@@ -230,7 +230,7 @@ export default function CalendarioPage() {
               <div className='relative w-full rounded-xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)]' style={{ aspectRatio: '16/9' }}>
                 <iframe 
                   key={playerSrc}
-                  src={playerSrc.includes('streamtp') || playerSrc.includes('tvlibr3') ? playerSrc : `/embed?url=${encodeURIComponent(playerSrc)}`}
+                  src={playerSrc.includes('streamtp') || playerSrc.includes('tvlibr3') || playerSrc.includes('streamx550') ? playerSrc : `/embed?url=${encodeURIComponent(playerSrc)}`}
                   className='absolute inset-0 w-full h-full border-none bg-black'
                   allowFullScreen
                   scrolling='no'
