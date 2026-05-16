@@ -31,16 +31,7 @@ async function fetchStreamX550() {
     if (!res.ok) return []
     const rawData = await res.json()
     
-    return rawData.map((item: any) => {
-      let normalizedLink = item.link || ''
-      if (normalizedLink.includes('channel=')) {
-        normalizedLink = normalizedLink.replace('channel=', 'stream=')
-      }
-      return {
-        ...item,
-        link: normalizedLink
-      }
-    })
+    return rawData
   } catch (e) {
     return []
   }

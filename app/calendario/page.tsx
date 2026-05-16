@@ -344,12 +344,12 @@ export default function CalendarioPage() {
                     {isOpen && (
                       <div className='flex flex-wrap gap-2 px-4 py-3 border-t border-white/5 bg-[#02081080]'>
                         {g.links.map((link, i) => {
-                          let streamName = link.split('stream=')[1] || `Opción ${i+1}`
+                          let streamName = (link.split('stream=')[1] || link.split('channel=')[1] || `Opción ${i+1}`)
                           streamName = streamName.replace(/_/g, ' ').toUpperCase()
                           const isPrimary = i === 0
                           const urlOpt = isPrimary ? link : link // actually we just need the link itself
                           // Buscar si el link corresponde a un canal con HD
-                          const sid = (link.split('stream=')[1] || '').toLowerCase()
+                          const sid = ((link.split('stream=')[1] || link.split('channel=')[1]) || '').toLowerCase()
                           const canalHD = CANALES.find(c => c.hd && c.enlace.toLowerCase().includes(sid))
                           const hdUrl = canalHD && canalHD.hd ? (BASE_JW + canalHD.hd) : null
 

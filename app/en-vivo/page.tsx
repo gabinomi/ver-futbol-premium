@@ -164,7 +164,7 @@ export default function EnVivoPage() {
       // Intentamos identificar a qué canal pertenece este link
       // El link es e.g. https://streamtpnew.com/global1.php?stream=espn
       const urlObj = new URL(linkStr)
-      const streamParam = urlObj.searchParams.get('stream')
+      const streamParam = urlObj.searchParams.get('stream') || urlObj.searchParams.get('channel')
       
       let canalObj = CANALES.find(c => {
         if (!c.enlace.includes('stream=')) return false

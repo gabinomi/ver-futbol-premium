@@ -228,7 +228,7 @@ function EmbedContent() {
                   <span className='text-[10px] font-bold tracking-[2px] uppercase text-slate-500'>Opciones de transmisión</span>
                   <div className='flex flex-wrap gap-2'>
                     {options.map((opt, i) => {
-                      let sName = opt.split('stream=')[1] || `Opción ${i+2}`
+                      let sName = (opt.split('stream=')[1] || opt.split('channel=')[1] || `Opción ${i+2}`)
                       sName = sName.replace(/_/g, ' ').toUpperCase()
                       return (
                         <button key={opt} onClick={() => setActiveStream(opt)} className={`px-3 py-1.5 rounded-lg text-xs font-barlow font-bold uppercase tracking-wider transition-colors ${activeStream === opt ? 'bg-blue-600 text-white' : 'bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/30 hover:text-white'}`}>
