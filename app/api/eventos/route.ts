@@ -98,9 +98,6 @@ export async function GET() {
               link: xEv.link
             })
           }
-        } else {
-          // El partido NO existe en streamtpnew, lo agregamos completo desde x550
-          merged.push(xEv)
         }
       })
     }
