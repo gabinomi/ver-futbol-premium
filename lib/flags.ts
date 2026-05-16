@@ -78,7 +78,7 @@ export function detectarBandera(titulo: string): string {
   // Ligas específicas (priorizando las solicitadas)
   if (inc(context, ['serie a', 'coppa italia'])) return FLAGS.IT;
   if (inc(context, ['ligue 1', 'ligue1'])) return FLAGS.FR;
-  if (inc(context, ['liga betplay'])) return FLAGS.COL;
+  if (inc(context, ['liga betplay', 'copa colombia', 'copa de colombia'])) return FLAGS.COL;
   
   // Conflicto de Copa de la Liga: Chile vs Argentina
   // Si explícitamente dice 'copa de la liga: c' -> Chile. Si dice 'copa de la liga' -> Argentina

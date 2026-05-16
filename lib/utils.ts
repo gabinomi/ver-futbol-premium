@@ -1,4 +1,5 @@
 import { ZONAS } from '@/types'
+import { fetchEspnDailyScoreboard } from './espn'
 
 export function calcularHorarios(horaUtc: string): [string, string][] {
   const fecha = new Date(horaUtc)
@@ -26,15 +27,28 @@ export function slugify(texto: string): string {
 
 export async function buscarEscudo(equipo: string): Promise<string | null> {
   try {
-    const res = await fetch(
-      `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(equipo)}`
-    )
-    const data = await res.json()
-    const team = data?.teams?.[0]
-    if (!team) return null
+    const events = await fetchEspnDailyScoreboard()
+    const target = equipo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, '')
     
-    // Fallback order: Badge -> Logo -> TeamBadge -> TeamLogo
-    return team.strBadge || team.strLogo || team.strTeamBadge || team.strTeamLogo || null
+    for (const ev of events as any[]) {
+      const comp = ev.competitions?.[0]
+      const competitors = comp?.competitors || ev.competitors || []
+      
+      const home = competitors.find((c: any) => c.homeAway === 'home')
+      const away = competitors.find((c: any) => c.homeAway === 'away')
+      
+      const homeName = (home?.team?.displayName || home?.team?.name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, '')
+      const awayName = (away?.team?.displayName || away?.team?.name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, '')
+      
+      if (homeName && home?.team?.logo && (homeName.includes(target) || target.includes(homeName))) {
+        return home.team.logo
+      }
+      if (awayName && away?.team?.logo && (awayName.includes(target) || target.includes(awayName))) {
+        return away.team.logo
+      }
+    }
+    
+    return null
   } catch {
     return null
   }
