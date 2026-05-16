@@ -30,17 +30,36 @@ export interface ESPNEventInfo {
   }[]
 }
 
+const LIGAS_SLUGS = [
+  'arg.1', 'arg.copa', 'conmebol.libertadores', 'conmebol.sudamericana',
+  'esp.1', 'esp.2', 'uefa.champions', 'uefa.europa', 'bra.1', 'col.1',
+  'mex.1', 'eng.1', 'ita.1', 'ger.1'
+]
+
 // 1. Obtener todos los partidos de fútbol del mundo (top leagues) del día (o cercanos)
 export async function fetchEspnDailyScoreboard(): Promise<ESPNEventInfo[]> {
   try {
-    const res = await fetch("https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard", {
-      next: { revalidate: 30 } // cachear 30s para no spammar y evitar re-busquedas masivas
-    })
+    const allEvents: ESPNEventInfo[] = []
     
-    if (!res.ok) return []
-    const data = await res.json()
-    // data.events array
-    return data.events || []
+    await Promise.all(
+      LIGAS_SLUGS.map(async (slug) => {
+        try {
+          const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/${slug}/scoreboard?limit=50`, {
+            next: { revalidate: 30 }
+          })
+          if (res.ok) {
+            const data = await res.json()
+            if (data.events) {
+              allEvents.push(...data.events)
+            }
+          }
+        } catch (e) {
+          // Ignore individual fetch errors
+        }
+      })
+    )
+    
+    return allEvents
   } catch (error) {
     console.error("Error fetching ESPN Scoreboard:", error)
     return []
