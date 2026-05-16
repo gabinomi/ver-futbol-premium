@@ -18,48 +18,6 @@ async function fetchStreamTP() {
   }
 }
 
-async function fetchTvLibr3() {
-  try {
-    const res = await fetch('https://tvlibr3.com/agenda/', {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-      },
-      cache: 'no-store',
-      signal: AbortSignal.timeout(6000)
-    })
-    if (!res.ok) return []
-    
-    const data = await res.text()
-    const regex = /<li class="[^"]+">\s*<a href="#">\s*([^<]+)\s*<span class="t">([^<]+)<\/span><\/a>\s*<ul>([\s\S]*?)<\/ul>\s*<\/li>/g;
-    let match;
-    const eventos = [];
-    
-    while ((match = regex.exec(data)) !== null) {
-      const title = match[1].trim();
-      const time = match[2].trim();
-      const optionsHtml = match[3];
-      
-      const optionsRegex = /<a href="([^"]+)"[^>]*>([^<]+)<span>([^<]*)<\/span><\/a>/g;
-      let optMatch;
-      while ((optMatch = optionsRegex.exec(optionsHtml)) !== null) {
-        let url = optMatch[1]
-        if (url.includes('/eventos/?r=')) {
-          try {
-            url = Buffer.from(url.split('?r=')[1], 'base64').toString('utf8')
-          } catch(e) {}
-        } else if (url.startsWith('/en-vivo/')) {
-          let cid = url.replace('/en-vivo/', '').replace(/\//g, '').replace(/-/g, '')
-          url = `https://streamtpnew.com/global1.php?stream=${cid}`
-        }
-        eventos.push({ title, time, link: url, status: 'pronto' }); // flat structure
-      }
-    }
-    return eventos
-  } catch (e) {
-    return []
-  }
-}
-
 async function fetchStreamX550() {
   try {
     const res = await fetch('https://streamx550.com/json/agenda550.json?nocache=' + Date.now(), {
@@ -88,59 +46,75 @@ async function fetchStreamX550() {
   }
 }
 
+const getStreamId = (url: string) => {
+  if (!url) return ''
+  try {
+    const u = new URL(url)
+    return u.searchParams.get('stream') || u.searchParams.get('channel') || url
+  } catch {
+    const match = url.match(/(stream|channel)=([^&]+)/)
+    return match ? match[2] : url
+  }
+}
+
+const getMatchTeams = (title: string) => {
+  if (!title) return ''
+  const parts = title.split(':')
+  return parts.length > 1 ? parts[1].toLowerCase().trim() : title.toLowerCase().trim()
+}
+
 export async function GET() {
   try {
-    const [streamTpEvents, tvLibr3Events, x550Events] = await Promise.all([
+    const [streamTpEvents, x550Events] = await Promise.all([
       fetchStreamTP(),
-      fetchTvLibr3(),
       fetchStreamX550()
     ])
 
     let merged = [...(streamTpEvents || [])]
 
-    // Función auxiliar para buscar evento en x550 y obtener su categoría y status
-    const findInX550 = (title: string) => {
-      if (!Array.isArray(x550Events)) return null
-      return x550Events.find((x: any) => x.title?.toLowerCase().trim() === title?.toLowerCase().trim())
-    }
-
-    // 1. Enriquecer streamTpEvents con categorías de x550
+    // 1. Enriquecer streamTpEvents con categorías de x550 (usando coincidencia de equipos)
     merged = merged.map((ev: any) => {
-      const found = findInX550(ev.title)
-      if (found && found.category && (!ev.category || ev.category === 'Other')) {
-        ev.category = found.category
+      const teams = getMatchTeams(ev.title)
+      const matchingX550 = x550Events.filter((x: any) => getMatchTeams(x.title) === teams)
+      
+      if (matchingX550.length > 0) {
+        const cat = matchingX550.find((x: any) => x.category && x.category !== 'Other')?.category
+        if (cat && (!ev.category || ev.category === 'Other')) {
+          ev.category = cat
+        }
       }
       return ev
     })
 
-    // 2. Añadir eventos/links de tvlibr3 que NO estén en merged
-    if (Array.isArray(tvLibr3Events)) {
-      tvLibr3Events.forEach((ev: any) => {
-        const foundCategory = findInX550(ev.title)?.category || 'Other'
-        const existsLink = merged.find((m: any) => 
-          m.title?.toLowerCase().trim() === ev.title?.toLowerCase().trim() && 
-          m.link === ev.link
-        )
-        if (!existsLink) {
-          merged.push({ ...ev, category: foundCategory })
-        }
-      })
-    }
-
-    // 3. Añadir eventos/links exclusivos de x550 que NO estén
+    // 2. Añadir links de x550 sin duplicar canales para un mismo partido
     if (Array.isArray(x550Events)) {
-      x550Events.forEach((ev: any) => {
-        const existsLink = merged.find((m: any) => 
-          m.title?.toLowerCase().trim() === ev.title?.toLowerCase().trim() && 
-          m.link === ev.link
-        )
-        if (!existsLink) {
-          merged.push(ev)
+      x550Events.forEach((xEv: any) => {
+        const teams = getMatchTeams(xEv.title)
+        const streamId = getStreamId(xEv.link)
+        
+        // Buscar si este partido (equipos) ya existe en streamtpnew
+        const tpMatches = merged.filter((m: any) => getMatchTeams(m.title) === teams)
+        
+        if (tpMatches.length > 0) {
+          // El partido existe. ¿Ya tenemos este canal/streamId?
+          const hasLink = tpMatches.some((m: any) => getStreamId(m.link) === streamId)
+          
+          if (!hasLink) {
+            // Añadimos la opción de video usando el título original de streamtpnew para evitar crear un evento duplicado en el calendario
+            const baseEvent = tpMatches[0]
+            merged.push({
+              ...baseEvent,
+              link: xEv.link
+            })
+          }
+        } else {
+          // El partido NO existe en streamtpnew, lo agregamos completo desde x550
+          merged.push(xEv)
         }
       })
     }
     
-    // Sort by time
+    // Ordenar por hora
     merged = merged.sort((a, b) => (a.time || '').localeCompare(b.time || ''))
 
     if (merged.length === 0) {

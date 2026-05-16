@@ -217,18 +217,6 @@ export default function EnVivoPage() {
           }
         }
 
-        // Opciones Extra (Bolaloca, Welivesports, etc)
-        if (canalObj.options) {
-          canalObj.options.forEach(opt => {
-            opciones.push({
-              nombre: opt.name,
-              urlDirecta: opt.url,
-              isHD: false,
-              isPremium: false
-            })
-          })
-        }
-
       } else {
         // Canal genérico / desconocido
         opciones.push({

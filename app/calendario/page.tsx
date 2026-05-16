@@ -369,14 +369,6 @@ export default function CalendarioPage() {
                                 <Play className='w-3 h-3' fill={isPrimary ? 'currentColor' : 'none'} />
                                 {isPrimary ? streamName : `Opción ${i+1} — ${streamName}`}
                               </button>
-                              
-                              {/* Opciones extra (Bolaloca, Welivesports, etc) */}
-                              {isPrimary && canalHD?.options?.map((opt, idx) => (
-                                <button key={`opt-${idx}`} onClick={() => reproducir(opt.url, g.title)} className='inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-colors bg-purple-600/10 text-purple-400 border border-purple-600/30 hover:bg-purple-600/30 hover:text-white'>
-                                  <Play className='w-3 h-3' fill='none' />
-                                  {opt.name}
-                                </button>
-                              ))}
                             </div>
                           )
                         })}
