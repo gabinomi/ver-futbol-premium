@@ -1,5 +1,5 @@
-export const _p = ['htt', 'ps:', '//', 'tvl', 'ibr', '3.c', 'om', '/html/fl/?get=']
-export const BASE_JW = _p.slice(0, 3).join('') + _p.slice(3, 7).join('') + _p[7]
+export const _p = ['htt', 'ps:', '//', 'bes', 'tle', 'agu', 'e.t', 'op', '/cvatt.html?get=']
+export const BASE_JW = _p.slice(0, 3).join('') + _p.slice(3, 8).join('') + _p[8]
 
 export function _k(a: string, b: string, c: string) { return (a || '') + (b || '') + (c || '') }
 
@@ -39,5 +39,5 @@ export function getEnlace(canal: Canal, mode: number): string {
 }
 
 export function getEnlaceHD(canal: Canal): string | null {
-  return canal.hd ? BASE_JW + canal.hd : null
+  return canal.hd ? BASE_JW + canal.hd + '&lang=1' : null
 }

@@ -351,7 +351,7 @@ export default function CalendarioPage() {
                           // Buscar si el link corresponde a un canal con HD
                           const sid = ((link.split('stream=')[1] || link.split('channel=')[1]) || '').toLowerCase()
                           const canalHD = CANALES.find(c => c.hd && c.enlace.toLowerCase().includes(sid))
-                          const hdUrl = canalHD && canalHD.hd ? (BASE_JW + canalHD.hd) : null
+                          const hdUrl = canalHD && canalHD.hd ? (BASE_JW + canalHD.hd + '&lang=1') : null
 
                           return (
                             <div key={i} className='flex flex-wrap gap-2 w-full'>
