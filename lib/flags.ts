@@ -43,7 +43,7 @@ export function classificarCategoriaFútbol(cat: string): boolean {
 
 export function esFutbolReal(t: string): boolean {
   const c = (t || '').toLowerCase()
-  return inc(c, ['liga profesional','copa argentina','primera nacional','laliga','la liga','liga 2:','hypermotion','copa del rey','supercopa','brasileirao','brasileirão','premier league','fa cup','serie a','coppa italia','bundesliga','dfb','ligue 1','liga portugal','liga betplay','liga mx','primera division','copa de primera','liga 1:','copa libertadores','copa sudamericana','champions league','europa league','conference league','copa del mundo','mundial','eliminatorias','concacaf','gold cup','copa america','nations league','futbol','fútbol'])
+  return inc(c, ['liga profesional','copa argentina','primera nacional','laliga','la liga','liga 2:','hypermotion','copa del rey','supercopa','brasileirao','brasileirão','premier league','fa cup','serie a','coppa italia','bundesliga','dfb','ligue 1','liga portugal','liga betplay','liga mx','primera division','copa de primera','liga 1:','copa libertadores','copa sudamericana','champions league','europa league','conference league','copa del mundo','mundial','eliminatorias','concacaf','gold cup','copa america','nations league','futbol','fútbol', 'amistoso', 'amistosos', 'international friendly'])
 }
 
 export function parsearTitulo(titulo: string) {
@@ -71,7 +71,7 @@ export function detectarBandera(titulo: string): string {
   if (inc(context, ['copa libertadores'])) return FLAGS.LIB;
   if (inc(context, ['copa sudamericana', 'recopa sudamericana'])) return FLAGS.SUD;
   if (inc(context, ['concacaf', 'gold cup', 'liga de naciones concacaf'])) return FLAGS.CONCACAF;
-  if (inc(context, ['fifa', 'copa del mundo', 'mundial', 'eliminatorias'])) return FLAGS.FIFA;
+  if (inc(context, ['fifa', 'copa del mundo', 'mundial', 'eliminatorias', 'amistoso', 'amistosos', 'fecha fifa', 'international friendly'])) return FLAGS.FIFA;
   if (inc(context, ['champions league', 'uefa champions'])) return FLAGS.CHA;
   if (inc(context, ['europa league', 'conference league'])) return FLAGS.UE;
   
