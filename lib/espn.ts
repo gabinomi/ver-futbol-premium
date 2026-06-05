@@ -31,6 +31,7 @@ export interface ESPNEventInfo {
 }
 
 const LIGAS_SLUGS = [
+  'fifa.world', 'fifa.friendly',
   'arg.1', 'arg.copa', 'conmebol.libertadores', 'conmebol.sudamericana',
   'esp.1', 'esp.2', 'uefa.champions', 'uefa.europa', 'bra.1', 'col.1',
   'mex.1', 'eng.1', 'ita.1', 'ger.1'

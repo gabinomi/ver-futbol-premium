@@ -7,6 +7,8 @@ import { supabase } from '@/lib/supabase'
 
 // Configuracion de Ligas
 const LIGAS = [
+  { slug: 'fifa.world', nombre: 'Copa Mundial', bandera: 'https://bestleague.world/img/fifa.png' },
+  { slug: 'fifa.friendly', nombre: 'Amistosos Int.', bandera: 'https://bestleague.world/img/fifa.png' },
   { slug: 'arg.1', nombre: 'Liga Profesional', bandera: 'https://bestleague.world/jr/55.png' },
   { slug: 'arg.copa', nombre: 'Copa Argentina', bandera: 'https://bestleague.world/jr/55.png' },
   { slug: 'conmebol.libertadores', nombre: 'Copa Libertadores', bandera: 'https://bestleague.world/jr/76.png' },
