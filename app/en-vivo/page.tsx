@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import GlobalNav from '@/components/public/GlobalNav'
 import Image from 'next/image'
 import Link from 'next/link'
-import { CANALES, BASE_JW, getEnlaceHD, Canal } from '@/lib/canales-data'
+import { CANALES, BASE_JW, BASE_TOK, getEnlaceHD, getEnlaceHD2, Canal } from '@/lib/canales-data'
 import { detectarBandera, parsearTitulo, esFutbolReal } from '@/lib/flags'
 import { Play, Star } from 'lucide-react'
 
@@ -157,7 +157,7 @@ export default function EnVivoPage() {
 
   const procesarEnlaces = (linksOriginales: string[], titulo: string) => {
     // Retornamos una lista de opciones a renderizar
-    const opciones: { nombre: string, urlDirecta: string, isHD: boolean, isPremium: boolean }[] = []
+    const opciones: { nombre: string, urlDirecta: string, isHD: boolean, isHD2?: boolean, isPremium: boolean }[] = []
     
     // Primero, opciones normales y HD del propio canal
     linksOriginales.forEach((linkStr, idx) => {
@@ -189,6 +189,20 @@ export default function EnVivoPage() {
               nombre: `${canalObj.nombre} HD`,
               urlDirecta: hdLink,
               isHD: true,
+              isPremium: true
+            })
+          }
+        }
+        
+        // HD 2 Version si tiene
+        if (canalObj.hd2) {
+          const hd2Link = getEnlaceHD2(canalObj)
+          if (hd2Link) {
+            opciones.push({
+              nombre: `${canalObj.nombre} HD 2`,
+              urlDirecta: hd2Link,
+              isHD: true,
+              isHD2: true,
               isPremium: true
             })
           }
@@ -434,9 +448,11 @@ export default function EnVivoPage() {
                             key={opIdx} 
                             onClick={() => reproducir(op.urlDirecta, parseado.partido || parseado.liga)}
                             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-barlow text-sm font-extrabold uppercase tracking-wide transition-all ${
-                              op.isPremium 
-                                ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(234,179,8,0.15)]'
-                                : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:border-blue-500/50 hover:text-white'
+                              op.isHD2
+                                ? 'bg-gradient-to-r from-emerald-600/10 to-emerald-700/10 border border-emerald-600/50 text-emerald-500 hover:bg-emerald-600/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(5,150,105,0.15)]'
+                                : op.isPremium 
+                                  ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(234,179,8,0.15)]'
+                                  : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:border-blue-500/50 hover:text-white'
                             }`}
                           >
                             {op.isPremium ? <Star size={14} fill='currentColor' /> : <Play size={14} />}
@@ -471,9 +487,11 @@ export default function EnVivoPage() {
                           key={opIdx} 
                           onClick={() => reproducir(op.urlDirecta, parseado.partido || parseado.liga)}
                           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-barlow text-sm font-extrabold uppercase tracking-wide transition-all ${
-                            op.isPremium 
-                              ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(234,179,8,0.15)]'
-                              : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:border-blue-500/50 hover:text-white'
+                            op.isHD2
+                              ? 'bg-gradient-to-r from-emerald-600/10 to-emerald-700/10 border border-emerald-600/50 text-emerald-500 hover:bg-emerald-600/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(5,150,105,0.15)]'
+                              : op.isPremium 
+                                ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/20 hover:scale-[1.02] shadow-[0_0_15px_rgba(234,179,8,0.15)]'
+                                : 'bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:border-blue-500/50 hover:text-white'
                           }`}
                         >
                           {op.isPremium ? <Star size={14} fill='currentColor' /> : <Play size={14} />}

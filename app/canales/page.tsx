@@ -2,13 +2,13 @@
 import { useState, useRef } from 'react'
 import GlobalNav from '@/components/public/GlobalNav'
 import { Play, Signal, Zap, Star, RotateCw, X } from 'lucide-react'
-import { CANALES, getEnlace, getEnlaceHD } from '@/lib/canales-data'
+import { CANALES, getEnlace, getEnlaceHD, getEnlaceHD2, getEnlaceExtra } from '@/lib/canales-data'
 
 const SMARTLINK = 'https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644'
 
 export default function CanalesPage() {
   const [canalActivo, setCanalActivo] = useState<number | null>(null)
-  const [modo, setModo] = useState<1 | 2 | 3>(1)
+  const [modo, setModo] = useState<1 | 2 | 3 | 4 | 5>(1)
   const [iframeSrc, setIframeSrc] = useState('')
   const [showOverlay, setShowOverlay] = useState(true)
   const playerRef = useRef<HTMLDivElement>(null)
@@ -28,17 +28,25 @@ export default function CanalesPage() {
     window.open(SMARTLINK, '_blank')
     setShowOverlay(false)
     const canal = CANALES[canalActivo]
-    const src = modo === 3 ? getEnlaceHD(canal) : getEnlace(canal, modo)
-    setIframeSrc(src || getEnlace(canal, 1))
+    let src = getEnlace(canal, 1)
+    if (modo === 2) src = getEnlace(canal, 2)
+    if (modo === 3) src = getEnlaceHD(canal) || src
+    if (modo === 4) src = getEnlaceHD2(canal) || src
+    if (modo === 5) src = getEnlaceExtra(canal) || src
+    setIframeSrc(src)
   }
 
-  function cambiarModo(m: 1 | 2 | 3) {
+  function cambiarModo(m: 1 | 2 | 3 | 4 | 5) {
     if (canalActivo === null) return
     setModo(m)
     if (!showOverlay) {
       const canal = CANALES[canalActivo]
-      const src = m === 3 ? getEnlaceHD(canal) : getEnlace(canal, m)
-      if (src) setIframeSrc(src)
+      let src = getEnlace(canal, 1)
+      if (m === 2) src = getEnlace(canal, 2)
+      if (m === 3) src = getEnlaceHD(canal) || src
+      if (m === 4) src = getEnlaceHD2(canal) || src
+      if (m === 5) src = getEnlaceExtra(canal) || src
+      setIframeSrc(src)
     }
   }
 
@@ -195,7 +203,27 @@ export default function CanalesPage() {
                         modo === 3 ? 'bg-yellow-500 border-yellow-500 text-black' : 'bg-white/[0.06] border-yellow-500/40 text-yellow-400 hover:bg-yellow-500/15 hover:text-yellow-300'
                       }`}
                     >
-                      <Star size={12} /> HD
+                      <Star size={12} /> Premium HD
+                    </button>
+                  )}
+                  {canalData.hd2 && (
+                    <button
+                      onClick={() => cambiarModo(4)}
+                      className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide border transition-all ${
+                        modo === 4 ? 'bg-emerald-600 border-emerald-600 text-white shadow-[0_0_15px_rgba(5,150,105,0.4)]' : 'bg-white/[0.06] border-emerald-600/40 text-emerald-400 hover:bg-emerald-600/15 hover:text-emerald-300'
+                      }`}
+                    >
+                      <Star size={12} /> HD 2
+                    </button>
+                  )}
+                  {canalData.extra && (
+                    <button
+                      onClick={() => cambiarModo(5)}
+                      className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide border transition-all ${
+                        modo === 5 ? 'bg-slate-500 border-slate-500 text-white' : 'bg-white/[0.06] border-white/10 text-slate-400 hover:bg-white/[0.12] hover:text-white'
+                      }`}
+                    >
+                      <Play size={12} /> Opción Extra
                     </button>
                   )}
                   <button

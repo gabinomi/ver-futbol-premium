@@ -4,7 +4,7 @@ import { utcToArg, detectarBandera, parsearTitulo, esFutbolReal } from '@/lib/fl
 import { Play, Star } from 'lucide-react'
 import Link from 'next/link'
 import GlobalNav from '@/components/public/GlobalNav'
-import { CANALES, BASE_JW } from '@/lib/canales-data'
+import { CANALES, BASE_JW, BASE_TOK } from '@/lib/canales-data'
 
 interface Evento {
   title: string
@@ -348,10 +348,11 @@ export default function CalendarioPage() {
                           streamName = streamName.replace(/_/g, ' ').toUpperCase()
                           const isPrimary = i === 0
                           const urlOpt = isPrimary ? link : link // actually we just need the link itself
-                          // Buscar si el link corresponde a un canal con HD
+                          // Buscar si el link corresponde a un canal con HD o HD2
                           const sid = ((link.split('stream=')[1] || link.split('channel=')[1]) || '').toLowerCase()
-                          const canalHD = CANALES.find(c => c.hd && c.enlace.toLowerCase().includes(sid))
-                          const hdUrl = canalHD && canalHD.hd ? (BASE_JW + canalHD.hd + '&lang=1') : null
+                          const canalMatch = CANALES.find(c => (c.hd || c.hd2) && c.enlace.toLowerCase().includes(sid))
+                          const hdUrl = canalMatch && canalMatch.hd ? (BASE_JW + canalMatch.hd + '&lang=1') : null
+                          const hd2Url = canalMatch && canalMatch.hd2 ? (BASE_TOK + canalMatch.hd2) : null
 
                           return (
                             <div key={i} className='flex flex-wrap gap-2 w-full'>
@@ -361,6 +362,15 @@ export default function CalendarioPage() {
                                   <button onClick={() => reproducir(hdUrl, g.title)} className='inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-all bg-gradient-to-br from-yellow-500 to-yellow-600 text-black shadow-[0_4px_14px_rgba(234,179,8,0.25)] hover:scale-[1.02]'>
                                     <Star className='w-3 h-3' fill='currentColor' />
                                     {streamName} <span className='bg-black text-yellow-500 text-[8px] font-black px-1 rounded ml-1'>HD</span>
+                                  </button>
+                                </div>
+                              )}
+                              {hd2Url && (
+                                <div className='w-full mb-1 bg-emerald-500/10 border border-emerald-500/20 p-2 rounded-lg flex flex-col items-start'>
+                                  <span className='text-[9px] font-bold tracking-[2px] uppercase text-emerald-600 mb-1.5 flex items-center gap-1'><Star size={10} /> Versión Premium 2</span>
+                                  <button onClick={() => reproducir(hd2Url, g.title)} className='inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-all bg-gradient-to-br from-emerald-600 to-emerald-700 text-white shadow-[0_4px_14px_rgba(5,150,105,0.25)] hover:scale-[1.02]'>
+                                    <Star className='w-3 h-3' fill='currentColor' />
+                                    {streamName} <span className='bg-white text-emerald-700 text-[8px] font-black px-1 rounded ml-1'>HD 2</span>
                                   </button>
                                 </div>
                               )}
