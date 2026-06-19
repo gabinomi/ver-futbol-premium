@@ -355,29 +355,23 @@ export default function CalendarioPage() {
                           const hd2Url = canalMatch && canalMatch.hd2 ? (BASE_TOK + canalMatch.hd2) : null
 
                           return (
-                            <div key={i} className='flex flex-wrap gap-2 w-full'>
+                            <div key={i} className='contents'>
                               {hdUrl && (
-                                <div className='w-full mb-1 bg-yellow-500/10 border border-yellow-500/20 p-2 rounded-lg flex flex-col items-start'>
-                                  <span className='text-[9px] font-bold tracking-[2px] uppercase text-yellow-600 mb-1.5 flex items-center gap-1'><Star size={10} /> Versión Premium</span>
-                                  <button onClick={() => reproducir(hdUrl, g.title)} className='inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-all bg-gradient-to-br from-yellow-500 to-yellow-600 text-black shadow-[0_4px_14px_rgba(234,179,8,0.25)] hover:scale-[1.02]'>
-                                    <Star className='w-3 h-3' fill='currentColor' />
-                                    {streamName} <span className='bg-black text-yellow-500 text-[8px] font-black px-1 rounded ml-1'>HD</span>
-                                  </button>
-                                </div>
+                                <button onClick={() => reproducir(hdUrl, g.title)} className='inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-barlow text-[12px] font-bold tracking-wide uppercase transition-all bg-yellow-500/10 text-yellow-500 border border-yellow-500/30 hover:bg-yellow-500/20 hover:text-yellow-400'>
+                                  <Play className='w-3.5 h-3.5' fill='currentColor' />
+                                  {streamName} <span className='bg-yellow-500/20 text-yellow-500 text-[9px] font-black px-1.5 py-0.5 rounded ml-0.5'>HD</span>
+                                </button>
                               )}
                               {hd2Url && (
-                                <div className='w-full mb-1 bg-emerald-500/10 border border-emerald-500/20 p-2 rounded-lg flex flex-col items-start'>
-                                  <span className='text-[9px] font-bold tracking-[2px] uppercase text-emerald-600 mb-1.5 flex items-center gap-1'><Star size={10} /> Versión Premium 2</span>
-                                  <button onClick={() => reproducir(hd2Url, g.title)} className='inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-all bg-gradient-to-br from-emerald-600 to-emerald-700 text-white shadow-[0_4px_14px_rgba(5,150,105,0.25)] hover:scale-[1.02]'>
-                                    <Star className='w-3 h-3' fill='currentColor' />
-                                    {streamName} <span className='bg-white text-emerald-700 text-[8px] font-black px-1 rounded ml-1'>HD 2</span>
-                                  </button>
-                                </div>
+                                <button onClick={() => reproducir(hd2Url, g.title)} className='inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-barlow text-[12px] font-bold tracking-wide uppercase transition-all bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 hover:bg-emerald-500/20 hover:text-emerald-400'>
+                                  <Play className='w-3.5 h-3.5' fill='currentColor' />
+                                  {streamName} <span className='bg-emerald-500/20 text-emerald-500 text-[9px] font-black px-1.5 py-0.5 rounded ml-0.5'>HD2</span>
+                                </button>
                               )}
                               
-                              <button onClick={() => reproducir(link, g.title)} className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-barlow text-[13px] font-bold tracking-wide uppercase transition-colors ${isPrimary ? 'bg-gradient-to-br from-blue-600 to-[#1a3ab8] text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)]' : 'bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/30 hover:text-white'}`}>
-                                <Play className='w-3 h-3' fill={isPrimary ? 'currentColor' : 'none'} />
-                                {isPrimary ? streamName : `Opción ${i+1} — ${streamName}`}
+                              <button onClick={() => reproducir(link, g.title)} className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-barlow text-[12px] font-bold tracking-wide uppercase transition-colors ${isPrimary ? 'bg-gradient-to-br from-blue-600 to-[#1a3ab8] text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)]' : 'bg-[#0a1835] text-blue-400 border border-[#1e3a8a] hover:bg-blue-600/30 hover:text-white'}`}>
+                                <Play className='w-3.5 h-3.5' fill='currentColor' />
+                                {streamName}
                               </button>
                             </div>
                           )
