@@ -365,7 +365,7 @@ export default function EnVivoPage() {
                 <div className='relative w-full rounded-xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)] aspect-video min-h-[250px] sm:min-h-[400px]'>
                   <iframe 
                     key={playerSrc}
-                    src={playerSrc.includes('streamtp') || playerSrc.includes('tvlibr3') || playerSrc.includes('streamx741') || playerSrc.includes('bestleague.top') ? playerSrc : `/embed?url=${encodeURIComponent(playerSrc)}`}
+                    src={playerSrc}
                     className='absolute inset-0 w-full h-full border-none bg-black'
                     allowFullScreen
                     scrolling='no'

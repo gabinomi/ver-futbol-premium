@@ -230,7 +230,7 @@ export default function CalendarioPage() {
               <div className='relative w-full rounded-xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.5)] aspect-video min-h-[250px] sm:min-h-[400px]'>
                 <iframe 
                   key={playerSrc}
-                  src={playerSrc.includes('streamtp') || playerSrc.includes('tvlibr3') || playerSrc.includes('streamx741') || playerSrc.includes('bestleague.top') ? playerSrc : `/embed?url=${encodeURIComponent(playerSrc)}`}
+                  src={playerSrc}
                   className='absolute inset-0 w-full h-full border-none bg-black'
                   allowFullScreen
                   scrolling='no'
@@ -350,7 +350,7 @@ export default function CalendarioPage() {
                           const urlOpt = isPrimary ? link : link // actually we just need the link itself
                           // Buscar si el link corresponde a un canal con HD o HD2
                           const sid = ((link.split('stream=')[1] || link.split('channel=')[1]) || '').toLowerCase()
-                          const canalMatch = CANALES.find(c => (c.hd || c.hd2) && c.enlace.toLowerCase().includes(sid))
+                          const canalMatch = sid ? CANALES.find(c => (c.hd || c.hd2) && c.enlace.toLowerCase().includes(sid)) : undefined
                           const hdUrl = canalMatch && canalMatch.hd ? (BASE_JW + canalMatch.hd + '&lang=1') : null
                           const hd2Url = canalMatch && canalMatch.hd2 ? (BASE_TOK + canalMatch.hd2) : null
 
