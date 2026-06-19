@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server'
 
 async function fetchStreamTP() {
   try {
-    const res = await fetch('https://streamtp-x-y-z.ws/eventos.json', {
+    const res = await fetch('https://streamtpday1.xyz/eventos.json', {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Referer': 'https://streamtp-x-y-z.ws/',
+        'Referer': 'https://streamtpday1.xyz/',
         'Accept': 'application/json',
       },
       cache: 'no-store',
@@ -61,46 +61,62 @@ export async function GET() {
       fetchStreamX550()
     ])
 
-    let merged = [...(streamTpEvents || [])]
+    let merged = streamTpEvents && streamTpEvents.length > 0 ? [...streamTpEvents] : []
 
-    // 1. Enriquecer streamTpEvents con categorías de x550 (usando coincidencia de equipos)
-    merged = merged.map((ev: any) => {
-      const teams = getMatchTeams(ev.title)
-      const matchingX550 = x550Events.filter((x: any) => getMatchTeams(x.title) === teams)
-      
-      if (matchingX550.length > 0) {
-        const cat = matchingX550.find((x: any) => x.category && x.category !== 'Other')?.category
-        if (cat && (!ev.category || ev.category === 'Other')) {
-          ev.category = cat
-        }
-      }
-      return ev
-    })
-
-    // 2. Añadir links de x550 sin duplicar canales para un mismo partido
-    if (Array.isArray(x550Events)) {
-      
-      x550Events.forEach((xEv: any) => {
-        const teams = getMatchTeams(xEv.title)
-        const streamId = getStreamId(xEv.link)
-        
-        // Buscar si este partido (equipos) ya existe en streamtp
-        const tpMatches = merged.filter((m: any) => getMatchTeams(m.title) === teams)
-        
-        if (tpMatches.length > 0) {
-          // El partido existe. ¿Ya tenemos este canal/streamId?
-          const hasLink = tpMatches.some((m: any) => getStreamId(m.link) === streamId)
-          
-          if (!hasLink) {
-            // Añadimos la opción de video usando el título original de streamtp para evitar crear un evento duplicado en el calendario
-            const baseEvent = tpMatches[0]
-            merged.push({
-              ...baseEvent,
-              link: xEv.link
-            })
-          }
+    if (merged.length === 0 && x550Events && x550Events.length > 0) {
+      // Fallback: Si StreamTP falla, armamos la agenda exclusivamente con StreamX741
+      // Nos aseguramos de no repetir exactamente el mismo partido y el mismo enlace
+      const uniqueX550: any[] = []
+      const seen = new Set()
+      x550Events.forEach((ev: any) => {
+        const teams = getMatchTeams(ev.title)
+        const streamId = getStreamId(ev.link)
+        const key = `${teams}-${streamId}`
+        if (!seen.has(key)) {
+          seen.add(key)
+          uniqueX550.push(ev)
         }
       })
+      merged = uniqueX550
+    } else {
+      // 1. Enriquecer streamTpEvents con categorías de x550 (usando coincidencia de equipos)
+      merged = merged.map((ev: any) => {
+        const teams = getMatchTeams(ev.title)
+        const matchingX550 = x550Events.filter((x: any) => getMatchTeams(x.title) === teams)
+        
+        if (matchingX550.length > 0) {
+          const cat = matchingX550.find((x: any) => x.category && x.category !== 'Other')?.category
+          if (cat && (!ev.category || ev.category === 'Other')) {
+            ev.category = cat
+          }
+        }
+        return ev
+      })
+
+      // 2. Añadir links de x550 sin duplicar canales para un mismo partido
+      if (Array.isArray(x550Events)) {
+        x550Events.forEach((xEv: any) => {
+          const teams = getMatchTeams(xEv.title)
+          const streamId = getStreamId(xEv.link)
+          
+          // Buscar si este partido (equipos) ya existe en streamtp
+          const tpMatches = merged.filter((m: any) => getMatchTeams(m.title) === teams)
+          
+          if (tpMatches.length > 0) {
+            // El partido existe. ¿Ya tenemos este canal/streamId?
+            const hasLink = tpMatches.some((m: any) => getStreamId(m.link) === streamId)
+            
+            if (!hasLink) {
+              // Añadimos la opción de video usando el título original de streamtp para evitar crear un evento duplicado en el calendario
+              const baseEvent = tpMatches[0]
+              merged.push({
+                ...baseEvent,
+                link: xEv.link
+              })
+            }
+          }
+        })
+      }
     }
     
     // Ordenar por hora
