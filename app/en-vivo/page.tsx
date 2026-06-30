@@ -4,7 +4,7 @@ import GlobalNav from '@/components/public/GlobalNav'
 import Image from 'next/image'
 import Link from 'next/link'
 import { CANALES, BASE_JW, BASE_TOK, getEnlaceHD, getEnlaceHD2, Canal } from '@/lib/canales-data'
-import { detectarBandera, parsearTitulo, esFutbolReal } from '@/lib/flags'
+import { detectarBandera, parsearTitulo, esFutbolReal, traducirEquipos } from '@/lib/flags'
 import { Play, Star } from 'lucide-react'
 
 // Reutilizamos la configuracion de Ligas para buscar los escudos
@@ -138,7 +138,8 @@ export default function EnVivoPage() {
 
   // Lógica Fuzzy Match
   const matchEventoConESPN = (titulo: string) => {
-    const cleanTitle = titulo.toLowerCase().replace(/vs/g, '').replace(/[^a-z0-9\s]/g, '')
+    const tituloTraducido = traducirEquipos(titulo)
+    const cleanTitle = tituloTraducido.toLowerCase().replace(/vs/g, '').replace(/[^a-z0-9\s]/g, '')
     const words = cleanTitle.split(/\s+/).filter(w => w.length >= 3)
     
     for (const ev of espnEvents) {

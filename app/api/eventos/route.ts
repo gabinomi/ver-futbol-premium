@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server'
 
 async function fetchStreamTP() {
   try {
-    const res = await fetch('https://streamtpday1.xyz/eventos.json', {
+    const res = await fetch('https://streamtp.sbs/eventos.json', {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Referer': 'https://streamtpday1.xyz/',
+        'Referer': 'https://streamtp.sbs/',
         'Accept': 'application/json',
       },
       cache: 'no-store',

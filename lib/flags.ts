@@ -24,12 +24,135 @@ export const FLAGS: Record<string, string> = {
   SUD: 'https://pelotalibre24.com/flags/sud.png',
   CONCACAF: 'https://bestleague.world/img/concacaf.png',
   FIFA: 'https://bestleague.world/img/fifa.png',
+  MUNDIAL: 'https://i.imgur.com/YYN77mq.png',
   CHA: 'https://bestleague.world/jr/5.png',
   UE:  'https://bestleague.world/jr/7.png',
   F1:  'https://futbollibreenhd.net/flags/f1.png',
   F2:  'https://futbollibreenhd.net/flags/f2.png',
   NBA: 'https://bestleague.world/img/nba.svg',
   FUT: 'https://static.futbolenlatv.com/img/32/20130618113222-futbol.png'
+}
+
+export const COUNTRY_DICT: Record<string, string> = {
+  'escocia': 'scotland',
+  'marruecos': 'morocco',
+  'inglaterra': 'england',
+  'francia': 'france',
+  'alemania': 'germany',
+  'italia': 'italy',
+  'españa': 'spain',
+  'brasil': 'brazil',
+  'uruguay': 'uruguay',
+  'colombia': 'colombia',
+  'chile': 'chile',
+  'peru': 'peru',
+  'perú': 'peru',
+  'ecuador': 'ecuador',
+  'paraguay': 'paraguay',
+  'venezuela': 'venezuela',
+  'bolivia': 'bolivia',
+  'mexico': 'mexico',
+  'méxico': 'mexico',
+  'estados unidos': 'usa',
+  'ee. uu.': 'usa',
+  'ee uu': 'usa',
+  'canada': 'canada',
+  'canadá': 'canada',
+  'japon': 'japan',
+  'japón': 'japan',
+  'corea del sur': 'south korea',
+  'australia': 'australia',
+  'paises bajos': 'netherlands',
+  'países bajos': 'netherlands',
+  'holanda': 'netherlands',
+  'portugal': 'portugal',
+  'belgica': 'belgium',
+  'bélgica': 'belgium',
+  'suecia': 'sweden',
+  'suiza': 'switzerland',
+  'croacia': 'croatia',
+  'dinamarca': 'denmark',
+  'polonia': 'poland',
+  'gales': 'wales',
+  'ucrania': 'ukraine',
+  'rusia': 'russia',
+  'turquia': 'turkey',
+  'turquía': 'turkey',
+  'grecia': 'greece',
+  'rumania': 'romania',
+  'hungria': 'hungary',
+  'hungría': 'hungary',
+  'austria': 'austria',
+  'serbia': 'serbia',
+  'republica checa': 'czech republic',
+  'república checa': 'czech republic',
+  'eslovaquia': 'slovakia',
+  'eslovenia': 'slovenia',
+  'islandia': 'iceland',
+  'irlanda': 'ireland',
+  'irlanda del norte': 'northern ireland',
+  'arabia saudita': 'saudi arabia',
+  'iran': 'iran',
+  'irán': 'iran',
+  'mali': 'mali',
+  'senegal': 'senegal',
+  'camerun': 'cameroon',
+  'camerún': 'cameroon',
+  'nigeria': 'nigeria',
+  'ghana': 'ghana',
+  'costa de marfil': 'ivory coast',
+  'egipto': 'egypt',
+  'argelia': 'algeria',
+  'tunez': 'tunisia',
+  'túnez': 'tunisia',
+  'sudafrica': 'south africa',
+  'sudáfrica': 'south africa',
+  'nueva zelanda': 'new zealand',
+  'jamaica': 'jamaica',
+  'costa rica': 'costa rica',
+  'panama': 'panama',
+  'panamá': 'panama',
+  'honduras': 'honduras',
+  'el salvador': 'el salvador',
+  'guatemala': 'guatemala',
+  'qatar': 'qatar',
+  'china': 'china',
+  'india': 'india',
+  'indonesia': 'indonesia',
+  'malasia': 'malaysia',
+  'tailandia': 'thailand',
+  'vietnam': 'vietnam',
+  'filipinas': 'philippines',
+  'siria': 'syria',
+  'irak': 'iraq',
+  'emiratos arabes unidos': 'uae',
+  'oman': 'oman',
+  'omán': 'oman',
+  'bahrein': 'bahrain',
+  'jordania': 'jordan',
+  'libano': 'lebanon',
+  'líbano': 'lebanon',
+  'palestina': 'palestine',
+  'koweit': 'kuwait',
+  'georgia': 'georgia',
+  'armenia': 'armenia',
+  'azerbaiyan': 'azerbaijan',
+  'kazajistan': 'kazakhstan',
+  'uzbekistan': 'uzbekistan',
+  'nueva caledonia': 'new caledonia',
+  'tahiti': 'tahiti',
+  'tahití': 'tahiti',
+  'fiyi': 'fiji',
+  'islas salomon': 'solomon islands'
+}
+
+export function traducirEquipos(titulo: string): string {
+  let lower = titulo.toLowerCase()
+  for (const [es, en] of Object.entries(COUNTRY_DICT)) {
+    // Usamos reemplazo global para cada coincidencia del nombre del país
+    lower = lower.split(es).join(en)
+  }
+  return lower
 }
 
 function inc(t: string, words: string[]): boolean {
@@ -71,7 +194,10 @@ export function detectarBandera(titulo: string): string {
   if (inc(context, ['copa libertadores'])) return FLAGS.LIB;
   if (inc(context, ['copa sudamericana', 'recopa sudamericana'])) return FLAGS.SUD;
   if (inc(context, ['concacaf', 'gold cup', 'liga de naciones concacaf'])) return FLAGS.CONCACAF;
-  if (inc(context, ['fifa', 'copa del mundo', 'mundial', 'eliminatorias', 'amistoso', 'amistosos', 'fecha fifa', 'international friendly'])) return FLAGS.FIFA;
+  
+  // FIFA Oficial vs Amistosos
+  if (inc(context, ['fifa', 'copa del mundo', 'mundial', 'eliminatorias'])) return FLAGS.MUNDIAL;
+  if (inc(context, ['amistoso', 'amistosos', 'fecha fifa', 'international friendly'])) return FLAGS.FIFA;
   if (inc(context, ['champions league', 'uefa champions'])) return FLAGS.CHA;
   if (inc(context, ['europa league', 'conference league'])) return FLAGS.UE;
   
