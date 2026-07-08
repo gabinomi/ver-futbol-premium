@@ -1,5 +1,40 @@
 import { NextResponse } from 'next/server'
 
+function getStatusPorHorario(timeStr: string): string {
+  if (!timeStr || !timeStr.includes(':')) {
+    return 'próximo'
+  }
+  
+  let [h, m] = timeStr.split(':').map(Number)
+  h = h + 2
+  if (h >= 24) h -= 24
+  
+  const now = new Date()
+  const argNowStr = new Intl.DateTimeFormat('en-US', { 
+    timeZone: 'America/Argentina/Buenos_Aires', 
+    hour: 'numeric', 
+    minute: 'numeric', 
+    hour12: false 
+  }).format(now)
+  
+  let [nowH, nowM] = argNowStr.split(':').map(Number)
+  if (nowH === 24) nowH = 0
+  
+  const nowMinutes = nowH * 60 + nowM
+  const evMinutes = h * 60 + m
+  
+  let isLive = false
+  if (h >= 21 && nowH <= 3) {
+    isLive = (nowMinutes + 24 * 60) >= evMinutes
+  } else if (h <= 3 && nowH >= 21) {
+    isLive = false
+  } else {
+    isLive = nowMinutes >= evMinutes
+  }
+  
+  return isLive ? 'en vivo' : 'próximo'
+}
+
 async function fetchStreamTP() {
   try {
     const res = await fetch('https://streamtp.sbs/wc.json?nocache=' + Date.now(), {
@@ -23,7 +58,7 @@ async function fetchStreamTP() {
               time: ev.time,
               category: ev.category,
               link: l.url,
-              status: l.status === 'live' ? 'en vivo' : 'próximo'
+              status: getStatusPorHorario(ev.time)
             })
           })
         }
@@ -50,7 +85,7 @@ async function fetchStreamX550() {
     if (Array.isArray(rawData)) {
       return rawData.map(ev => ({
         ...ev,
-        status: ev.status ? ev.status.toLowerCase() : 'próximo'
+        status: getStatusPorHorario(ev.time)
       }))
     }
     return rawData
