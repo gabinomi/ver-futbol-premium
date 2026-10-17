@@ -1,13 +1,17 @@
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 import { NextResponse } from 'next/server'
 
-function getStatusPorHorario(timeStr: string): string {
+function getStatusPorHorario(timeStr: string, statusFromJson?: string): string {
   if (!timeStr || !timeStr.includes(':')) {
     return 'próximo'
   }
   
   let [h, m] = timeStr.split(':').map(Number)
-  h = h + 2
-  if (h >= 24) h -= 24
+  // La hora del JSON está en UTC-5 (hora Colombia/Perú/US Central).
+  // Argentina está en UTC-3 (+2 horas de diferencia).
+  h = (h + 2) % 24
   
   const now = new Date()
   const argNowStr = new Intl.DateTimeFormat('en-US', { 
@@ -23,58 +27,25 @@ function getStatusPorHorario(timeStr: string): string {
   const nowMinutes = nowH * 60 + nowM
   const evMinutes = h * 60 + m
   
-  let isLive = false
-  if (h >= 21 && nowH <= 3) {
-    isLive = (nowMinutes + 24 * 60) >= evMinutes
-  } else if (h <= 3 && nowH >= 21) {
-    isLive = false
-  } else {
-    isLive = nowMinutes >= evMinutes
-  }
+  let diff = nowMinutes - evMinutes
+  if (diff < -720) diff += 1440
+  if (diff > 720) diff -= 1440
   
-  return isLive ? 'en vivo' : 'próximo'
+  // Un partido está "en vivo" desde 5 minutos antes del pitazo inicial hasta ~135 minutos después
+  const isWithinMatchTime = diff >= -5 && diff <= 135
+  
+  const s = (statusFromJson || '').toLowerCase()
+  if (s === 'next' && diff < 0) return 'próximo'
+  if (s === 'live' && diff >= -15 && diff <= 180) return 'en vivo'
+  
+  return isWithinMatchTime ? 'en vivo' : 'próximo'
 }
 
-async function fetchStreamTP() {
+async function fetchStreamX() {
   try {
-    const res = await fetch('https://streamtp.sbs/wc.json?nocache=' + Date.now(), {
+    const res = await fetch('https://streamx723.sbs/json/agenda888.json?nocache=' + Date.now(), {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Referer': 'https://streamtp.sbs/',
-        'Accept': 'application/json',
-      },
-      cache: 'no-store',
-      signal: AbortSignal.timeout(6000)
-    })
-    if (!res.ok) return []
-    const data = await res.json()
-    const flattened: any[] = []
-    if (data && data.events && Array.isArray(data.events)) {
-      data.events.forEach((ev: any) => {
-        if (ev.links && Array.isArray(ev.links)) {
-          ev.links.forEach((l: any) => {
-            flattened.push({
-              title: ev.title,
-              time: ev.time,
-              category: ev.category,
-              link: l.url,
-              status: getStatusPorHorario(ev.time)
-            })
-          })
-        }
-      })
-    }
-    return flattened
-  } catch (e) {
-    return []
-  }
-}
-
-async function fetchStreamX550() {
-  try {
-    const res = await fetch('https://streamx996.one/json/agenda550.json?nocache=' + Date.now(), {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
         'Accept': 'application/json',
       },
       cache: 'no-store',
@@ -84,11 +55,59 @@ async function fetchStreamX550() {
     const rawData = await res.json()
     if (Array.isArray(rawData)) {
       return rawData.map(ev => ({
-        ...ev,
-        status: getStatusPorHorario(ev.time)
+        title: ev.title,
+        time: ev.time,
+        category: ev.category,
+        link: ev.link || ev.url,
+        status: getStatusPorHorario(ev.time, ev.status)
       }))
     }
-    return rawData
+    return []
+  } catch (e) {
+    return []
+  }
+}
+
+async function fetchStreamTP() {
+  try {
+    const res = await fetch('https://streamtp99a.sbs/events.json?nocache=' + Date.now(), {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://streamtp99a.sbs/',
+        'Accept': 'application/json',
+      },
+      cache: 'no-store',
+      signal: AbortSignal.timeout(6000)
+    })
+    if (!res.ok) return []
+    const data = await res.json()
+    const flattened: any[] = []
+    if (Array.isArray(data)) {
+      data.forEach((ev: any) => {
+        flattened.push({
+          title: ev.title,
+          time: ev.time,
+          category: ev.category,
+          link: ev.url || ev.link,
+          status: getStatusPorHorario(ev.time, ev.status)
+        })
+      })
+    } else if (data && data.events && Array.isArray(data.events)) {
+      data.events.forEach((ev: any) => {
+        if (ev.links && Array.isArray(ev.links)) {
+          ev.links.forEach((l: any) => {
+            flattened.push({
+              title: ev.title,
+              time: ev.time,
+              category: ev.category,
+              link: l.url || l.link,
+              status: getStatusPorHorario(ev.time, l.status || ev.status)
+            })
+          })
+        }
+      })
+    }
+    return flattened
   } catch (e) {
     return []
   }
@@ -113,16 +132,16 @@ const getMatchTeams = (title: string) => {
 
 export async function GET() {
   try {
-    const [streamTpEvents, x550Events] = await Promise.all([
-      fetchStreamTP(),
-      fetchStreamX550()
+    const [streamXEvents, streamTpEvents] = await Promise.all([
+      fetchStreamX(),
+      fetchStreamTP()
     ])
 
-    // streamx996 es ahora el principal
-    let merged = x550Events && x550Events.length > 0 ? [...x550Events] : []
+    // streamx723 es ahora el principal
+    let merged = streamXEvents && streamXEvents.length > 0 ? [...streamXEvents] : []
 
     if (merged.length === 0 && streamTpEvents && streamTpEvents.length > 0) {
-      // Fallback: Si streamx996 falla, armamos la agenda exclusivamente con streamtp
+      // Fallback: Si streamx723 falla, armamos la agenda exclusivamente con streamtp
       const uniqueTp: any[] = []
       const seen = new Set()
       streamTpEvents.forEach((ev: any) => {
@@ -136,15 +155,20 @@ export async function GET() {
       })
       merged = uniqueTp
     } else if (merged.length > 0 && streamTpEvents && streamTpEvents.length > 0) {
-      // 1. Enriquecer streamx996Events con categorías de streamtp si hace falta
+      // Enriquecer streamXEvents con categorías más específicas de streamtp si hace falta (ej. si dice "Fútbol" o "Other")
       merged = merged.map((ev: any) => {
         const teams = getMatchTeams(ev.title)
         const matchingTp = streamTpEvents.filter((x: any) => getMatchTeams(x.title) === teams)
         
         if (matchingTp.length > 0) {
-          const cat = matchingTp.find((x: any) => x.category && x.category !== 'Other')?.category
-          if (cat && (!ev.category || ev.category === 'Other')) {
+          const cat = matchingTp.find((x: any) => x.category && x.category !== 'Other' && x.category !== 'Fútbol')?.category
+          if (cat && (!ev.category || ev.category === 'Other' || ev.category === 'Fútbol')) {
             ev.category = cat
+          }
+          // Si streamtp marca el partido explícitamente en "live", asegurar que esté en vivo
+          const tpLive = matchingTp.some((x: any) => x.status === 'en vivo')
+          if (tpLive) {
+            ev.status = 'en vivo'
           }
         }
         return ev

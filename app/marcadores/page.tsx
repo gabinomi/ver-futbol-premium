@@ -7,28 +7,28 @@ import { supabase } from '@/lib/supabase'
 
 // Configuracion de Ligas
 const LIGAS = [
-  { slug: 'fifa.world', nombre: 'Copa Mundial', bandera: 'https://bestleague.world/img/fifa.png' },
-  { slug: 'fifa.friendly', nombre: 'Amistosos Int.', bandera: 'https://bestleague.world/img/fifa.png' },
-  { slug: 'arg.1', nombre: 'Liga Profesional', bandera: 'https://bestleague.world/jr/55.png' },
-  { slug: 'arg.copa', nombre: 'Copa Argentina', bandera: 'https://bestleague.world/jr/55.png' },
-  { slug: 'conmebol.libertadores', nombre: 'Copa Libertadores', bandera: 'https://bestleague.world/jr/76.png' },
-  { slug: 'conmebol.sudamericana', nombre: 'Copa Sudamericana', bandera: 'https://pelotalibre24.com/flags/sud.png' },
-  { slug: 'esp.1', nombre: 'LaLiga', bandera: 'https://bestleague.world/jr/34.png' },
-  { slug: 'esp.2', nombre: 'LaLiga 2', bandera: 'https://bestleague.world/jr/34.png' },
-  { slug: 'uefa.champions', nombre: 'Champions League', bandera: 'https://bestleague.world/jr/5.png' },
-  { slug: 'uefa.europa', nombre: 'Europa League', bandera: 'https://bestleague.world/jr/7.png' },
-  { slug: 'bra.1', nombre: 'Brasileirão', bandera: 'https://bestleague.world/jr/79.png' },
-  { slug: 'col.1', nombre: 'Liga BetPlay', bandera: 'https://bestleague.world/jr/118.png' },
-  { slug: 'mex.1', nombre: 'Liga MX', bandera: 'https://bestleague.world/jr/69.png' },
-  { slug: 'eng.1', nombre: 'Premier League', bandera: 'https://bestleague.world/jr/61.png' },
-  { slug: 'ita.1', nombre: 'Serie A', bandera: 'https://bestleague.world/jr/37.png' },
-  { slug: 'ger.1', nombre: 'Bundesliga', bandera: 'https://bestleague.world/jr/96.png' }
+  { slug: 'fifa.friendly', nombre: 'Amistosos Int.', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/53.png' },
+  { slug: 'arg.1', nombre: 'Liga Profesional', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1.png' },
+  { slug: 'arg.copa', nombre: 'Copa Argentina', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2320.png' },
+  { slug: 'conmebol.libertadores', nombre: 'Copa Libertadores', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/58.png' },
+  { slug: 'conmebol.sudamericana', nombre: 'Copa Sudamericana', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1208.png' },
+  { slug: 'esp.1', nombre: 'LaLiga', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/15.png' },
+  { slug: 'esp.2', nombre: 'LaLiga 2', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/107.png' },
+  { slug: 'uefa.champions', nombre: 'Champions League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2.png' },
+  { slug: 'uefa.europa', nombre: 'Europa League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2310.png' },
+  { slug: 'bra.1', nombre: 'Brasileirão', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/85.png' },
+  { slug: 'col.1', nombre: 'Liga BetPlay', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1543.png' },
+  { slug: 'mex.1', nombre: 'Liga MX', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/22.png' },
+  { slug: 'eng.1', nombre: 'Premier League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png' },
+  { slug: 'ita.1', nombre: 'Serie A', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/12.png' },
+  { slug: 'ger.1', nombre: 'Bundesliga', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/10.png' }
 ]
 
 const BASE_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/'
 
 export default function MarcadoresPage() {
   const [resultados, setResultados] = useState<Record<string, any[]>>({})
+  const [logosLigas, setLogosLigas] = useState<Record<string, string>>({})
   const [partidosDb, setPartidosDb] = useState<any[]>([])
   const [ligaActiva, setLigaActiva] = useState<string>('todas')
   const [cargando, setCargando] = useState(true)
@@ -40,6 +40,7 @@ export default function MarcadoresPage() {
     else setCargando(true)
 
     const nuevosResultados: Record<string, any[]> = {}
+    const nuevosLogos: Record<string, string> = {}
 
     await Promise.all(
       LIGAS.map(async (liga) => {
@@ -48,6 +49,9 @@ export default function MarcadoresPage() {
           if (res.ok) {
             const data = await res.json()
             nuevosResultados[liga.slug] = data.events || []
+            if (data.leagues?.[0]?.logos?.[0]?.href) {
+              nuevosLogos[liga.slug] = data.leagues[0].logos[0].href
+            }
           } else {
             nuevosResultados[liga.slug] = []
           }
@@ -58,6 +62,7 @@ export default function MarcadoresPage() {
     )
 
     setResultados(nuevosResultados)
+    setLogosLigas(nuevosLogos)
     
     // Fetch local matches that might be playing today
     const { data: locales } = await supabase
@@ -160,7 +165,7 @@ export default function MarcadoresPage() {
                     }`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={liga.bandera} alt={liga.nombre} className='w-4 h-3 object-contain rounded-[1px]' loading='lazy' />
+                    <img src={logosLigas[liga.slug] || liga.bandera} alt={liga.nombre} className='w-4 h-4 object-contain rounded-[1px]' loading='lazy' />
                     {liga.nombre}
                     {liveCount > 0 && (
                       <span className='bg-red-600 text-white leading-none px-1.5 py-0.5 rounded-full text-[9px] ml-1'>
@@ -197,7 +202,7 @@ export default function MarcadoresPage() {
                       {/* Cabecera de Liga */}
                       <div className='flex items-center gap-2 px-3 py-2 bg-white/[0.02] rounded-lg border border-white/[0.05]'>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={liga.bandera} alt={liga.nombre} className='w-[18px] h-[12px] object-contain rounded-sm' loading='lazy' />
+                        <img src={logosLigas[liga.slug] || liga.bandera} alt={liga.nombre} className='w-5 h-5 object-contain rounded-sm' loading='lazy' />
                         <span className='font-barlow text-[13px] font-black tracking-widest uppercase text-slate-400'>{liga.nombre}</span>
                         {liveTotal > 0 && (
                           <div className='ml-auto inline-flex items-center gap-1.5 bg-red-600/10 border border-red-500/30 text-red-500 px-2.5 py-0.5 rounded-full text-[9px] font-black tracking-widest uppercase'>
