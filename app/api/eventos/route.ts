@@ -11,7 +11,7 @@ function getStatusPorHorario(timeStr: string, statusFromJson?: string): string {
   let [h, m] = timeStr.split(':').map(Number)
   // La hora del JSON está en UTC-5 (hora Colombia/Perú/US Central).
   // Argentina está en UTC-3 (+2 horas de diferencia).
-  h = (h + 2) % 24
+  const hArg = (h + 2) % 24
   
   const now = new Date()
   const argNowStr = new Intl.DateTimeFormat('en-US', { 
@@ -25,20 +25,33 @@ function getStatusPorHorario(timeStr: string, statusFromJson?: string): string {
   if (nowH === 24) nowH = 0
   
   const nowMinutes = nowH * 60 + nowM
-  const evMinutes = h * 60 + m
+  const evMinutes = hArg * 60 + m
   
   let diff = nowMinutes - evMinutes
-  if (diff < -720) diff += 1440
-  if (diff > 720) diff -= 1440
+  // Ajuste en caso de cruzar medianoche (ej: ahora madrugada 01:00 y partido 23:30, o viceversa)
+  if (nowMinutes < 300 && evMinutes > 1200) {
+    diff = (nowMinutes + 1440) - evMinutes
+  } else if (nowMinutes > 1200 && evMinutes < 300) {
+    diff = nowMinutes - (evMinutes + 1440)
+  }
   
-  // Un partido está "en vivo" desde 5 minutos antes del pitazo inicial hasta ~135 minutos después
-  const isWithinMatchTime = diff >= -5 && diff <= 135
-  
-  const s = (statusFromJson || '').toLowerCase()
-  if (s === 'next' && diff < 0) return 'próximo'
+  const s = (statusFromJson || '').toLowerCase().trim()
+  // 1. Si streamtp reporta explícitamente "finished" o "finalizado", está finalizado
+  if (s === 'finished' || s === 'finalizado') return 'finalizado'
+
+  // 2. Si pasaron más de 135 minutos desde el inicio del evento, ya finalizó
+  if (diff > 135) return 'finalizado'
+
+  // 3. Si el status es 'live' y está dentro de una ventana razonable
   if (s === 'live' && diff >= -15 && diff <= 180) return 'en vivo'
+
+  // 4. Si el status es 'next' y aún no empezó
+  if (s === 'next' && diff < 0) return 'próximo'
+
+  // 5. Ventana normal de partido en vivo: desde 5 minutos antes hasta 135 minutos después
+  if (diff >= -5 && diff <= 135) return 'en vivo'
   
-  return isWithinMatchTime ? 'en vivo' : 'próximo'
+  return 'próximo'
 }
 
 async function fetchStreamX() {
@@ -165,18 +178,34 @@ export async function GET() {
           if (cat && (!ev.category || ev.category === 'Other' || ev.category === 'Fútbol')) {
             ev.category = cat
           }
-          // Si streamtp marca el partido explícitamente en "live", asegurar que esté en vivo
-          const tpLive = matchingTp.some((x: any) => x.status === 'en vivo')
-          if (tpLive) {
-            ev.status = 'en vivo'
+          // Si streamtp marca el partido como "finalizado", asegurar que esté finalizado
+          const tpFinished = matchingTp.some((x: any) => x.status === 'finalizado')
+          if (tpFinished) {
+            ev.status = 'finalizado'
+          } else {
+            // Si streamtp marca el partido explícitamente en "en vivo", asegurar que esté en vivo
+            const tpLive = matchingTp.some((x: any) => x.status === 'en vivo')
+            if (tpLive) {
+              ev.status = 'en vivo'
+            }
           }
         }
         return ev
       })
     }
     
-    // Ordenar por hora
-    merged = merged.sort((a, b) => (a.time || '').localeCompare(b.time || ''))
+    // Ordenar: primero 'en vivo', luego 'próximo' (por horario), y al final 'finalizado'
+    const getPrio = (status: string) => {
+      if (status === 'en vivo') return 1
+      if (status === 'próximo') return 2
+      return 3 // finalizado
+    }
+    merged = merged.sort((a, b) => {
+      const pa = getPrio(a.status)
+      const pb = getPrio(b.status)
+      if (pa !== pb) return pa - pb
+      return (a.time || '').localeCompare(b.time || '')
+    })
 
     if (merged.length === 0) {
       throw new Error('No se encontraron eventos en ninguna fuente.')

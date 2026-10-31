@@ -388,6 +388,10 @@ export default function ImportarAgendaPage() {
                       <span className='w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse' />
                       <span className='text-[9px] font-black text-red-500 uppercase tracking-widest'>Vivo</span>
                     </div>
+                  ) : grupo.status === 'finalizado' ? (
+                    <div className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-700/20 border border-slate-700/40 flex-shrink-0'>
+                      <span className='text-[9px] font-black text-slate-400 uppercase tracking-widest'>Finalizado</span>
+                    </div>
                   ) : (
                     <div className='flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-600/10 border border-blue-600/30 flex-shrink-0'>
                       <Clock size={9} className='text-blue-400' />

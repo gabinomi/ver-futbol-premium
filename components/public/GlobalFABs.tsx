@@ -45,9 +45,9 @@ export default function GlobalFABs() {
 
   const enVivo = listaGrupos.filter(g => g.status === 'en vivo')
   
-  // Próximos: status no en vivo Y <= 15 mins (y no muy viejo)
+  // Próximos: status próximo Y <= 15 mins (y no muy viejo ni finalizado)
   const proximos = listaGrupos.filter(g => {
-    if (g.status === 'en vivo') return false
+    if (g.status === 'en vivo' || g.status === 'finalizado') return false
     const [h, m] = g.time.split(':').map(Number)
     const eventTime = new Date()
     eventTime.setUTCHours(h, m, 0, 0)

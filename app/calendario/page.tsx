@@ -39,6 +39,7 @@ export default function CalendarioPage() {
   const [filtro, setFiltro] = useState<'futbol' | 'otros' | 'argentino'>('futbol')
   const [openId, setOpenId] = useState<string | null>(null)
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
+  const [mostrarFinalizados, setMostrarFinalizados] = useState(true)
 
   const [playerSrc, setPlayerSrc] = useState('')
   const [playerTitle, setPlayerTitle] = useState('')
@@ -122,10 +123,30 @@ export default function CalendarioPage() {
     if (!gruposMap[key]) {
       gruposMap[key] = { title: e.title, time: e.time, status: e.status, links: [] }
     }
+    // Mantener prioridad de estados si hay múltiples enlaces para un mismo evento
+    if (e.status === 'en vivo') {
+      gruposMap[key].status = 'en vivo'
+    } else if (e.status === 'próximo' && gruposMap[key].status === 'finalizado') {
+      gruposMap[key].status = 'próximo'
+    }
     gruposMap[key].links.push(e.link)
   })
 
-  const listaGrupos = Object.values(gruposMap).sort((a, b) => a.time.localeCompare(b.time))
+  const todosGrupos = Object.values(gruposMap)
+
+  // Activos: En Vivo primero, luego Próximos por horario
+  const listaActivos = todosGrupos
+    .filter(g => g.status !== 'finalizado')
+    .sort((a, b) => {
+      if (a.status === 'en vivo' && b.status !== 'en vivo') return -1
+      if (a.status !== 'en vivo' && b.status === 'en vivo') return 1
+      return a.time.localeCompare(b.time)
+    })
+
+  // Finalizados: al fondo, ordenados cronológicamente
+  const listaFinalizados = todosGrupos
+    .filter(g => g.status === 'finalizado')
+    .sort((a, b) => a.time.localeCompare(b.time))
 
   const buildRedirUrl = (links: string[], title: string, img: string) => {
     const params = new URLSearchParams()
@@ -305,89 +326,155 @@ export default function CalendarioPage() {
               <div className='text-center py-20 text-red-400 font-barlow tracking-wider'>
                 No se pudo cargar la agenda. Intentá recargar la página.
               </div>
-            ) : listaGrupos.length === 0 ? (
+            ) : listaActivos.length === 0 && listaFinalizados.length === 0 ? (
               <div className='text-center py-20 text-slate-500 font-barlow tracking-wider'>
                 No hay partidos disponibles hoy
               </div>
             ) : (
-              listaGrupos.map((g, idx) => {
-                const id = `${g.title}-${g.time}-${idx}`
-                const parsed = parsearTitulo(g.title)
-                const horaArg = utcToArg(g.time)
-                const bandera = detectarBandera(g.title)
-                const esVivo = g.status === 'en vivo'
-                const isOpen = openId === id
+              <>
+                {listaActivos.length === 0 && listaFinalizados.length > 0 && (
+                  <div className='text-center py-8 text-slate-500 font-barlow tracking-wider bg-white/[0.02] border border-white/5 rounded-xl'>
+                    No hay más partidos pendientes hoy
+                  </div>
+                )}
 
-                return (
-                  <div key={id} className={`bg-[#081024e6] border rounded-[12px] overflow-hidden transition-all duration-200 ${esVivo ? 'border-red-600/50 shadow-[0_0_16px_rgba(220,38,38,0.1)]' : 'border-white/5 hover:border-blue-600/40 hover:shadow-[0_4px_20px_rgba(37,99,235,0.1)]'}`}>
-                    <div className='flex items-center gap-3 px-4 py-3 cursor-pointer select-none' onClick={() => togglePartido(id)}>
-                      <div className='font-barlow text-[15px] font-black text-slate-200 w-11 flex-shrink-0 tracking-wide'>
-                        {horaArg}
-                        <span className='block text-[8px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5'>ARG</span>
-                      </div>
-                      
-                      <div className='w-6 h-4 flex-shrink-0 bg-center bg-no-repeat bg-contain rounded-sm' style={{ backgroundImage: `url(${bandera})` }} />
-                      
-                      <div className='flex-1 min-w-0'>
-                        {parsed.liga && <div className='text-[9px] font-semibold tracking-[1px] uppercase text-slate-500 mb-0.5 truncate'>{parsed.liga}</div>}
-                        <div className='font-barlow text-[14px] font-extrabold uppercase tracking-wide text-slate-200 leading-tight truncate'>{parsed.partido}</div>
+                {listaActivos.map((g, idx) => {
+                  const id = `${g.title}-${g.time}-${idx}`
+                  const parsed = parsearTitulo(g.title)
+                  const horaArg = utcToArg(g.time)
+                  const bandera = detectarBandera(g.title)
+                  const esVivo = g.status === 'en vivo'
+                  const isOpen = openId === id
+
+                  return (
+                    <div key={id} className={`bg-[#081024e6] border rounded-[12px] overflow-hidden transition-all duration-200 ${esVivo ? 'border-red-600/50 shadow-[0_0_16px_rgba(220,38,38,0.1)]' : 'border-white/5 hover:border-blue-600/40 hover:shadow-[0_4px_20px_rgba(37,99,235,0.1)]'}`}>
+                      <div className='flex items-center gap-3 px-4 py-3 cursor-pointer select-none' onClick={() => togglePartido(id)}>
+                        <div className='font-barlow text-[15px] font-black text-slate-200 w-11 flex-shrink-0 tracking-wide'>
+                          {horaArg}
+                          <span className='block text-[8px] font-semibold text-slate-500 uppercase tracking-widest mt-0.5'>ARG</span>
+                        </div>
+                        
+                        <div className='w-6 h-4 flex-shrink-0 bg-center bg-no-repeat bg-contain rounded-sm' style={{ backgroundImage: `url(${bandera})` }} />
+                        
+                        <div className='flex-1 min-w-0'>
+                          {parsed.liga && <div className='text-[9px] font-semibold tracking-[1px] uppercase text-slate-500 mb-0.5 truncate'>{parsed.liga}</div>}
+                          <div className='font-barlow text-[14px] font-extrabold uppercase tracking-wide text-slate-200 leading-tight truncate'>{parsed.partido}</div>
+                        </div>
+
+                        <div className='flex flex-col items-end gap-1 flex-shrink-0'>
+                          {esVivo ? (
+                            <div className='flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-600/15 border border-red-600/50 text-red-500 text-[8px] font-bold tracking-widest uppercase'>
+                              <span className='w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse' /> EN VIVO
+                            </div>
+                          ) : (
+                            <div className='flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-600/12 border border-blue-600/50 text-blue-400 text-[8px] font-bold tracking-widest uppercase'>
+                              PRONTO
+                            </div>
+                          )}
+                          <svg className={`w-3.5 h-3.5 text-slate-600 transition-transform duration-200 mt-0.5 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                        </div>
                       </div>
 
-                      <div className='flex flex-col items-end gap-1 flex-shrink-0'>
-                        {esVivo ? (
-                          <div className='flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-600/15 border border-red-600/50 text-red-500 text-[8px] font-bold tracking-widest uppercase'>
-                            <span className='w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse' /> EN VIVO
-                          </div>
-                        ) : (
-                          <div className='flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-600/12 border border-blue-600/50 text-blue-400 text-[8px] font-bold tracking-widest uppercase'>
-                            PRONTO
-                          </div>
-                        )}
-                        <svg className={`w-3.5 h-3.5 text-slate-600 transition-transform duration-200 mt-0.5 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                      {/* Expandible (Opciones) */}
+                      {isOpen && (
+                        <div className='flex flex-wrap gap-2 px-4 py-3 border-t border-white/5 bg-[#02081080]'>
+                          {g.links.map((link, i) => {
+                            let streamName = (link.split('stream=')[1] || link.split('channel=')[1] || `Opción ${i+1}`)
+                            streamName = streamName.replace(/_/g, ' ').toUpperCase()
+                            const isPrimary = i === 0
+                            const sid = ((link.split('stream=')[1] || link.split('channel=')[1]) || '').toLowerCase()
+                            const canalMatch = sid ? CANALES.find(c => (c.hd || c.hd2) && c.enlace.toLowerCase().includes(sid)) : undefined
+                            const hdUrl = canalMatch && canalMatch.hd ? (BASE_JW + canalMatch.hd + '&lang=1') : null
+                            const hd2Url = canalMatch && canalMatch.hd2 ? (BASE_TOK + canalMatch.hd2) : null
+
+                            return (
+                              <div key={i} className='contents'>
+                                {hdUrl && (
+                                  <button onClick={() => reproducir(hdUrl, g.title)} className='inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-barlow text-[12px] font-bold tracking-wide uppercase transition-all bg-yellow-500/10 text-yellow-500 border border-yellow-500/30 hover:bg-yellow-500/20 hover:text-yellow-400'>
+                                    <Play className='w-3.5 h-3.5' fill='currentColor' />
+                                    {streamName} <span className='bg-yellow-500/20 text-yellow-500 text-[9px] font-black px-1.5 py-0.5 rounded ml-0.5'>HD</span>
+                                  </button>
+                                )}
+                                {hd2Url && (
+                                  <button onClick={() => reproducir(hd2Url, g.title)} className='inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-barlow text-[12px] font-bold tracking-wide uppercase transition-all bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 hover:bg-emerald-500/20 hover:text-emerald-400'>
+                                    <Play className='w-3.5 h-3.5' fill='currentColor' />
+                                    {streamName} <span className='bg-emerald-500/20 text-emerald-500 text-[9px] font-black px-1.5 py-0.5 rounded ml-0.5'>HD2</span>
+                                  </button>
+                                )}
+                                
+                                <button onClick={() => reproducir(link, g.title)} className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-barlow text-[12px] font-bold tracking-wide uppercase transition-colors ${isPrimary ? 'bg-gradient-to-br from-blue-600 to-[#1a3ab8] text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)]' : 'bg-[#0a1835] text-blue-400 border border-[#1e3a8a] hover:bg-blue-600/30 hover:text-white'}`}>
+                                  <Play className='w-3.5 h-3.5' fill='currentColor' />
+                                  {streamName}
+                                </button>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+
+                {/* Sección Partidos Finalizados */}
+                {listaFinalizados.length > 0 && (
+                  <div className='mt-6 pt-5 border-t border-white/10'>
+                    <div className='flex items-center justify-between mb-3 px-1'>
+                      <div className='flex items-center gap-2'>
+                        <h2 className='font-barlow text-sm font-black uppercase tracking-wider text-slate-400'>
+                          Partidos Finalizados
+                        </h2>
+                        <span className='px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 text-[10px] font-bold border border-slate-700/50'>
+                          {listaFinalizados.length}
+                        </span>
                       </div>
+                      <button
+                        onClick={() => setMostrarFinalizados(!mostrarFinalizados)}
+                        className='text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-300 transition-colors'
+                      >
+                        {mostrarFinalizados ? 'Ocultar' : 'Mostrar'}
+                      </button>
                     </div>
 
-                    {/* Expandible (Opciones) */}
-                    {isOpen && (
-                      <div className='flex flex-wrap gap-2 px-4 py-3 border-t border-white/5 bg-[#02081080]'>
-                        {g.links.map((link, i) => {
-                          let streamName = (link.split('stream=')[1] || link.split('channel=')[1] || `Opción ${i+1}`)
-                          streamName = streamName.replace(/_/g, ' ').toUpperCase()
-                          const isPrimary = i === 0
-                          const urlOpt = isPrimary ? link : link // actually we just need the link itself
-                          // Buscar si el link corresponde a un canal con HD o HD2
-                          const sid = ((link.split('stream=')[1] || link.split('channel=')[1]) || '').toLowerCase()
-                          const canalMatch = sid ? CANALES.find(c => (c.hd || c.hd2) && c.enlace.toLowerCase().includes(sid)) : undefined
-                          const hdUrl = canalMatch && canalMatch.hd ? (BASE_JW + canalMatch.hd + '&lang=1') : null
-                          const hd2Url = canalMatch && canalMatch.hd2 ? (BASE_TOK + canalMatch.hd2) : null
+                    {mostrarFinalizados && (
+                      <div className='flex flex-col gap-2.5'>
+                        {listaFinalizados.map((g, idx) => {
+                          const id = `fin-${g.title}-${g.time}-${idx}`
+                          const parsed = parsearTitulo(g.title)
+                          const horaArg = utcToArg(g.time)
+                          const bandera = detectarBandera(g.title)
 
                           return (
-                            <div key={i} className='contents'>
-                              {hdUrl && (
-                                <button onClick={() => reproducir(hdUrl, g.title)} className='inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-barlow text-[12px] font-bold tracking-wide uppercase transition-all bg-yellow-500/10 text-yellow-500 border border-yellow-500/30 hover:bg-yellow-500/20 hover:text-yellow-400'>
-                                  <Play className='w-3.5 h-3.5' fill='currentColor' />
-                                  {streamName} <span className='bg-yellow-500/20 text-yellow-500 text-[9px] font-black px-1.5 py-0.5 rounded ml-0.5'>HD</span>
-                                </button>
-                              )}
-                              {hd2Url && (
-                                <button onClick={() => reproducir(hd2Url, g.title)} className='inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-barlow text-[12px] font-bold tracking-wide uppercase transition-all bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 hover:bg-emerald-500/20 hover:text-emerald-400'>
-                                  <Play className='w-3.5 h-3.5' fill='currentColor' />
-                                  {streamName} <span className='bg-emerald-500/20 text-emerald-500 text-[9px] font-black px-1.5 py-0.5 rounded ml-0.5'>HD2</span>
-                                </button>
-                              )}
-                              
-                              <button onClick={() => reproducir(link, g.title)} className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-barlow text-[12px] font-bold tracking-wide uppercase transition-colors ${isPrimary ? 'bg-gradient-to-br from-blue-600 to-[#1a3ab8] text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)]' : 'bg-[#0a1835] text-blue-400 border border-[#1e3a8a] hover:bg-blue-600/30 hover:text-white'}`}>
-                                <Play className='w-3.5 h-3.5' fill='currentColor' />
-                                {streamName}
-                              </button>
+                            <div
+                              key={id}
+                              className='bg-[#08102466] border border-white/5 rounded-[12px] overflow-hidden opacity-50 select-none cursor-default'
+                            >
+                              <div className='flex items-center gap-3 px-4 py-3'>
+                                <div className='font-barlow text-[15px] font-bold text-slate-500 w-11 flex-shrink-0 tracking-wide'>
+                                  {horaArg}
+                                  <span className='block text-[8px] font-semibold text-slate-600 uppercase tracking-widest mt-0.5'>ARG</span>
+                                </div>
+                                
+                                <div className='w-6 h-4 flex-shrink-0 bg-center bg-no-repeat bg-contain rounded-sm grayscale opacity-60' style={{ backgroundImage: `url(${bandera})` }} />
+                                
+                                <div className='flex-1 min-w-0'>
+                                  {parsed.liga && <div className='text-[9px] font-semibold tracking-[1px] uppercase text-slate-600 mb-0.5 truncate'>{parsed.liga}</div>}
+                                  <div className='font-barlow text-[14px] font-bold uppercase tracking-wide text-slate-400 leading-tight truncate'>{parsed.partido}</div>
+                                </div>
+
+                                <div className='flex flex-col items-end gap-1 flex-shrink-0'>
+                                  <div className='flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-800/80 border border-slate-700/50 text-slate-400 text-[8px] font-bold tracking-widest uppercase'>
+                                    FINALIZADO
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           )
                         })}
                       </div>
                     )}
                   </div>
-                )
-              })
+                )}
+              </>
             )}
           </div>
         </div>
