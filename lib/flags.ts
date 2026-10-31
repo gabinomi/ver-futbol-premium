@@ -1,4 +1,5 @@
 export const FLAGS: Record<string, string> = {
+  // Banderas de países
   AR:  'https://flagcdn.com/w40/ar.png',
   ES:  'https://flagcdn.com/w40/es.png',
   BR:  'https://flagcdn.com/w40/br.png',
@@ -20,17 +21,27 @@ export const FLAGS: Record<string, string> = {
   HOL: 'https://flagcdn.com/w40/nl.png',
   BEL: 'https://flagcdn.com/w40/be.png',
   TUR: 'https://flagcdn.com/w40/tr.png',
-  LIB: 'https://a.espncdn.com/i/leaguelogos/soccer/500/58.png',
-  SUD: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1208.png',
-  CONCACAF: 'https://a.espncdn.com/i/leaguelogos/soccer/500/32.png',
-  FIFA: 'https://a.espncdn.com/i/leaguelogos/soccer/500/53.png',
-  MUNDIAL: 'https://i.imgur.com/YYN77mq.png',
-  CHA: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2.png',
-  UE:  'https://a.espncdn.com/i/leaguelogos/soccer/500/2310.png',
-  F1:  'https://futbollibreenhd.net/flags/f1.png',
-  F2:  'https://futbollibreenhd.net/flags/f2.png',
-  NBA: 'https://a.espncdn.com/i/teamlogos/leagues/500/nba.png',
-  FUT: 'https://static.futbolenlatv.com/img/32/20130618113222-futbol.png'
+  SA:  'https://flagcdn.com/w40/sa.png',
+
+  // Competiciones y deportes con imágenes específicas solicitadas
+  CONFERENCE: 'https://i.imgur.com/Z0pZ0df.png',
+  CONCACAF:   'https://i.imgur.com/KjnWiPK.png',
+  NBA:        'https://i.imgur.com/nV4k8Zm.png',
+  LIB:        'https://i.imgur.com/IdXfeQz.png',
+  SUD:        'https://i.imgur.com/6s8GUyZ.png',
+  CHA:        'https://i.imgur.com/GTMR7ID.png',
+  UE:         'https://i.imgur.com/VhEV9aI.png',
+  MLB:        'https://i.imgur.com/gAFJsYP.png',
+  NFL:        'https://i.imgur.com/rmwX8DS.png',
+  MMA:        'https://i.imgur.com/lTJVRFj.png',
+  TENIS:      'https://i.imgur.com/6L3iCvP.png',
+  F1:         'https://i.imgur.com/HxN3Oa6.png',
+  F2:         'https://i.imgur.com/3TrVkd4.png',
+  FIFA:       'https://a.espncdn.com/i/leaguelogos/soccer/500/53.png',
+  MUNDIAL:    'https://i.imgur.com/YYN77mq.png',
+
+  // Imagen de la pelota por defecto
+  FUT:        'https://i.imgur.com/appIhpR.png'
 }
 
 export const COUNTRY_DICT: Record<string, string> = {
@@ -155,18 +166,51 @@ export function traducirEquipos(titulo: string): string {
   return lower
 }
 
-function inc(t: string, words: string[]): boolean {
-  return words.some(w => t.includes(w))
+function norm(s: string = ''): string {
+  return (s || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
 }
 
 export function classificarCategoriaFútbol(cat: string): boolean {
-  const c = (cat || '').toLowerCase()
-  return c.includes('f') && (c.includes('tbol') || c.includes('tbol'))
+  const c = norm(cat)
+  return c.includes('f') && c.includes('tbol')
 }
 
-export function esFutbolReal(t: string): boolean {
-  const c = (t || '').toLowerCase()
-  return inc(c, ['liga profesional','copa argentina','primera nacional','laliga','la liga','liga 2:','hypermotion','copa del rey','supercopa','brasileirao','brasileirão','premier league','fa cup','serie a','coppa italia','bundesliga','dfb','ligue 1','liga portugal','liga betplay','liga mx','primera division','copa de primera','liga 1:','copa libertadores','copa sudamericana','champions league','europa league','conference league','copa del mundo','mundial','eliminatorias','concacaf','gold cup','copa america','nations league','futbol','fútbol', 'amistoso', 'amistosos', 'international friendly'])
+export function esOtrosDeportes(titulo: string, categoria?: string): boolean {
+  const t = norm(titulo)
+  const c = norm(categoria)
+  const otrosKeywords = [
+    'nba', 'basquet', 'baloncesto', 'basketball',
+    'f1', 'formula 1', 'formula 2', 'f2',
+    'ufc', 'mma', 'boxeo', 'boxing', 'bellator', 'pfl',
+    'tenis', 'tennis', 'atp', 'wta',
+    'nfl', 'american football',
+    'mlb', 'baseball', 'beisbol',
+    'rugby', 'ciclismo', 'cycling', 'golf', 'hockey', 'padel'
+  ]
+  return otrosKeywords.some(k => t.includes(k) || c.includes(k))
+}
+
+export function esFutbolArgentino(titulo: string, categoria?: string): boolean {
+  const t = norm(titulo)
+  if (t.includes('saudi') || t.includes('arabia')) return false
+  const argKeywords = [
+    'liga profesional', 'copa argentina', 'primera nacional', 'nacional b',
+    'b metropolitana', 'b metro', 'federal a',
+    'torneo proyeccion', 'reserva lpf', 'trofeo de campeones', 'supercopa argentina'
+  ]
+  if (argKeywords.some(k => t.includes(k))) return true
+  if (/\bprimera [bcd]\b/.test(t)) return true
+  if (t.includes('copa de la liga') && !t.includes('chile')) return true
+  return false
+}
+
+export function esFutbolReal(titulo: string, categoria?: string): boolean {
+  if (esOtrosDeportes(titulo, categoria)) return false
+  return true
 }
 
 export function parsearTitulo(titulo: string) {
@@ -181,75 +225,114 @@ export function parsearTitulo(titulo: string) {
 }
 
 export function detectarBandera(titulo: string): string {
-  const t = (titulo || '').toLowerCase()
-  const { liga } = parsearTitulo(t)
-  const context = liga ? liga : t // Usamos la liga para matchear torneos, o todo el titulo si no hay separador
-  
-  // 1. PRIORIDAD: MATCH POR LIGA / CAMPEONATO
-  if (inc(context, ['nba'])) return FLAGS.NBA;
-  if (inc(context, ['formula 1', 'f1'])) return FLAGS.F1;
-  if (inc(context, ['formula 2', 'f2'])) return FLAGS.F2;
-  
-  // Torneos Internacionales
-  if (inc(context, ['copa libertadores'])) return FLAGS.LIB;
-  if (inc(context, ['copa sudamericana', 'recopa sudamericana'])) return FLAGS.SUD;
-  if (inc(context, ['concacaf', 'gold cup', 'liga de naciones concacaf'])) return FLAGS.CONCACAF;
-  
-  // FIFA Oficial vs Amistosos
-  if (inc(context, ['fifa', 'copa del mundo', 'mundial', 'eliminatorias'])) return FLAGS.MUNDIAL;
-  if (inc(context, ['amistoso', 'amistosos', 'fecha fifa', 'international friendly'])) return FLAGS.FIFA;
-  if (inc(context, ['champions league', 'uefa champions'])) return FLAGS.CHA;
-  if (inc(context, ['europa league', 'conference league'])) return FLAGS.UE;
-  
-  // Ligas específicas (priorizando las solicitadas)
-  if (inc(context, ['serie a', 'coppa italia'])) return FLAGS.IT;
-  if (inc(context, ['ligue 1', 'ligue1'])) return FLAGS.FR;
-  if (inc(context, ['liga betplay', 'copa colombia', 'copa de colombia'])) return FLAGS.COL;
-  
-  // Conflicto de Copa de la Liga: Chile vs Argentina
-  // Si explícitamente dice 'copa de la liga: c' -> Chile. Si dice 'copa de la liga' -> Argentina
-  if (inc(context, ['copa de la liga: c', 'primera division: c', 'primera division: o'])) return FLAGS.CH;
-  if (inc(context, ['copa de la liga'])) return FLAGS.AR;
-  if (inc(context, ['liga profesional', 'copa argentina', 'primera nacional', 'nacional b', 'b metropolitana', 'federal a'])) return FLAGS.AR;
-  if (inc(context, ['brasileirao', 'brasileirão'])) return FLAGS.BR;
-  if (inc(context, ['copa de primera'])) return FLAGS.PY;
-  
-  // Validar 'liga 1' sin coincidir con 'laliga'
-  if (context.includes('liga 1') && !context.includes('laliga')) return FLAGS.PE;
-  
-  if (inc(context, ['mls', 'usa soccer', 'usmnt'])) return FLAGS.USA;
-  if (inc(context, ['laliga', 'la liga', 'liga 2', 'hypermotion', 'copa del rey', 'supercopa espa'])) return FLAGS.ES;
-  if (inc(context, ['premier league', 'fa cup'])) return FLAGS.EN;
-  if (inc(context, ['bundesliga', 'dfb pokal'])) return FLAGS.DE;
-  if (inc(context, ['liga portugal', 'primeira liga'])) return FLAGS.PT;
-  if (inc(context, ['liga mx', 'liga mex'])) return FLAGS.MEX;
-  if (inc(context, ['primera division: nacional', 'primera division: pe'])) return FLAGS.URU;
-  if (inc(context, ['liga pro ecuador', 'liga betecuador'])) return FLAGS.ECU;
-  if (inc(context, ['eredivisie'])) return FLAGS.HOL;
-  if (inc(context, ['jupiler'])) return FLAGS.BEL;
-  if (inc(context, ['super lig'])) return FLAGS.TUR;
-  
-  // 2. FALLBACK: MATCH POR EQUIPOS O EN EL TITULO COMPLETO
-  if (inc(t,['defensa y justicia','chaco for ever','san lorenzo','estudiantes lp','banfield','talleres','atletico tucuman','lanus','platense','tigre','instituto','velez','independiente','huracan','river plate','boca juniors','san martin'])) return FLAGS.AR;
-  if (inc(t,['atletico madrid','real madrid','barcelona','sevilla','valencia fc','villarreal','athletic bilbao','real betis','osasuna','celta','getafe','girona','mallorca','racing santander','sporting gij'])) return FLAGS.ES;
-  if (inc(t,['botafogo','fluminense','corinthians','palmeiras','flamengo','gremio','bahia','cruzeiro','atletico mineiro','vasco da gama','coritiba','mirassol','vitoria','athletico-pr','sao paulo','atletico go'])) return FLAGS.BR;
-  if (inc(t,['atletico nacional','santa fe','deportivo pasto','cucuta','llaneros','rionegro','tolima','junior fc','deportivo cali','fortaleza ceif','inter bogota','millonarios','america de cali'])) return FLAGS.COL;
-  if (inc(t,['colo-colo','huachipato','everton de','deportes limache','u de chile','o higgins','audax italiano','cobresal','coquimbo'])) return FLAGS.CH;
-  if (inc(t,['olimpia','guarani','rubio nu','trinidense','libertad','cerro porteno'])) return FLAGS.PY;
-  if (inc(t,['central espanol','defensor sp','danubio','nacional vs','penarol'])) return FLAGS.URU;
-  if (inc(t,['alianza lima','universitario','sporting cristal','cienciano','sport huancayo','adt '])) return FLAGS.PE;
-  if (inc(t,['puebla fc','juarez','tijuana','tigres uanl','chivas','america fc','cruz azul','pumas','monterrey','tudn','necaxa','mazatlan','atlas','leon fc','toluca','santos laguna','pachuca'])) return FLAGS.MEX;
-  if (inc(t,['arsenal','chelsea','manchester','liverpool','tottenham','west ham','newcastle','brighton'])) return FLAGS.EN;
-  if (inc(t,['juventus','ac milan','inter milan','as roma','napoli','lazio','fiorentina','atalanta'])) return FLAGS.IT;
-  if (inc(t,['bayern','dortmund','leverkusen','leipzig'])) return FLAGS.DE;
-  if (inc(t,['paris saint','olympique','as monaco'])) return FLAGS.FR;
-  if (inc(t,['benfica','sporting cp','fc porto'])) return FLAGS.PT;
-  if (inc(t,['barcelona sc','emelec','liga de quito','independiente del valle'])) return FLAGS.ECU;
-  if (inc(t,['ajax','psv','feyenoord','az alkmaar'])) return FLAGS.HOL;
-  if (inc(t,['anderlecht','club brugge','gent'])) return FLAGS.BEL;
-  if (inc(t,['galatasaray','fenerbahce','besiktas'])) return FLAGS.TUR;
-  
-  return FLAGS.FUT;
+  const t = norm(titulo)
+  const { liga } = parsearTitulo(titulo)
+  const l = norm(liga)
+  const target = l || t
+
+  // 1. Torneos y deportes con imágenes específicas solicitadas
+  if (t.includes('formula 1') || t.includes('f1') || t.includes('gran premio') || t.includes('gp ')) return FLAGS.F1
+  if (t.includes('formula 2') || t.includes('f2')) return FLAGS.F2
+  if (t.includes('nba') || t.includes('baloncesto') || t.includes('basquet') || t.includes('basketball')) return FLAGS.NBA
+  if (t.includes('mlb') || t.includes('baseball') || t.includes('beisbol')) return FLAGS.MLB
+  if (t.includes('nfl') || t.includes('american football')) return FLAGS.NFL
+  if (t.includes('mma') || t.includes('ufc') || t.includes('bellator') || t.includes('pfl') || t.includes('boxeo') || t.includes('boxing')) return FLAGS.MMA
+  if (t.includes('tenis') || t.includes('tennis') || t.includes('atp') || t.includes('wta') || t.includes('roland garros') || t.includes('wimbledon')) return FLAGS.TENIS
+
+  if (t.includes('conference league') || t.includes('uefa conference')) return FLAGS.CONFERENCE
+  if (t.includes('champions league') || t.includes('uefa champions')) return FLAGS.CHA
+  if (t.includes('europa league') || t.includes('uefa europa')) return FLAGS.UE
+  if (t.includes('copa libertadores') || t.includes('libertadores')) return FLAGS.LIB
+  if (t.includes('copa sudamericana') || t.includes('sudamericana') || t.includes('recopa sudamericana')) return FLAGS.SUD
+  if (t.includes('concacaf') || t.includes('gold cup') || t.includes('copa oro') || t.includes('leagues cup')) return FLAGS.CONCACAF
+  if (t.includes('copa del mundo') || t.includes('mundial de la fifa') || t.includes('fifa world cup') || t.includes('eliminatorias')) return FLAGS.MUNDIAL
+  if (t.includes('amistoso internacional') || t.includes('amistosos int') || t.includes('fecha fifa') || t.includes('international friendly')) return FLAGS.FIFA
+
+  // 2. Ligas y campeonatos por país (revisando nombre COMPLETO)
+  // Arabia Saudita (debe ir antes que Argentina para evitar que "Liga profesional SAUDI" dé Argentina)
+  if (target.includes('saudi') || target.includes('arabia') || t.includes('saudi pro league')) return FLAGS.SA
+
+  // Inglaterra (Championship, Premier, FA Cup, etc.)
+  if (target.includes('championship') || target.includes('english football league') || target.includes('premier league') || target.includes('fa cup') || target.includes('carabao') || target.includes('efl cup') || target.includes('league one') || target.includes('league two')) return FLAGS.EN
+
+  // Argentina
+  if (
+    target.includes('liga profesional') ||
+    target.includes('copa argentina') ||
+    target.includes('primera nacional') ||
+    target.includes('nacional b') ||
+    target.includes('b metropolitana') ||
+    target.includes('b metro') ||
+    /\bprimera [bcd]\b/.test(target) ||
+    target.includes('federal a') ||
+    target.includes('torneo proyeccion') ||
+    target.includes('reserva lpf') ||
+    target.includes('trofeo de campeones') ||
+    target.includes('supercopa argentina') ||
+    (target.includes('copa de la liga') && !target.includes('chile'))
+  ) {
+    return FLAGS.AR
+  }
+
+  // España
+  if (target.includes('laliga') || target.includes('la liga') || target.includes('hypermotion') || target.includes('copa del rey') || target.includes('supercopa de espana')) return FLAGS.ES
+
+  // Italia
+  if ((target.includes('serie a') || target.includes('serie b') || target.includes('coppa italia')) && !target.includes('brasil')) return FLAGS.IT
+
+  // Alemania
+  if (target.includes('bundesliga') || target.includes('dfb pokal')) return FLAGS.DE
+
+  // Francia
+  if (target.includes('ligue 1') || target.includes('ligue 2') || target.includes('coupe de france')) return FLAGS.FR
+
+  // Brasil
+  if (target.includes('brasileirao') || target.includes('copa do brasil') || target.includes('paulista') || target.includes('carioca') || target.includes('gaucho') || target.includes('mineiro')) return FLAGS.BR
+
+  // Portugal
+  if (target.includes('liga portugal') || target.includes('primeira liga') || target.includes('taca de portugal') || target.includes('copa de portugal')) return FLAGS.PT
+
+  // Colombia
+  if (target.includes('liga betplay') || target.includes('torneo betplay') || target.includes('copa colombia')) return FLAGS.COL
+
+  // Chile
+  if (target.includes('campeonato nacional chile') || target.includes('primera division chile') || target.includes('copa chile')) return FLAGS.CH
+
+  // Uruguay
+  if (target.includes('campeonato uruguayo') || target.includes('primera division uruguay') || target.includes('copa aufe')) return FLAGS.URU
+
+  // México
+  if (target.includes('liga mx') || target.includes('expansion mx') || target.includes('copa mx')) return FLAGS.MEX
+
+  // Perú
+  if ((target.includes('liga 1') || target.includes('copa bicentenario')) && !target.includes('laliga')) return FLAGS.PE
+
+  // Estados Unidos
+  if (target.includes('mls') || target.includes('major league soccer') || target.includes('usl') || target.includes('us open cup') || target.includes('nwsl')) return FLAGS.USA
+
+  // Países Bajos
+  if (target.includes('eredivisie') || target.includes('knvb')) return FLAGS.HOL
+
+  // Bélgica
+  if (target.includes('jupiler') || target.includes('pro league belgica')) return FLAGS.BEL
+
+  // Turquía
+  if (target.includes('super lig') || target.includes('superlig') || target.includes('turkiye kupasi')) return FLAGS.TUR
+
+  // Paraguay
+  if (target.includes('copa de primera') || target.includes('division de honor paraguay')) return FLAGS.PY
+
+  // Ecuador
+  if (target.includes('liga pro ecuador') || (target.includes('liga pro') && !target.includes('saudi'))) return FLAGS.ECU
+
+  // Bolivia
+  if (target.includes('division profesional bolivia') || target.includes('copa bolivia')) return FLAGS.BOL
+
+  // Venezuela
+  if (target.includes('liga futve') || target.includes('primera division venezuela')) return FLAGS.VEN
+
+  // Por defecto si no coincide: pelota de fútbol por defecto
+  return FLAGS.FUT
 }
 
 export function utcToArg(timeStr: string): string {

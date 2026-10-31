@@ -2,13 +2,13 @@
 import { useState, useRef } from 'react'
 import GlobalNav from '@/components/public/GlobalNav'
 import { Play, Signal, Zap, Star, RotateCw, X } from 'lucide-react'
-import { CANALES, getEnlace, getEnlaceHD, getEnlaceHD2, getEnlaceExtra } from '@/lib/canales-data'
+import { CANALES, getEnlace, getEnlaceHD, getEnlaceHD2, getEnlaceExtra, getEnlaceExtra2 } from '@/lib/canales-data'
 
 const SMARTLINK = 'https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644'
 
 export default function CanalesPage() {
   const [canalActivo, setCanalActivo] = useState<number | null>(null)
-  const [modo, setModo] = useState<1 | 2 | 3 | 4 | 5>(1)
+  const [modo, setModo] = useState<1 | 2 | 3 | 4 | 5 | 6>(1)
   const [iframeSrc, setIframeSrc] = useState('')
   const [showOverlay, setShowOverlay] = useState(true)
   const playerRef = useRef<HTMLDivElement>(null)
@@ -33,10 +33,11 @@ export default function CanalesPage() {
     if (modo === 3) src = getEnlaceHD(canal) || src
     if (modo === 4) src = getEnlaceHD2(canal) || src
     if (modo === 5) src = getEnlaceExtra(canal) || src
+    if (modo === 6) src = getEnlaceExtra2(canal) || src
     setIframeSrc(src)
   }
 
-  function cambiarModo(m: 1 | 2 | 3 | 4 | 5) {
+  function cambiarModo(m: 1 | 2 | 3 | 4 | 5 | 6) {
     if (canalActivo === null) return
     setModo(m)
     if (!showOverlay) {
@@ -46,6 +47,7 @@ export default function CanalesPage() {
       if (m === 3) src = getEnlaceHD(canal) || src
       if (m === 4) src = getEnlaceHD2(canal) || src
       if (m === 5) src = getEnlaceExtra(canal) || src
+      if (m === 6) src = getEnlaceExtra2(canal) || src
       setIframeSrc(src)
     }
   }
@@ -168,12 +170,13 @@ export default function CanalesPage() {
                   )}
                   {iframeSrc && (
                     <iframe
+                      id='iframe'
+                      name='iframe'
                       src={iframeSrc}
                       className='absolute inset-0 w-full h-full border-none'
                       allow='encrypted-media; autoplay; picture-in-picture'
                       allowFullScreen
                       scrolling='no'
-                      referrerPolicy='no-referrer'
                     />
                   )}
                 </div>
@@ -223,7 +226,17 @@ export default function CanalesPage() {
                         modo === 5 ? 'bg-slate-500 border-slate-500 text-white' : 'bg-white/[0.06] border-white/10 text-slate-400 hover:bg-white/[0.12] hover:text-white'
                       }`}
                     >
-                      <Play size={12} /> Opción Extra
+                      <Play size={12} /> Opción Extra 1
+                    </button>
+                  )}
+                  {canalData.extra2 && (
+                    <button
+                      onClick={() => cambiarModo(6)}
+                      className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide border transition-all ${
+                        modo === 6 ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white/[0.06] border-white/10 text-slate-400 hover:bg-white/[0.12] hover:text-white'
+                      }`}
+                    >
+                      <Play size={12} /> Opción Extra 2
                     </button>
                   )}
                   <button

@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
-import { utcToArg, detectarBandera, parsearTitulo, esFutbolReal } from '@/lib/flags'
+import { utcToArg, detectarBandera, parsearTitulo, esFutbolReal, esFutbolArgentino, esOtrosDeportes } from '@/lib/flags'
 import { Play, Star } from 'lucide-react'
 import Link from 'next/link'
 import GlobalNav from '@/components/public/GlobalNav'
@@ -22,7 +22,7 @@ interface PartidoGrupo {
   links: string[]
 }
 
-const IMG_DEFAULT = 'https://i.imgur.com/NwU54jR.jpeg'
+const IMG_DEFAULT = 'https://i.imgur.com/appIhpR.png'
 const DURACION = 5
 const MSGS = [
   'El botón se activa al finalizar',
@@ -36,7 +36,7 @@ export default function CalendarioPage() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState(false)
-  const [filtro, setFiltro] = useState<'futbol' | 'todos'>('futbol')
+  const [filtro, setFiltro] = useState<'futbol' | 'otros' | 'argentino'>('futbol')
   const [openId, setOpenId] = useState<string | null>(null)
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
 
@@ -110,9 +110,11 @@ export default function CalendarioPage() {
   }, [])
 
   // Procesamiento
-  const filtrados = filtro === 'futbol' 
-    ? eventos.filter(e => e.category === 'Fútbol' || e.category === 'Fútbol_cup' || e.category === 'Futbol' || esFutbolReal(e.title))
-    : eventos.filter(e => !(e.category === 'Fútbol' || e.category === 'Fútbol_cup' || e.category === 'Futbol' || esFutbolReal(e.title)))
+  const filtrados = eventos.filter(e => {
+    if (filtro === 'argentino') return esFutbolArgentino(e.title, e.category)
+    if (filtro === 'otros') return esOtrosDeportes(e.title, e.category)
+    return esFutbolReal(e.title, e.category)
+  })
 
   const gruposMap: Record<string, PartidoGrupo> = {}
   filtrados.forEach(e => {
@@ -270,8 +272,13 @@ export default function CalendarioPage() {
               Solo Fútbol
             </button>
             <button
-              onClick={() => setFiltro('todos')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide transition-colors ${filtro === 'todos' ? 'bg-blue-600/20 text-blue-400 border border-blue-600' : 'bg-white/5 text-slate-400 border border-white/10'}`}>
+              onClick={() => setFiltro('argentino')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide transition-colors ${filtro === 'argentino' ? 'bg-blue-600/20 text-blue-400 border border-blue-600' : 'bg-white/5 text-slate-400 border border-white/10'}`}>
+              Fútbol Argentino
+            </button>
+            <button
+              onClick={() => setFiltro('otros')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide transition-colors ${filtro === 'otros' ? 'bg-blue-600/20 text-blue-400 border border-blue-600' : 'bg-white/5 text-slate-400 border border-white/10'}`}>
               Otros Deportes
             </button>
             {/* Botón Actualizar */}

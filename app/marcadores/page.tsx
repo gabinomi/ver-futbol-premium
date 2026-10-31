@@ -165,7 +165,7 @@ export default function MarcadoresPage() {
                     }`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={logosLigas[liga.slug] || liga.bandera} alt={liga.nombre} className='w-4 h-4 object-contain rounded-[1px]' loading='lazy' />
+                    <img src={logosLigas[liga.slug] || liga.bandera} alt={liga.nombre} className='w-[38px] h-[28px] object-contain flex-shrink-0' loading='lazy' />
                     {liga.nombre}
                     {liveCount > 0 && (
                       <span className='bg-red-600 text-white leading-none px-1.5 py-0.5 rounded-full text-[9px] ml-1'>
@@ -200,10 +200,10 @@ export default function MarcadoresPage() {
                   return (
                     <div key={liga.slug} className='flex flex-col gap-3'>
                       {/* Cabecera de Liga */}
-                      <div className='flex items-center gap-2 px-3 py-2 bg-white/[0.02] rounded-lg border border-white/[0.05]'>
+                      <div className='flex items-center gap-3 px-3 py-2 bg-white/[0.02] rounded-lg border border-white/[0.05]'>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={logosLigas[liga.slug] || liga.bandera} alt={liga.nombre} className='w-5 h-5 object-contain rounded-sm' loading='lazy' />
-                        <span className='font-barlow text-[13px] font-black tracking-widest uppercase text-slate-400'>{liga.nombre}</span>
+                        <img src={logosLigas[liga.slug] || liga.bandera} alt={liga.nombre} className='w-[42px] h-[32px] object-contain flex-shrink-0' loading='lazy' />
+                        <span className='font-barlow text-[14px] font-black tracking-widest uppercase text-slate-300'>{liga.nombre}</span>
                         {liveTotal > 0 && (
                           <div className='ml-auto inline-flex items-center gap-1.5 bg-red-600/10 border border-red-500/30 text-red-500 px-2.5 py-0.5 rounded-full text-[9px] font-black tracking-widest uppercase'>
                             <span className='w-1 h-1 bg-red-500 rounded-full animate-blink' />
