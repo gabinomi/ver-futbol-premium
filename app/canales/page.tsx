@@ -1,7 +1,7 @@
 'use client'
 import { useState, useRef } from 'react'
 import GlobalNav from '@/components/public/GlobalNav'
-import { Play, Signal, Zap, Star, RotateCw, X } from 'lucide-react'
+import { Play, Signal, Zap, Star, RotateCw, X, ShieldCheck, Globe, Puzzle } from 'lucide-react'
 import { CANALES, getEnlace, getEnlaceHD, getEnlaceHD2, getEnlaceExtra, getEnlaceExtra2 } from '@/lib/canales-data'
 
 const SMARTLINK = 'https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644'
@@ -157,15 +157,15 @@ export default function CanalesPage() {
                   {/* SmartLink Overlay */}
                   {showOverlay && (
                     <div
-                      className='absolute inset-0 z-10 bg-black flex flex-col items-center justify-center gap-5 cursor-pointer rounded-xl overflow-hidden'
+                      className='absolute inset-0 z-10 bg-black flex flex-col items-center justify-center gap-3 md:gap-5 p-4 cursor-pointer rounded-xl overflow-hidden text-center'
                       onClick={confirmarClick}
                     >
                       <img src='https://i.imgur.com/NwU54jR.jpeg' alt='Thumb' className='absolute inset-0 w-full h-full object-cover opacity-50' />
-                      <div className='relative z-10 w-[72px] h-[72px] rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center shadow-[0_0_0_0_rgba(37,99,235,0.5)] animate-[slPulse_1.8s_ease-in-out_infinite]'>
-                        <Play size={26} className='text-white ml-1' fill='white' />
+                      <div className='relative z-10 w-14 h-14 md:w-[72px] md:h-[72px] rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center flex-shrink-0 shadow-[0_0_0_0_rgba(37,99,235,0.5)] animate-[slPulse_1.8s_ease-in-out_infinite]'>
+                        <Play size={24} className='text-white ml-0.5 md:ml-1' fill='white' />
                       </div>
-                      <div className='relative z-10 font-barlow text-xl font-black uppercase tracking-wider text-white shadow-black drop-shadow-md'>Hacé click para ver el canal</div>
-                      <div className='relative z-10 text-xs text-slate-300 tracking-wider font-bold shadow-black drop-shadow-md'>Tocá en cualquier parte para continuar</div>
+                      <div className='relative z-10 font-barlow text-lg md:text-xl font-black uppercase tracking-wider text-white shadow-black drop-shadow-md'>Hacé click para ver el canal</div>
+                      <div className='relative z-10 text-[11px] md:text-xs text-slate-300 tracking-wider font-bold shadow-black drop-shadow-md'>Tocá en cualquier parte para continuar</div>
                     </div>
                   )}
                   {iframeSrc && (
@@ -254,6 +254,54 @@ export default function CanalesPage() {
                 </div>
               </div>
             )}
+
+            {/* ═══ AVISO CANALES ═══ */}
+            <div className='flex flex-col gap-3 p-4 md:p-5 rounded-2xl bg-[#081024f2] border border-sky-400/20 shadow-[0_4px_24px_rgba(0,0,0,0.4)]'>
+              <div className='flex items-start gap-3.5 text-xs md:text-sm leading-relaxed text-slate-400'>
+                <div className='w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-sky-500/10 border border-sky-500/25 text-sky-400'>
+                  <ShieldCheck size={18} />
+                </div>
+                <div className='pt-1'>
+                  ¿No se ve el canal? Probá activando una <strong className='text-slate-200 font-bold'>VPN</strong> y recargá el reproductor.
+                </div>
+              </div>
+
+              <div className='flex items-start gap-3.5 text-xs md:text-sm leading-relaxed text-slate-400'>
+                <div className='w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-sky-500/10 border border-sky-500/25 text-sky-400'>
+                  <Globe size={18} />
+                </div>
+                <div className='pt-1'>
+                  Las opciones HD1 y HD2 funcionan en países como <strong className='text-slate-200 font-bold'>Argentina, Paraguay y Uruguay</strong>. Fuera de esos países necesitás usar una VPN.
+                </div>
+              </div>
+
+              <div className='flex items-start gap-3.5 text-xs md:text-sm leading-relaxed text-slate-400'>
+                <div className='w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-sky-500/10 border border-sky-500/25 text-sky-400'>
+                  <Puzzle size={18} />
+                </div>
+                <div className='pt-0.5 flex-1'>
+                  <div>
+                    Para reproducir algunos canales necesitás instalar la extensión{' '}
+                    <a
+                      href='https://sharkiller.dev/videoplayer/'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='text-blue-400 hover:text-blue-300 font-bold underline'
+                    >
+                      Reproductor MPD/M3U8/M3U/EPG
+                    </a>.
+                  </div>
+                  <a
+                    href='https://sharkiller.dev/videoplayer/'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='btn-ext'
+                  >
+                    <Puzzle size={14} /> Instalar extensión
+                  </a>
+                </div>
+              </div>
+            </div>
 
             {/* ═══ CANALES AGRUPADOS ═══ */}
             <div className='flex flex-col gap-6'>

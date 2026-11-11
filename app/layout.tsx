@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel='stylesheet'
         />
       </head>
-      <body className={`${inter.variable} font-inter bg-[#060d1a] text-white min-h-screen`}>
+      <body className={`${inter.variable} font-inter bg-[#060d1a] text-white min-h-screen pb-[calc(74px+env(safe-area-inset-bottom,0px))] md:pb-0`}>
         <div className='bg-stadium fixed inset-0 z-[-1]' />
         <div className='content-wrapper'>
           <Providers>

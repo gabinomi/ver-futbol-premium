@@ -75,11 +75,11 @@ export default function GlobalFABs() {
 
   return (
     <>
-      <div className='fixed bottom-5 right-4 z-[9999] flex flex-col gap-2 items-end'>
+      <div className='fixed bottom-[calc(80px+env(safe-area-inset-bottom,0px))] md:bottom-5 right-4 z-[9999] flex flex-col gap-2 items-end'>
         {enVivo.length > 0 && (
           <Link
             href='/en-vivo'
-            className={`flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 rounded-full font-barlow text-[13px] font-black tracking-wide uppercase transition-all shadow-[0_4px_16px_rgba(0,0,0,0.4)] hover:scale-105 bg-red-600/90 text-white border-none`}
+            className='hidden md:flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 rounded-full font-barlow text-[13px] font-black tracking-wide uppercase transition-all shadow-[0_4px_16px_rgba(0,0,0,0.4)] hover:scale-105 bg-red-600/90 text-white border-none'
           >
             <span className='w-1.5 h-1.5 rounded-full bg-white animate-blink block' />
             EN VIVO <span className='bg-black/30 px-2 py-0.5 rounded-full text-[11px]'>{enVivo.length}</span>
@@ -98,7 +98,7 @@ export default function GlobalFABs() {
       </div>
 
       {openPanel && (
-        <div className='fixed bottom-[120px] md:bottom-[130px] right-4 z-[9998] w-[320px] max-w-[92vw] bg-[#0d1221] border border-white/10 rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.6)] flex flex-col max-h-[70vh]'>
+        <div className='fixed bottom-[calc(134px+env(safe-area-inset-bottom,0px))] md:bottom-[130px] right-4 z-[9998] w-[320px] max-w-[92vw] bg-[#0d1221] border border-white/10 rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.6)] flex flex-col max-h-[70vh]'>
           <div className='flex items-center justify-between mb-3'>
             <span className='font-barlow text-[15px] font-black uppercase text-white'>
               {openPanel === 'live' ? 'En Vivo Ahora' : 'Próximos Partidos'}

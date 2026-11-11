@@ -265,7 +265,7 @@ export default function EnVivoPage() {
       <main className='max-w-[1000px] w-full mx-auto px-4 py-8 flex flex-col flex-1'>
         <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-white/10'>
           <div>
-            <h1 className='font-barlow text-3xl font-black uppercase text-white tracking-wide flex items-center gap-3'>
+            <h1 className='font-barlow text-2xl md:text-3xl font-black uppercase text-white tracking-wide flex items-center gap-3 flex-wrap'>
               Partidos en Vivo
               <span className='px-3 py-1 rounded-full border border-red-500/40 text-red-500 text-[11px] bg-red-500/10 flex items-center gap-2 shadow-[0_0_15px_rgba(220,38,38,0.2)]'>
                 <span className='w-2 h-2 rounded-full bg-red-500 animate-pulse' />
@@ -279,7 +279,7 @@ export default function EnVivoPage() {
           <button 
             onClick={() => cargarDatos()}
             disabled={cargando}
-            className='flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-bold text-slate-300 uppercase tracking-widest transition-colors'
+            className='w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2.5 md:py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-bold text-slate-300 uppercase tracking-widest transition-colors flex-shrink-0'
           >
             {cargando ? 'Actualizando...' : 'Actualizar'}
           </button>
