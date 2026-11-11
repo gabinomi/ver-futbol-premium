@@ -14,12 +14,12 @@ const LIGAS = [
   { slug: 'conmebol.sudamericana', nombre: 'Copa Sudamericana', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1208.png' },
   { slug: 'esp.1', nombre: 'LaLiga', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/15.png' },
   { slug: 'esp.2', nombre: 'LaLiga 2', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/107.png' },
-  { slug: 'uefa.champions', nombre: 'Champions League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2.png' },
-  { slug: 'uefa.europa', nombre: 'Europa League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2310.png' },
+  { slug: 'uefa.champions', nombre: 'Champions League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500-dark/2.png' },
+  { slug: 'uefa.europa', nombre: 'Europa League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500-dark/2310.png' },
   { slug: 'bra.1', nombre: 'Brasileirão', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/85.png' },
   { slug: 'col.1', nombre: 'Liga BetPlay', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1543.png' },
   { slug: 'mex.1', nombre: 'Liga MX', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/22.png' },
-  { slug: 'eng.1', nombre: 'Premier League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png' },
+  { slug: 'eng.1', nombre: 'Premier League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500-dark/23.png' },
   { slug: 'ita.1', nombre: 'Serie A', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/12.png' },
   { slug: 'ger.1', nombre: 'Bundesliga', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/10.png' }
 ]
@@ -49,8 +49,9 @@ export default function MarcadoresPage() {
           if (res.ok) {
             const data = await res.json()
             nuevosResultados[liga.slug] = data.events || []
-            if (data.leagues?.[0]?.logos?.[0]?.href) {
-              nuevosLogos[liga.slug] = data.leagues[0].logos[0].href
+            if (data.leagues?.[0]?.logos) {
+              const darkLogo = data.leagues[0].logos.find((l: any) => l.rel?.includes('dark'))?.href
+              nuevosLogos[liga.slug] = darkLogo || data.leagues[0].logos[0]?.href || liga.bandera
             }
           } else {
             nuevosResultados[liga.slug] = []
@@ -165,7 +166,7 @@ export default function MarcadoresPage() {
                     }`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={logosLigas[liga.slug] || liga.bandera} alt={liga.nombre} className='w-[38px] h-[28px] object-contain flex-shrink-0' loading='lazy' />
+                    <img src={liga.bandera || logosLigas[liga.slug]} alt={liga.nombre} className='w-[48px] h-[34px] object-contain flex-shrink-0' loading='lazy' />
                     {liga.nombre}
                     {liveCount > 0 && (
                       <span className='bg-red-600 text-white leading-none px-1.5 py-0.5 rounded-full text-[9px] ml-1'>
@@ -202,7 +203,7 @@ export default function MarcadoresPage() {
                       {/* Cabecera de Liga */}
                       <div className='flex items-center gap-3 px-3 py-2 bg-white/[0.02] rounded-lg border border-white/[0.05]'>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={logosLigas[liga.slug] || liga.bandera} alt={liga.nombre} className='w-[42px] h-[32px] object-contain flex-shrink-0' loading='lazy' />
+                        <img src={liga.bandera || logosLigas[liga.slug]} alt={liga.nombre} className='w-[54px] h-[38px] object-contain flex-shrink-0' loading='lazy' />
                         <span className='font-barlow text-[14px] font-black tracking-widest uppercase text-slate-300'>{liga.nombre}</span>
                         {liveTotal > 0 && (
                           <div className='ml-auto inline-flex items-center gap-1.5 bg-red-600/10 border border-red-500/30 text-red-500 px-2.5 py-0.5 rounded-full text-[9px] font-black tracking-widest uppercase'>
