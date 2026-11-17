@@ -37,8 +37,9 @@ export const FLAGS: Record<string, string> = {
   TENIS:      'https://i.imgur.com/6L3iCvP.png',
   F1:         'https://i.imgur.com/HxN3Oa6.png',
   F2:         'https://i.imgur.com/3TrVkd4.png',
-  FIFA:       'https://a.espncdn.com/i/leaguelogos/soccer/500/53.png',
+  FIFA:       'https://i.imgur.com/kRGSaP7.png',
   MUNDIAL:    'https://i.imgur.com/YYN77mq.png',
+  NATIONS:    'https://tvlibre.st/agenda/jr/2349.png',
 
   // Imagen de la pelota por defecto
   FUT:        'https://i.imgur.com/appIhpR.png'
@@ -242,11 +243,12 @@ export function detectarBandera(titulo: string): string {
   if (t.includes('conference league') || t.includes('uefa conference')) return FLAGS.CONFERENCE
   if (t.includes('champions league') || t.includes('uefa champions')) return FLAGS.CHA
   if (t.includes('europa league') || t.includes('uefa europa')) return FLAGS.UE
+  if (t.includes('liga de las naciones') || t.includes('liga de naciones') || t.includes('nations league') || t.includes('uefa nations')) return FLAGS.NATIONS
   if (t.includes('copa libertadores') || t.includes('libertadores')) return FLAGS.LIB
   if (t.includes('copa sudamericana') || t.includes('sudamericana') || t.includes('recopa sudamericana')) return FLAGS.SUD
   if (t.includes('concacaf') || t.includes('gold cup') || t.includes('copa oro') || t.includes('leagues cup')) return FLAGS.CONCACAF
   if (t.includes('copa del mundo') || t.includes('mundial de la fifa') || t.includes('fifa world cup') || t.includes('eliminatorias')) return FLAGS.MUNDIAL
-  if (t.includes('amistoso internacional') || t.includes('amistosos int') || t.includes('fecha fifa') || t.includes('international friendly')) return FLAGS.FIFA
+  if (t.includes('amistoso internacional') || t.includes('amistosos int') || t.includes('fecha fifa') || t.includes('international friendly') || t.includes('amistoso')) return FLAGS.FIFA
 
   // 2. Ligas y campeonatos por país (revisando nombre COMPLETO)
   // Arabia Saudita (debe ir antes que Argentina para evitar que "Liga profesional SAUDI" dé Argentina)

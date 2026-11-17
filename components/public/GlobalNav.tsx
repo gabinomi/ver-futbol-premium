@@ -14,7 +14,15 @@ export default function GlobalNav() {
         const res = await fetch('/api/eventos', { cache: 'no-store' })
         const data = await res.json()
         if (Array.isArray(data)) {
-          const count = data.filter((e: any) => e.status === 'en vivo').length
+          // Agrupar por partido (título + hora) para contar partidos únicos en vivo igual que GlobalFABs
+          const gruposMap: Record<string, string> = {}
+          data.forEach((e: any) => {
+            const key = `${e.title}|${e.time}`
+            if (!gruposMap[key] || e.status === 'en vivo') {
+              gruposMap[key] = e.status
+            }
+          })
+          const count = Object.values(gruposMap).filter(st => st === 'en vivo').length
           setLiveCount(count)
         }
       } catch {
@@ -43,7 +51,7 @@ export default function GlobalNav() {
           <Link href='/' className='flex items-center h-full flex-shrink-0'>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src='https://i.imgur.com/Ts9K8tz.png'
+              src='https://i.imgur.com/96IXkPJ.png'
               alt='Ver Fútbol EN VIVO'
               className='h-[42px] md:h-[48px] w-auto object-contain'
             />

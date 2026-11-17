@@ -73,14 +73,8 @@
 }
 
 @keyframes mcGrad {
-  0% { background-position: 0% 50% }
-  100% { background-position: 250% 50% }
-}
-
-@keyframes mcShine {
-  0% { transform: translateX(-150%) rotate(25deg); }
-  50% { transform: translateX(250%) rotate(25deg); }
-  100% { transform: translateX(250%) rotate(25deg); }
+  0% { background-position: 250% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 html {
@@ -105,20 +99,8 @@ html {
   border: 1px solid rgba(125, 211, 252, .55);
   text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
   box-shadow: 0 0 14px rgba(56, 189, 248, .35), 0 3px 10px rgba(37, 99, 235, .35);
-  animation: mcGrad 5s linear infinite;
+  animation: mcGrad 4s linear infinite;
   transition: transform .2s, box-shadow .2s;
-}
-.btn-mascanales::after {
-  content: '';
-  position: absolute;
-  top: -60%;
-  left: -120%;
-  width: 45%;
-  height: 220%;
-  background: rgba(255, 255, 255, .28);
-  transform: rotate(25deg);
-  animation: mcShine 3.5s ease-in-out infinite;
-  pointer-events: none;
 }
 .btn-mascanales:hover {
   transform: translateY(-1px);

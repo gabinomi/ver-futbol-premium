@@ -16,6 +16,7 @@ const LIGAS = [
   { slug: 'esp.2', nombre: 'LaLiga 2', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/107.png' },
   { slug: 'uefa.champions', nombre: 'Champions League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500-dark/2.png' },
   { slug: 'uefa.europa', nombre: 'Europa League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500-dark/2310.png' },
+  { slug: 'uefa.nations', nombre: 'UEFA Nations League', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500-dark/2395.png' },
   { slug: 'bra.1', nombre: 'Brasileirão', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/85.png' },
   { slug: 'col.1', nombre: 'Liga BetPlay', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1543.png' },
   { slug: 'mex.1', nombre: 'Liga MX', bandera: 'https://a.espncdn.com/i/leaguelogos/soccer/500/22.png' },

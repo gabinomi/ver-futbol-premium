@@ -279,26 +279,16 @@ export default function CanalesPage() {
                 <div className='w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-sky-500/10 border border-sky-500/25 text-sky-400'>
                   <Puzzle size={18} />
                 </div>
-                <div className='pt-0.5 flex-1'>
-                  <div>
-                    Para reproducir algunos canales necesitás instalar la extensión{' '}
-                    <a
-                      href='https://sharkiller.dev/videoplayer/'
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='text-blue-400 hover:text-blue-300 font-bold underline'
-                    >
-                      Reproductor MPD/M3U8/M3U/EPG
-                    </a>.
-                  </div>
+                <div className='pt-1 flex-1'>
+                  Para reproducir algunos canales necesitás instalar la extensión{' '}
                   <a
                     href='https://sharkiller.dev/videoplayer/'
                     target='_blank'
                     rel='noopener noreferrer'
-                    className='btn-ext'
+                    className='text-blue-400 hover:text-blue-300 font-bold underline'
                   >
-                    <Puzzle size={14} /> Instalar extensión
-                  </a>
+                    Reproductor MPD/M3U8/M3U/EPG
+                  </a>.
                 </div>
               </div>
             </div>
