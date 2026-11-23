@@ -8,12 +8,17 @@ import PartidoClient from '@/components/public/PartidoClient'
 export const revalidate = 120
 
 async function getPartido(slug: string): Promise<Partido | null> {
-  const { data } = await supabase
-    .from('partidos')
-    .select('*')
-    .eq('slug', slug)
-    .single()
-  return data as Partido | null
+  try {
+    const { data } = await supabase
+      .from('partidos')
+      .select('*')
+      .eq('slug', slug)
+      .single()
+    return (data as Partido) || null
+  } catch (err) {
+    console.error('getPartido error:', err)
+    return null
+  }
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {

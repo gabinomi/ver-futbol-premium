@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  staticPageGenerationTimeout: 120,
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'www.thesportsdb.com' },

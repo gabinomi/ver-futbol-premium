@@ -8,13 +8,18 @@ export const revalidate = 0
 export const dynamic = 'force-dynamic'
 
 export default async function AdminPartidosPage() {
-  const { data } = await supabaseAdmin()
-    .from('partidos')
-    .select('*')
-    .order('orden', { ascending: true })
-    .order('creado_en', { ascending: false })
+  let partidos: Partido[] = []
+  try {
+    const { data } = await supabaseAdmin()
+      .from('partidos')
+      .select('*')
+      .order('orden', { ascending: true })
+      .order('creado_en', { ascending: false })
 
-  const partidos = (data as Partido[]) || []
+    partidos = (data as Partido[]) || []
+  } catch (err) {
+    console.error('AdminPartidosPage error:', err)
+  }
 
   return (
     <div className='max-w-6xl mx-auto'>

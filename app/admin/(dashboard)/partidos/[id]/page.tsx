@@ -7,11 +7,17 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export default async function EditarPartidoPage({ params }: { params: { id: string } }) {
-  const { data } = await supabaseAdmin()
-    .from('partidos')
-    .select('*')
-    .eq('id', params.id)
-    .single()
+  let data = null
+  try {
+    const res = await supabaseAdmin()
+      .from('partidos')
+      .select('*')
+      .eq('id', params.id)
+      .single()
+    data = res.data
+  } catch (err) {
+    console.error('EditarPartidoPage error:', err)
+  }
 
   if (!data) notFound()
 

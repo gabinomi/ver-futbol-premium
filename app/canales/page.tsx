@@ -28,6 +28,7 @@ export default function CanalesPage() {
     window.open(SMARTLINK, '_blank')
     setShowOverlay(false)
     const canal = CANALES[canalActivo]
+    if (!canal) return
     let src = getEnlace(canal, 1)
     if (modo === 2) src = getEnlace(canal, 2)
     if (modo === 3) src = getEnlaceHD(canal) || src
@@ -43,6 +44,7 @@ export default function CanalesPage() {
     setModo(m)
     if (!showOverlay) {
       const canal = CANALES[canalActivo]
+      if (!canal) return
       let src = getEnlace(canal, 1)
       if (m === 2) src = getEnlace(canal, 2)
       if (m === 3) src = getEnlaceHD(canal) || src
