@@ -2,13 +2,13 @@
 import { useState, useRef } from 'react'
 import GlobalNav from '@/components/public/GlobalNav'
 import { Play, Signal, Zap, Star, RotateCw, X, ShieldCheck, Globe, Puzzle } from 'lucide-react'
-import { CANALES, getEnlace, getEnlaceHD, getEnlaceHD2, getEnlaceExtra, getEnlaceExtra2 } from '@/lib/canales-data'
+import { CANALES, getEnlace, getEnlaceHD, getEnlaceHD2, getEnlaceExtra, getEnlaceExtra2, getEnlaceExtra3 } from '@/lib/canales-data'
 
 const SMARTLINK = 'https://www.profitablecpmratenetwork.com/uj4jq7sxqb?key=e28e0a5ffc1f8cbc53e1375887ec3644'
 
 export default function CanalesPage() {
   const [canalActivo, setCanalActivo] = useState<number | null>(null)
-  const [modo, setModo] = useState<1 | 2 | 3 | 4 | 5 | 6>(1)
+  const [modo, setModo] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7>(1)
   const [iframeSrc, setIframeSrc] = useState('')
   const [showOverlay, setShowOverlay] = useState(true)
   const playerRef = useRef<HTMLDivElement>(null)
@@ -34,10 +34,11 @@ export default function CanalesPage() {
     if (modo === 4) src = getEnlaceHD2(canal) || src
     if (modo === 5) src = getEnlaceExtra(canal) || src
     if (modo === 6) src = getEnlaceExtra2(canal) || src
+    if (modo === 7) src = getEnlaceExtra3(canal) || src
     setIframeSrc(src)
   }
 
-  function cambiarModo(m: 1 | 2 | 3 | 4 | 5 | 6) {
+  function cambiarModo(m: 1 | 2 | 3 | 4 | 5 | 6 | 7) {
     if (canalActivo === null) return
     setModo(m)
     if (!showOverlay) {
@@ -48,6 +49,7 @@ export default function CanalesPage() {
       if (m === 4) src = getEnlaceHD2(canal) || src
       if (m === 5) src = getEnlaceExtra(canal) || src
       if (m === 6) src = getEnlaceExtra2(canal) || src
+      if (m === 7) src = getEnlaceExtra3(canal) || src
       setIframeSrc(src)
     }
   }
@@ -237,6 +239,16 @@ export default function CanalesPage() {
                       }`}
                     >
                       <Play size={12} /> Opción Extra 2
+                    </button>
+                  )}
+                  {canalData.extra3 && (
+                    <button
+                      onClick={() => cambiarModo(7)}
+                      className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg font-barlow text-[13px] font-bold uppercase tracking-wide border transition-all ${
+                        modo === 7 ? 'bg-purple-600 border-purple-600 text-white' : 'bg-white/[0.06] border-white/10 text-slate-400 hover:bg-white/[0.12] hover:text-white'
+                      }`}
+                    >
+                      <Play size={12} /> Opción Extra 3
                     </button>
                   )}
                   <button
